@@ -1,6 +1,6 @@
 # Presence Bridge handoff
 
-## Shipped in v0.1.1
+## Shipped in v0.1.2
 
 - Tauri 2 desktop shell with a persistent tray icon, hide-on-close behavior, and native contact-link opening.
 - Local roster with manual status, notes, search, keyboard navigation, add/edit/remove flows, JSON backup and restore, and a first-run sample project.

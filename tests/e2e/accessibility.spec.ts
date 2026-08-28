@@ -6,13 +6,16 @@ for (const path of ["/", "/demo", "/privacy", "/terms", "/download", "/missing-p
     const errors: string[] = [];
     page.on("console", message => { if (message.type() === "error") errors.push(message.text()); });
     page.on("pageerror", error => errors.push(error.message));
-    await page.goto(path);
+    const response = await page.goto(path);
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator("main")).toHaveCount(1);
     const results = await new AxeBuilder({ page: page as never }).analyze();
     expect(results.violations.filter(item => ["serious", "critical"].includes(item.impact || ""))).toEqual([]);
     if (path === "/missing-page") {
-      expect(errors.every(message => message.includes("404 (Not Found)"))).toBe(true);
+      expect(response?.status()).toBe(404);
+      // Vite reports "404 (Not Found)", while Azure Static Web Apps reports
+      // "status of 404 ()". Both are the expected request for this real 404.
+      expect(errors.every(message => /404 \(Not Found\)|status of 404/.test(message))).toBe(true);
     } else {
       expect(errors).toEqual([]);
     }
@@ -106,7 +109,9 @@ test("390px routes and download names reflow without horizontal scrolling and ke
 test("200 percent text size keeps every site route within the viewport", async ({ page }) => {
   for (const path of ["/", "/demo", "/privacy", "/terms", "/download"]) {
     await page.goto(path);
-    await page.addStyleTag({ content: "html { font-size: 200% !important; }" });
+    // Set the rendered root size directly rather than injecting a style tag.
+    // Production CSP correctly rejects injected inline <style> elements.
+    await page.evaluate(() => document.documentElement.style.setProperty("font-size", "200%", "important"));
     const widths = await page.evaluate(() => ({
       widths: [document.documentElement.scrollWidth, document.documentElement.clientWidth],
       overflow: [...document.querySelectorAll<HTMLElement>("*")].filter(element => element.getBoundingClientRect().right > document.documentElement.clientWidth + 1).slice(0, 8).map(element => `${element.tagName}.${element.className}`)

@@ -2,7 +2,7 @@
 
 ## Repair status
 
-This repair addresses the candidate `a259ad2106b6cccc7464b72bb8c702c7310d5f6a` findings in `.factory/verification-2.md` without changing the artifact class: this remains a Tauri 2 desktop app with a Vite static landing site in `dist/site`.
+This repair addresses the candidate `a259ad2106b6cccc7464b72bb8c702c7310d5f6a` findings in `.factory/verification-2.md` without changing the artifact class: this remains a Tauri 2 desktop app with a Vite static landing site in `dist/site`. Repair commit `1752072c8ad5121bbb5a7b9ea245effa51527c7d` is pushed to `main`.
 
 One external release blocker remains outside this repository: at 2026-08-28, `GET https://api.sociobot.in/api/v1/products/presence-bridge/checkout` still returns `404 {"error":"enabled factory product","status":404}`. The product must be enabled in the Sociobot live billing catalog at the already-public $24 price and return URL before the paid tier can be called releasable. The client continues to use only that required Sociobot endpoint; no payment provider was added to the app.
 
@@ -37,6 +37,9 @@ Results on 2026-08-28:
 - Rust format and `cargo check --locked`: PASS after installing the documented Ubuntu Tauri prerequisites (`libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf`).
 - Production preview was checked with `/opt/fleet/lib/verify-url.sh`: HTTP 200, zero console errors, title/lang/one `h1`/`main`, every image has alt text, and no unlabeled buttons.
 - Linux installer smoke against the real current GitHub API: PASS. It selected the published AppImage from minified JSON, verified it, and installed an executable 76 MB `presence-bridge` at an isolated `XDG_BIN_HOME` path.
+- Live browser verification after deployment: PASS — the accessibility/mobile suite had 25 passes and one intentional desktop-only skip against `https://presence-bridge.sociobot.in`. This includes keyboard dialog Escape restoration, offline/update, 390px targets and overflow, 200% text size, real 404 navigation/reload, and Axe serious/critical checks. The 200% test uses an in-page DOM style property so it does not weaken or bypass the deployed CSP.
+- Live identity check after deployment: `/`, `/demo`, `/app.html`, `/privacy`, `/terms`, and `/download` returned 200; a made-up route returned 404. `verify-url.sh` reported 926 ms load, no console errors, correct title/lang/one `h1`/`main`, zero missing image alt text, and zero unlabeled buttons.
+- Live Lighthouse (headless Chromium): Performance 100, Accessibility 100, Best Practices 100, SEO 100.
 
 ## Deploy
 
@@ -47,7 +50,7 @@ npm run build:site
 /opt/fleet/lib/deploy-static.sh presence-bridge dist/site
 ```
 
-The deployment target is `https://presence-bridge.sociobot.in`.
+Deployed on 2026-08-28 to `https://presence-bridge.sociobot.in` (Azure Static Web Apps deployment `99883541-b74c-4d7c-9e19-3e6e60ae7ffb`).
 
 ## Known external actions
 

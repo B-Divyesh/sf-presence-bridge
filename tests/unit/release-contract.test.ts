@@ -12,6 +12,8 @@ describe("release repair contracts", () => {
     expect(script).toContain("Start-Process -FilePath $installer");
     expect(script).toContain("-ArgumentList \"/S\"");
     expect(script).toContain("$installedApp");
+    expect(script).toContain('"presence-bridge.exe"');
+    expect(script).toContain("Windows\\CurrentVersion\\Uninstall");
     expect(script).toContain("Start-Process -FilePath $installedApp");
     expect(script.indexOf("Checksum failed")).toBeLessThan(script.indexOf("Start-Process -FilePath $installer"));
     expect(workflow).toContain("windows-installer-smoke:");

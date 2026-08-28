@@ -105,3 +105,16 @@ jobs:
       - name: Install and open the published Windows app
         shell: pwsh
         run: ./public/install.ps1
+
+  linux-installer-smoke:
+    needs: manifest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install and start the checksum-verified Linux AppImage
+        shell: bash
+        run: |
+          export XDG_BIN_HOME="$RUNNER_TEMP/presence-bridge-bin"
+          sh ./public/install.sh
+          test -x "$XDG_BIN_HOME/presence-bridge"
+          "$XDG_BIN_HOME/presence-bridge" --appimage-version

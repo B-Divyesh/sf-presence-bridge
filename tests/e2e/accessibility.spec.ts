@@ -53,7 +53,9 @@ test("a new service worker retires the old cache and reloads offline", async ({ 
   expect(updatedCaches).toContain("presence-bridge-regression-new");
   expect(updatedCaches).not.toContain("presence-bridge-regression-old");
 
-  await page.reload();
+  // Chromium may abort one navigation while a newly activated worker takes control.
+  // Retrying from the stable demo URL verifies the same post-update document path.
+  try { await page.reload(); } catch { await page.goto("/demo"); }
   await context.setOffline(true);
   await page.reload();
   await expect(page.getByRole("heading", { name: "Try a complete team roster" })).toBeVisible();
@@ -67,4 +69,48 @@ test("keyboard search and roster navigation", async ({ page }) => {
   await page.locator(".people").focus();
   await page.keyboard.press("ArrowDown");
   await expect(page.locator(".person-row.selected")).toContainText("Leo Martin");
+});
+
+test("Escape returns dialog focus to the control that opened it", async ({ page }) => {
+  await page.goto("/demo");
+  const add = page.getByRole("button", { name: "Add person" });
+  await add.click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await expect(add).toBeFocused();
+
+  const settings = page.getByRole("button", { name: "Settings" });
+  await settings.click();
+  await page.keyboard.press("Escape");
+  await expect(settings).toBeFocused();
+});
+
+test("390px routes and download names reflow without horizontal scrolling and keep touch targets", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "mobile");
+  for (const path of ["/", "/demo", "/privacy", "/terms", "/download", "/app.html"]) {
+    await page.goto(path);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+  }
+  await page.goto("/demo");
+  for (const locator of [page.locator(".site-header nav a"), page.locator(".demo-banner a"), page.locator(".app-wordmark"), page.locator(".site-footer a")]) {
+    const count = await locator.count();
+    for (let index = 0; index < count; index += 1) {
+      if (!await locator.nth(index).isVisible()) continue;
+      const box = await locator.nth(index).boundingBox();
+      expect(box?.height || 0).toBeGreaterThanOrEqual(44);
+    }
+  }
+});
+
+test("200 percent text size keeps every site route within the viewport", async ({ page }) => {
+  for (const path of ["/", "/demo", "/privacy", "/terms", "/download"]) {
+    await page.goto(path);
+    await page.addStyleTag({ content: "html { font-size: 200% !important; }" });
+    const widths = await page.evaluate(() => ({
+      widths: [document.documentElement.scrollWidth, document.documentElement.clientWidth],
+      overflow: [...document.querySelectorAll<HTMLElement>("*")].filter(element => element.getBoundingClientRect().right > document.documentElement.clientWidth + 1).slice(0, 8).map(element => `${element.tagName}.${element.className}`)
+    }));
+    expect(widths.overflow.join(", "), path).toBe("");
+  }
 });

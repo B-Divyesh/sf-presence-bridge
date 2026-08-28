@@ -2,9 +2,9 @@
 
 See who is free, then open the chat tool you already use.
 
-Presence Bridge is a local desktop roster for teams of two to ten people. Each person has a clear status, note, and saved contact link. The app opens Slack, Teams, Meet, Zoom, email, or phone links without creating another inbox.
+Presence Bridge is a local desktop roster for teams of two to ten people. Each person has a clear status, note, and saved contact link. The app opens Slack, Teams, Meet, Zoom, email, or phone links without creating another inbox. When a teammate chooses to share a small presence update file, you can import it into your local roster.
 
-The roster and imported `.ics` calendar events stay on this device. The installed site works after the first visit, even offline. These statements and each other product claim map to browser tests in [`.factory/claims.json`](.factory/claims.json).
+The roster and imported `.ics` calendar events stay on this device. A presence update only leaves when its owner explicitly downloads it, and contains only the chosen status fields—not calendar events, contact routes, activity, or messages. The installed site works after the first visit, even offline. These statements and each other product claim map to browser tests in [`.factory/claims.json`](.factory/claims.json).
 
 ## Try the sandbox
 
@@ -15,6 +15,10 @@ https://presence-bridge.sociobot.in/demo
 ```
 
 The demo starts with four colleagues and several contact tools. It uses the separate `demo:presence-bridge:v1` session key. Resetting or closing it does not change the real roster.
+
+## Share a chosen status
+
+Open **Settings**, choose **Download presence update**, then send that file using a shared folder or the tool your team already uses. A teammate imports it from the same Settings panel. Updates never send automatically, and an imported status remains a local roster row. This is the intentional sharing boundary: no activity tracking, message transport, contact scraping, or hosted roster relay.
 
 ## Run and test
 
@@ -41,7 +45,7 @@ Build the current platform package:
 npm run tauri build
 ```
 
-Desktop releases are built by GitHub Actions on macOS, Windows, and Linux. Tagging `v*` creates the platform packages, checksums, and `latest.json`. The download page reads release metadata from the GitHub API and has a calm fallback when no release exists.
+Desktop releases are built by GitHub Actions on macOS, Windows, and Linux. Tagging `v*` creates the platform packages, checksums, and `latest.json`. The download page selects the matching package from GitHub Release metadata and has a calm fallback when no release exists.
 
 ## Product limits and price
 

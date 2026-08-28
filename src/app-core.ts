@@ -1,5 +1,6 @@
 import { allowedDeepLink, applyCalendar, emptyState, initialsFor, parseCalendar, sampleState, type Presence, type RosterState, type TeamMember } from "./model";
 import { cachedLicense, checkoutUrl, restoreLicense, verifyLicense } from "./license";
+import { applyPresenceUpdate, createPresenceUpdate, parsePresenceUpdate } from "./sharing";
 
 type MountOptions = { demo?: boolean; embedded?: boolean };
 
@@ -35,10 +36,14 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
   let settingsOpen = false;
   let addOpen = false;
   let license = cachedLicense();
+  let returnFocusSelector = "";
   const storage = demo ? sessionStorage : localStorage;
   const key = demo ? DEMO_STORE : STORE;
 
-  const save = () => storage.setItem(key, JSON.stringify(state));
+  const save = () => {
+    if (!state.shareId) state.shareId = crypto.randomUUID();
+    storage.setItem(key, JSON.stringify(state));
+  };
   const selected = () => state.members.find(member => member.id === selectedId);
   const tell = (message: string) => { notice = message; render(); };
 
@@ -80,6 +85,11 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
       ${settingsOpen ? settingsDialog(state, license.valid, demo) : ""}
     </section>`;
     bind();
+    if (returnFocusSelector && !addOpen && !settingsOpen) {
+      const selector = returnFocusSelector; returnFocusSelector = "";
+      // Native dialog cancellation restores focus after the cancel event; wait one task so it cannot overwrite our explicit return target.
+      setTimeout(() => root.querySelector<HTMLElement>(selector)?.focus(), 0);
+    }
   };
 
   const bind = () => {
@@ -104,25 +114,34 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
     root.querySelector<HTMLFormElement>("#settings-form")?.addEventListener("submit", saveSettings);
     root.querySelector<HTMLInputElement>("#calendar-file")?.addEventListener("change", importCalendar);
     root.querySelector<HTMLInputElement>("#import-roster")?.addEventListener("change", importRoster);
+    root.querySelector<HTMLInputElement>("#import-presence")?.addEventListener("change", importPresence);
     root.querySelector<HTMLFormElement>("#license-form")?.addEventListener("submit", submitLicense);
     root.querySelectorAll<HTMLDialogElement>("dialog").forEach(dialog => {
       if (!dialog.open) dialog.showModal();
       dialog.querySelector<HTMLElement>("input,select,button")?.focus();
+      dialog.addEventListener("cancel", event => { event.preventDefault(); closeDialog(); });
     });
   };
 
   const action = (name: string) => {
-    if (name === "settings") settingsOpen = true;
-    if (name === "close-settings") settingsOpen = false;
-    if (name === "add-member") { addOpen = true; selectedId = ""; }
-    if (name === "edit-member") addOpen = true;
-    if (name === "close-member") addOpen = false;
+    if (name === "settings") { settingsOpen = true; returnFocusSelector = '[data-action="settings"]'; }
+    if (name === "close-settings") { settingsOpen = false; }
+    if (name === "add-member") { addOpen = true; selectedId = ""; returnFocusSelector = '[data-action="add-member"]'; }
+    if (name === "edit-member") { addOpen = true; returnFocusSelector = '[data-action="edit-member"]'; }
+    if (name === "close-member") { addOpen = false; }
     if (name === "clear-search") filter = "";
     if (name === "reset-demo") { sessionStorage.removeItem(DEMO_STORE); state = sampleState(); selectedId = state.members[0].id; notice = "Demo reset to its starting state."; }
     if (name === "load-sample") { state = sampleState(); selectedId = state.members[0].id; save(); notice = "Sample roster loaded. You can edit or remove every person."; }
     const current = selected();
     if (name === "delete-member" && current && confirm(`Remove ${current.name} from this local roster?`)) { state.members = state.members.filter(item => item.id !== current.id); selectedId = state.members[0]?.id || ""; save(); notice = `${current.name} was removed.`; }
     if (name === "export") exportRoster();
+    if (name === "export-presence") exportPresence();
+    render();
+  };
+
+  const closeDialog = () => {
+    if (addOpen) addOpen = false;
+    if (settingsOpen) settingsOpen = false;
     render();
   };
 
@@ -145,6 +164,7 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
     const member: TeamMember = {
       id: existing?.id || crypto.randomUUID(), name, role: String(data.get("role") || "").trim(), initials: initialsFor(name),
       status: String(data.get("status") || "available") as Presence, note: String(data.get("note") || "").trim(), source: "manual",
+      sharedFrom: existing?.sharedFrom,
       tools
     };
     if (existing) state.members = state.members.map(item => item.id === existing.id ? member : item);
@@ -172,6 +192,22 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
     tell("Roster backup downloaded.");
   };
 
+  const exportPresence = () => {
+    if (!state.shareId) save();
+    const update = createPresenceUpdate(state);
+    const blob = new Blob([JSON.stringify(update, null, 2)], { type: "application/json" });
+    const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "presence-bridge-availability.json"; link.click(); URL.revokeObjectURL(link.href);
+    notice = "Presence update downloaded. Share this file only with teammates who should see it.";
+  };
+
+  const importPresence = async (event: Event) => {
+    const file = (event.target as HTMLInputElement).files?.[0]; if (!file) return;
+    const update = parsePresenceUpdate(await file.text());
+    if (!update) return tell("That presence update could not be read. Choose a Presence Bridge availability file.");
+    state = applyPresenceUpdate(state, update); selectedId = state.members.find(member => member.sharedFrom === update.publisherId)?.id || selectedId;
+    save(); tell(`${update.person.name}'s chosen presence was added to this local roster.`);
+  };
+
   const importRoster = async (event: Event) => {
     const file = (event.target as HTMLInputElement).files?.[0]; if (!file) return;
     try {
@@ -189,7 +225,7 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
 
   const keyboard = (event: KeyboardEvent) => {
     if (event.key === "/" && !(event.target instanceof HTMLInputElement) && !(event.target instanceof HTMLTextAreaElement)) { event.preventDefault(); root.querySelector<HTMLInputElement>("#roster-search")?.focus(); }
-    if (event.key === "Escape" && (addOpen || settingsOpen)) { addOpen = false; settingsOpen = false; render(); }
+    if (event.key === "Escape" && (addOpen || settingsOpen)) { event.preventDefault(); closeDialog(); }
   };
   const handoff = async (event: Event) => {
     const button = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-url]");
@@ -236,6 +272,7 @@ function settingsDialog(state: RosterState, paid: boolean, demo: boolean): strin
       <button type="submit">Save settings</button>
     </form>
     <section class="settings-section"><h3>Back up this roster</h3><p>Download or restore a readable JSON file.</p><div class="inline-actions"><button data-action="export">Download backup</button><label class="file-label secondary">Import backup<input id="import-roster" type="file" accept="application/json"></label></div></section>
+    <section class="settings-section"><h3>Share your chosen presence</h3><p>Download a small availability file, then send it through a shared folder or your existing tool. Import a teammate's file to update this local roster. Nothing sends automatically.</p><p class="field-help">The file includes only their name, role, status, note, status source, and update time. It never includes calendar events, contact routes, activity, or messages.</p><div class="inline-actions"><button data-action="export-presence">Download presence update</button><label class="file-label secondary">Import presence update<input id="import-presence" type="file" accept="application/json,.presence.json"></label></div></section>
     <section class="settings-section"><p class="eyebrow">Bridge Plus · $24 once</p><h3>${paid ? "Bridge Plus is active" : "Add room for a larger team"}</h3><p>Keep up to ten people and add more contact routes in the desktop app. Free rosters hold five people.</p>${paid ? "" : `<a class="button-link" href="${checkoutUrl}">Buy Bridge Plus</a><form id="license-form"><label>Have a license?<input name="license" required autocomplete="off"></label><button type="submit">Verify license</button></form>`}<p class="field-help">Sociobot is the merchant of record. See <a href="/terms">terms</a> and <a href="/privacy">privacy</a>.</p></section>
     ${demo ? `<p class="field-help">Demo changes use the temporary ${DEMO_STORE} session namespace.</p>` : ""}</div></dialog>`;
 }

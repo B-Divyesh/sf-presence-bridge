@@ -4,11 +4,11 @@
     "claim": "Opens a saved chat, call, email, or phone link for a teammate",
     "where": "landing preview, app detail panel, README",
     "test": "npm test -- --grep @claim:contact-handoff",
-    "sandbox": "fresh browser context at /demo; select Ava Shah and assert the Slack handoff result"
+    "sandbox": "fresh browser context at /app.html with the shipped sample loaded; select Ava Shah, intercept the platform opener, and assert the Slack URL opens"
   },
   {
     "id": "privacy-local",
-    "claim": "Roster, status, and imported calendar data stay on this device and can be removed by clearing site storage",
+    "claim": "Roster, status, and imported calendar data stay on this device unless the user explicitly downloads a presence update; clearing site storage removes them",
     "where": "landing hero, privacy page, app settings, README",
     "test": "npm test -- --grep @claim:privacy-local",
     "sandbox": "fresh browser context at /demo; change status and import a calendar while asserting every request is same-origin and the real namespace stays untouched; then create and clear a real roster"
@@ -64,10 +64,10 @@
   },
   {
     "id": "one-time-price",
-    "claim": "Bridge Plus costs $24 once and checkout runs through the Sociobot billing API",
+    "claim": "Bridge Plus costs $24 once and starts checkout through the Sociobot billing API",
     "where": "landing pricing section, app settings, terms, README",
     "test": "npm test -- --grep @claim:one-time-price",
-    "sandbox": "fresh browser context starting at /demo; open the landing page and assert the exact price and Sociobot product checkout URL"
+    "sandbox": "fresh browser context; assert the displayed $24 price, then route the documented checkout API to a recorded redirect fixture and assert the checkout page opens"
   },
   {
     "id": "license-minimization",
@@ -82,5 +82,19 @@
     "where": "app settings",
     "test": "npm test -- --grep @claim:json-backup",
     "sandbox": "fresh browser context at /demo; download the sample roster and parse the saved JSON to assert its people"
+  },
+  {
+    "id": "shared-presence",
+    "claim": "A teammate can import an explicitly shared chosen presence update into their local roster",
+    "where": "app settings, landing privacy section, privacy page, terms, README",
+    "test": "npm test -- --grep @claim:shared-presence",
+    "sandbox": "two isolated browser contexts at /app.html; one downloads a chosen status update and the other imports it, asserting the status appears with no calendar, contact-route, or message data"
+  },
+  {
+    "id": "platform-download",
+    "claim": "The download page selects a package for the detected platform from GitHub Release metadata",
+    "where": "download page, README",
+    "test": "npm test -- --grep @claim:platform-download",
+    "sandbox": "fresh Chromium browser context on /download with a recorded GitHub release fixture; assert the detected Linux AppImage link is rendered"
   }
 ]

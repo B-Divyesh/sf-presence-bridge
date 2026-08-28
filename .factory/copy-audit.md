@@ -9,7 +9,7 @@ Count method: words separated by spaces. Labels and headings are included for re
 | For small teams that need availability without moving every conversation into another chat suite. | 14 |
 | Try it with sample data | 5 |
 | See a five-person roster in one click. | 7 |
-| Your roster stays on this device. | 6 |
+| Your roster stays on this device unless you share an update. | 11 |
 | Works after the first visit, even offline. | 7 |
 | Free for up to five people. | 6 |
 | The product | 2 |
@@ -25,10 +25,10 @@ Count method: words separated by spaces. Labels and headings are included for re
 | Open the right tool | 4 |
 | Start the conversation in the app your team already chose. | 10 |
 | A quiet boundary | 3 |
-| This is not another inbox | 5 |
+| Share status, not surveillance | 4 |
+| Download a presence update when you want teammates to see it. | 11 |
+| It carries only your chosen status fields. | 7 |
 | Presence Bridge does not carry messages or infer activity. | 9 |
-| You choose every status. | 4 |
-| Calendar import reads a local .ics file only when you select it. | 12 |
 | Bridge Plus · $24 once | 5 |
 | More room, same quiet roster | 5 |
 | Add up to ten people and more contact routes. | 9 |
@@ -63,3 +63,4 @@ Count method: words separated by spaces. Labels and headings are included for re
 | Imported schedule file | calendar |
 | Paid license | Bridge Plus |
 | Isolated sample experience | demo |
+| Explicitly shared availability file | presence update |

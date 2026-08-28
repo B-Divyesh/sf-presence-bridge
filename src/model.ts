@@ -15,6 +15,8 @@ export type TeamMember = {
   note: string;
   until?: string;
   source: "manual" | "calendar";
+  /** Stable publisher id when this row came from an opt-in presence update. */
+  sharedFrom?: string;
   tools: ContactTool[];
 };
 
@@ -25,6 +27,8 @@ export type RosterState = {
   members: TeamMember[];
   calendar: CalendarEvent[];
   calendarEnabled: boolean;
+  /** Local id used only to recognise later updates from the same opted-in teammate. */
+  shareId?: string;
 };
 
 export const sampleState = (): RosterState => ({

@@ -22,6 +22,19 @@ describe("release repair contracts", () => {
     expect(workflow).toContain("run: ./public/install.ps1");
   });
 
+  it("reads the Linux release response as JSON before verifying and installing the AppImage", () => {
+    const script = readFileSync(resolve(root, "public/install.sh"), "utf8");
+    const workflow = readFileSync(resolve(root, ".github/workflows/release.yml"), "utf8");
+    expect(script).toContain("python3");
+    expect(script).toContain("json.load");
+    expect(script).toContain(".AppImage");
+    expect(script).toContain("SHA256SUMS");
+    expect(script).toContain("sha256sum");
+    expect(script).not.toContain('browser_download_url": "');
+    expect(workflow).toContain("linux-installer-smoke:");
+    expect(workflow).toContain('"$XDG_BIN_HOME/presence-bridge" --appimage-version');
+  });
+
   it("maps known SPA routes and rewrites host 404 responses with status intact", () => {
     const config = JSON.parse(readFileSync(resolve(root, "public/staticwebapp.config.json"), "utf8"));
     expect(config.navigationFallback).toBeUndefined();

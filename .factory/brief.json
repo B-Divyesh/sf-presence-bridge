@@ -1,0 +1,10 @@
+{
+  "slug": "presence-bridge",
+  "title": "Presence Bridge",
+  "summary": "See who is free, then open the chat tool you already use.",
+  "artifact_class": "desktop-app",
+  "user": "Two-to-ten person businesses that need a clean desktop chat presence indicator and one-click contact handoff without moving conversations.",
+  "smallest_useful_product": "Cross-platform tray app with manually set and calendar-derived availability, a local team roster, and configurable deep links to existing chat and call tools.",
+  "monetization": "freemium",
+  "constraints": "Presence is opt-in and transparent. No activity inference, message transport, contact scraping, employee surveillance, or new social network."
+}

@@ -30,17 +30,21 @@ try {
     (Join-Path $env:ProgramFiles "Presence Bridge"),
     (Join-Path ${env:ProgramFiles(x86)} "Presence Bridge")
   ) | Where-Object { $_ }
-  $registeredRoots = @(
+  $uninstallEntries = @(
     'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*',
     'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*',
     'HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*'
   ) | ForEach-Object { Get-ItemProperty $_ -ErrorAction SilentlyContinue } |
-    Where-Object { $_.DisplayName -eq "Presence Bridge" } |
-    ForEach-Object { $_.InstallLocation } |
-    Where-Object { $_ }
-  $candidateApps = @($installRoots + $registeredRoots) | ForEach-Object {
-    @((Join-Path $_ "presence-bridge.exe"), (Join-Path $_ "Presence Bridge.exe"))
+    Where-Object { $_.DisplayName -eq "Presence Bridge" }
+  $registeredRoots = $uninstallEntries | ForEach-Object {
+    if ($_.InstallLocation) { ([string]$_.InstallLocation).Trim().Trim([char]34) }
   }
+  $registeredApps = $uninstallEntries | ForEach-Object {
+    if ($_.DisplayIcon) { (([string]$_.DisplayIcon) -replace ',\d+$', '').Trim().Trim([char]34) }
+  }
+  $candidateApps = @($registeredApps) + (@($installRoots + $registeredRoots) | ForEach-Object {
+    @((Join-Path $_ "presence-bridge.exe"), (Join-Path $_ "Presence Bridge.exe"))
+  })
   $installedApp = $candidateApps | Where-Object { $_ -and (Test-Path $_ -PathType Leaf) } | Select-Object -First 1
   if (-not $installedApp) { throw "Setup finished, but the installed Presence Bridge app was not found." }
 

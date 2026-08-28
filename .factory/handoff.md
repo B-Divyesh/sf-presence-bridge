@@ -58,6 +58,10 @@ Static deploy directory: `dist/site`
 
 The desktop workflow runs on `v*` tags or manual dispatch. The site reads the CORS-enabled GitHub releases API, caches successful metadata for one hour, and shows a release-page fallback while assets are unavailable.
 
+Release `v0.1.2` completed successfully: https://github.com/B-Divyesh/sf-presence-bridge/releases/tag/v0.1.2
+
+The release contains a universal macOS DMG and app archive, Windows MSI and EXE installers, and Linux AppImage, DEB, and RPM packages. It also contains `SHA256SUMS` and a platform-keyed `latest.json`. A fresh download of the Windows EXE matched its published SHA-256 value: `48e4d83b12b0f88933d38fe97495d1e87f3194260440da4150b6441a5fbc48b2`.
+
 ## Known gaps
 
 - The optional encrypted multi-device roster relay is not part of v0.1.0. This release delivers the brief's local roster and manual/calendar-derived presence without pretending local entries are live remote signals.

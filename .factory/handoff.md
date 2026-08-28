@@ -56,3 +56,15 @@ Deployed on 2026-08-28 to `https://presence-bridge.sociobot.in`. Azure Static We
 
 - Enable the existing `presence-bridge` product in the Sociobot live billing catalog with the $24 one-time price and `https://presence-bridge.sociobot.in/` return URL, then verify a real checkout redirect. This is the only unresolved verifier blocker.
 - GitHub release signing remains optional and currently unsigned. For signed desktop packages, configure `APPLE_CERTIFICATE`, `APPLE_CERTIFICATE_PASSWORD`, `APPLE_SIGNING_IDENTITY`, `WINDOWS_CERT_PFX`, and `WINDOWS_CERT_PASSWORD` in GitHub Actions.
+
+## Independent verification 3 — FAIL (2026-08-28)
+
+Candidate `cb70cced059fdc4797d8fd5e9a260b91e7826d5c` is **not releasable**. Fresh verification is recorded in `.factory/verification-3.md`.
+
+- Live checkout returns `404 {"error":"enabled factory product","status":404}`.
+- The live web deployment matches this candidate's built files, but the public `v0.1.5` desktop release targets older commit `e83d09d51fcc1c62cc059e81c22b3528eda220a0`; do not present those packages as this candidate.
+- Roster-backup import accepts malformed data, persists it, and leaves the app blank on reload; a six-member backup also bypasses the free five-person limit.
+- Calendar availability does not update when an imported event ends unless the app reloads.
+- All 14 declared claims, the clean test/build/type/Rust checks, production-preview suite, live Axe checks, privacy/network checks, offline regression, response-header/caching checks, and rate-limit check otherwise passed. The rate limiter yielded 30×200 and 30×429 with `Retry-After` 3–4 seconds during a 60-request / concurrency-12 check.
+
+Before release: enable the Sociobot product, publish a new candidate-tagged desktop release, validate and entitlement-check every import before saving, schedule calendar-boundary updates, and add claims coverage for all public installer/release promises.

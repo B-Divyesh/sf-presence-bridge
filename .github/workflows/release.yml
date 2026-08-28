@@ -1,0 +1,77 @@
+name: Release desktop apps
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            args: --target universal-apple-darwin
+          - platform: ubuntu-latest
+            args: ""
+          - platform: windows-latest
+            args: ""
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+      - name: Install Linux packages
+        if: matrix.platform == 'ubuntu-latest'
+        run: sudo apt-get update && sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+      - run: npm ci
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERT_PFX }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERT_PASSWORD }}
+        with:
+          tagName: v__VERSION__
+          releaseName: Presence Bridge v__VERSION__
+          releaseBody: Cross-platform desktop release. Builds are unsigned unless signing secrets are configured.
+          releaseDraft: false
+          prerelease: false
+          args: ${{ matrix.args }}
+
+  manifest:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download release assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release download "${GITHUB_REF_NAME}" --dir release-assets
+      - name: Build checksums and manifest
+        run: |
+          cd release-assets
+          sha256sum * > SHA256SUMS
+          python3 - <<'PY'
+          import json, os
+          repo = os.environ['GITHUB_REPOSITORY']
+          tag = os.environ['GITHUB_REF_NAME']
+          files = [f for f in os.listdir('.') if f not in ('SHA256SUMS', 'latest.json')]
+          data = {"version": tag.lstrip('v'), "assets": {f: f"https://github.com/{repo}/releases/download/{tag}/{f}" for f in files}}
+          open('latest.json', 'w').write(json.dumps(data, indent=2) + '\n')
+          PY
+      - name: Upload checksums and manifest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${GITHUB_REF_NAME}" release-assets/SHA256SUMS release-assets/latest.json --clobber

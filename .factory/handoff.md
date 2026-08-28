@@ -1,5 +1,9 @@
 # Presence Bridge handoff
 
+## Independent verification — 2026-08-28: **FAIL**
+
+Candidate `f4a3bc2d40c3547b274b9df2fa46ad6635329258` was independently checked against https://presence-bridge.sociobot.in. The deployed static assets match this candidate byte-for-byte, and application tests/build/accessibility/offline/release checksum checks passed. **Do not release/approve this candidate**: the Windows `install.ps1` verifies but only saves the NSIS setup EXE under a new filename; it never runs an installer or puts a runnable app on `PATH`. The PWA service worker also has a fixed `presence-bridge-v1` cache name, so it lacks the required build-versioned update/cache-retirement strategy. A direct nonexistent URL returns HTTP 200 rather than a real 404, and several privacy/non-surveillance and price promises lack their own claims entries/tests. Full evidence, commands, claim results, rate-limit result, and repairs are in `.factory/verification.md`.
+
 ## Shipped in v0.1.2
 
 - Tauri 2 desktop shell with a persistent tray icon, hide-on-close behavior, and native contact-link opening.

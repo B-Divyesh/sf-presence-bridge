@@ -47,6 +47,7 @@ function navigate(path: string, push = true): void {
   const route = routes[path] || { title: "Page not found — Presence Bridge", render: notFound };
   if (push) history.pushState({}, "", path);
   document.title = route.title;
+  document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute("href", `https://presence-bridge.sociobot.in${path}`);
   const root = document.querySelector<HTMLElement>("#site");
   if (!root) return;
   root.innerHTML = `${route.render()}<div class="route-status sr-only" aria-live="polite">${route.title}</div>`;
@@ -68,7 +69,12 @@ async function loadRelease(): Promise<void> {
   const platform = detectedPlatform(); copy.textContent = `We detected ${platform === "mac" ? "macOS" : platform === "windows" ? "Windows" : "Linux"}.`;
   try {
     const cached = JSON.parse(localStorage.getItem("presence-bridge:release") || "null") as { time: number; data: Release } | null;
-    const data = cached && Date.now() - cached.time < 3_600_000 ? cached.data : await fetch("https://api.github.com/repos/B-Divyesh/sf-presence-bridge/releases/latest").then(response => { if (!response.ok) throw new Error(); return response.json() as Promise<Release>; });
+    const data = cached && Date.now() - cached.time < 3_600_000 ? cached.data : await fetch("https://api.github.com/repos/B-Divyesh/sf-presence-bridge/releases?per_page=1").then(async response => {
+      if (!response.ok) throw new Error();
+      const releases = await response.json() as Release[];
+      if (!releases[0]) throw new Error();
+      return releases[0];
+    });
     localStorage.setItem("presence-bridge:release", JSON.stringify({ time: Date.now(), data }));
     const pattern = platform === "mac" ? /\.(dmg|app\.tar\.gz)$/i : platform === "windows" ? /\.(msi|exe)$/i : /\.(AppImage|deb)$/i;
     const asset = data.assets.find(item => pattern.test(item.name));

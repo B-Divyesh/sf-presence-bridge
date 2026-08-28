@@ -66,7 +66,7 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
             <div class="search-row"><input id="roster-search" type="search" value="${esc(filter)}" placeholder="Name, role, or status" autocomplete="off"><button data-action="add-member">Add person</button></div>
           </div>
           <div class="roster-heading"><span>${visible.length} ${visible.length === 1 ? "person" : "people"}</span><span>↑↓ then Enter</span></div>
-          <div class="people" role="listbox" aria-label="Team roster" tabindex="0">
+          <div class="people" ${visible.length ? `role="listbox" tabindex="0"` : `role="region"`} aria-label="Team roster">
             ${visible.map(member => memberRow(member, member.id === selectedId)).join("") || `<div class="empty-state"><span class="unlit-window" aria-hidden="true"></span><strong>${state.members.length ? "No teammate matches that search." : "Your roster is empty."}</strong><span>${state.members.length ? "Clear the search to see everyone." : "Add a person or load the included sample roster."}</span><div class="inline-actions"><button data-action="${state.members.length ? "clear-search" : "add-member"}">${state.members.length ? "Clear search" : "Add your first person"}</button>${state.members.length || demo ? "" : `<button class="secondary" data-action="load-sample">Load sample project</button>`}</div></div>`}
           </div>
         </${options.embedded ? "section" : "main"}>
@@ -120,7 +120,8 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
     if (name === "clear-search") filter = "";
     if (name === "reset-demo") { sessionStorage.removeItem(DEMO_STORE); state = sampleState(); selectedId = state.members[0].id; notice = "Demo reset to its starting state."; }
     if (name === "load-sample") { state = sampleState(); selectedId = state.members[0].id; save(); notice = "Sample roster loaded. You can edit or remove every person."; }
-    if (name === "delete-member" && person && confirm(`Remove ${person.name} from this local roster?`)) { state.members = state.members.filter(item => item.id !== person.id); selectedId = state.members[0]?.id || ""; save(); notice = `${person.name} was removed.`; }
+    const current = selected();
+    if (name === "delete-member" && current && confirm(`Remove ${current.name} from this local roster?`)) { state.members = state.members.filter(item => item.id !== current.id); selectedId = state.members[0]?.id || ""; save(); notice = `${current.name} was removed.`; }
     if (name === "export") exportRoster();
     render();
   };

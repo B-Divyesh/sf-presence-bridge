@@ -1,0 +1,51 @@
+[
+  {
+    "id": "contact-handoff",
+    "claim": "Opens a saved chat, call, email, or phone link for a teammate",
+    "where": "landing preview, app detail panel, README",
+    "test": "npm test -- --grep @claim:contact-handoff",
+    "sandbox": "fresh browser context at /demo; select Ava Shah and assert the Slack handoff result"
+  },
+  {
+    "id": "privacy-local",
+    "claim": "Roster and status data stays on this device",
+    "where": "landing hero, privacy page, app settings, README",
+    "test": "npm test -- --grep @claim:privacy-local",
+    "sandbox": "fresh browser context at /demo; change status and settings while asserting every request is same-origin"
+  },
+  {
+    "id": "calendar-local",
+    "claim": "Imports .ics calendar events locally to set busy status",
+    "where": "landing privacy section, app settings, README",
+    "test": "npm test -- --grep @claim:calendar-local",
+    "sandbox": "fresh browser context at /demo; upload an in-memory active ICS event and assert it is imported"
+  },
+  {
+    "id": "offline-reload",
+    "claim": "Works after the first visit, even offline",
+    "where": "landing hero, README",
+    "test": "npm test -- --grep @claim:offline-reload",
+    "sandbox": "fresh browser context at /demo; wait for service worker, reload once, set the context offline, reload, and assert sample data"
+  },
+  {
+    "id": "free-limit",
+    "claim": "The free local roster holds five people",
+    "where": "landing hero, pricing section, app limit notice, README",
+    "test": "npm test -- --grep @claim:free-limit",
+    "sandbox": "fresh browser context at /demo; add a fifth person and assert that adding a sixth shows the free limit"
+  },
+  {
+    "id": "demo-isolation",
+    "claim": "Demo changes never touch the real roster",
+    "where": "demo page, demo banner, README",
+    "test": "npm test -- --grep @claim:demo-isolation",
+    "sandbox": "fresh browser context; change demo status, open app.html, and assert the real roster remains empty"
+  },
+  {
+    "id": "paid-roster",
+    "claim": "Bridge Plus raises the roster limit to ten and adds a second contact route",
+    "where": "landing pricing section, app settings, terms, README",
+    "test": "npm test -- --grep @claim:paid-roster",
+    "sandbox": "fresh browser context with the license verify endpoint fulfilled by a valid fixture; assert the second route field is enabled"
+  }
+]

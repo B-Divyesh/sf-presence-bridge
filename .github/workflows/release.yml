@@ -68,7 +68,15 @@ jobs:
           repo = os.environ['GITHUB_REPOSITORY']
           tag = os.environ['GITHUB_REF_NAME']
           files = [f for f in os.listdir('.') if f not in ('SHA256SUMS', 'latest.json')]
-          data = {"version": tag.lstrip('v'), "assets": {f: f"https://github.com/{repo}/releases/download/{tag}/{f}" for f in files}}
+          url = lambda f: f"https://github.com/{repo}/releases/download/{tag}/{f}"
+          data = {
+            "version": tag.lstrip('v'),
+            "platforms": {
+              "macos": [url(f) for f in files if f.endswith(('.dmg', '.app.tar.gz'))],
+              "windows": [url(f) for f in files if f.endswith(('.msi', '.exe'))],
+              "linux": [url(f) for f in files if f.endswith(('.AppImage', '.deb', '.rpm'))]
+            }
+          }
           open('latest.json', 'w').write(json.dumps(data, indent=2) + '\n')
           PY
       - name: Upload checksums and manifest

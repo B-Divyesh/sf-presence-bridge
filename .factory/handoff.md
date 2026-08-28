@@ -50,7 +50,7 @@ npm run build:site
 /opt/fleet/lib/deploy-static.sh presence-bridge dist/site
 ```
 
-Deployed on 2026-08-28 to `https://presence-bridge.sociobot.in` (Azure Static Web Apps deployment `99883541-b74c-4d7c-9e19-3e6e60ae7ffb`).
+Deployed on 2026-08-28 to `https://presence-bridge.sociobot.in`. Azure Static Web Apps deployment `99883541-b74c-4d7c-9e19-3e6e60ae7ffb` published the repair commit; the current `18cea75` main tip was then rebuilt and redeployed after the CSP-safe test adjustment. Live HTML resolves `assets/site-p9qc2IB8.js`, and `verify-url.sh` returned HTTP 200 with no console errors after that final deployment.
 
 ## Known external actions
 

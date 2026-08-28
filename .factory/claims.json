@@ -8,10 +8,24 @@
   },
   {
     "id": "privacy-local",
-    "claim": "Roster and status data stays on this device",
+    "claim": "Roster, status, and imported calendar data stay on this device and can be removed by clearing site storage",
     "where": "landing hero, privacy page, app settings, README",
     "test": "npm test -- --grep @claim:privacy-local",
-    "sandbox": "fresh browser context at /demo; change status and settings while asserting every request is same-origin"
+    "sandbox": "fresh browser context at /demo; change status and import a calendar while asserting every request is same-origin and the real namespace stays untouched; then create and clear a real roster"
+  },
+  {
+    "id": "transparent-presence",
+    "claim": "Presence changes only when the user chooses a status or imports a calendar; keyboard and pointer activity are not monitored and no analytics request is sent",
+    "where": "landing privacy section, privacy page, README",
+    "test": "npm test -- --grep @claim:transparent-presence",
+    "sandbox": "fresh browser context at /demo; choose away, simulate keyboard and pointer activity, then assert the status remains away and no external request occurs"
+  },
+  {
+    "id": "no-message-transport",
+    "claim": "Presence Bridge does not transport messages; a handoff only opens the saved communication tool",
+    "where": "landing privacy section, terms, README",
+    "test": "npm test -- --grep @claim:no-message-transport",
+    "sandbox": "fresh browser context at /demo; use Ava's Slack handoff, assert the explicit handoff result, and assert no external request occurs"
   },
   {
     "id": "calendar-local",
@@ -47,5 +61,26 @@
     "where": "landing pricing section, app settings, terms, README",
     "test": "npm test -- --grep @claim:paid-roster",
     "sandbox": "fresh browser context with the license verify endpoint fulfilled by a valid fixture; assert the second route field is enabled"
+  },
+  {
+    "id": "one-time-price",
+    "claim": "Bridge Plus costs $24 once and checkout runs through the Sociobot billing API",
+    "where": "landing pricing section, app settings, terms, README",
+    "test": "npm test -- --grep @claim:one-time-price",
+    "sandbox": "fresh browser context starting at /demo; open the landing page and assert the exact price and Sociobot product checkout URL"
+  },
+  {
+    "id": "license-minimization",
+    "claim": "License verification sends only the license token to the Sociobot billing API",
+    "where": "privacy page",
+    "test": "npm test -- --grep @claim:license-minimization",
+    "sandbox": "fresh browser context starting at /demo; enter a fixture license in the real app, intercept verification, and assert its URL, method, and empty request body"
+  },
+  {
+    "id": "json-backup",
+    "claim": "Downloads the local roster as a readable JSON backup",
+    "where": "app settings",
+    "test": "npm test -- --grep @claim:json-backup",
+    "sandbox": "fresh browser context at /demo; download the sample roster and parse the saved JSON to assert its people"
   }
 ]

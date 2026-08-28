@@ -235,7 +235,7 @@ function settingsDialog(state: RosterState, paid: boolean, demo: boolean): strin
       <p class="field-help">Calendar data stays in this local roster. Nothing is uploaded.</p>
       <button type="submit">Save settings</button>
     </form>
-    <section class="settings-section"><h3>Back up this roster</h3><p>Download or restore a readable JSON file. Export is always free.</p><div class="inline-actions"><button data-action="export">Download backup</button><label class="file-label secondary">Import backup<input id="import-roster" type="file" accept="application/json"></label></div></section>
+    <section class="settings-section"><h3>Back up this roster</h3><p>Download or restore a readable JSON file.</p><div class="inline-actions"><button data-action="export">Download backup</button><label class="file-label secondary">Import backup<input id="import-roster" type="file" accept="application/json"></label></div></section>
     <section class="settings-section"><p class="eyebrow">Bridge Plus · $24 once</p><h3>${paid ? "Bridge Plus is active" : "Add room for a larger team"}</h3><p>Keep up to ten people and add more contact routes in the desktop app. Free rosters hold five people.</p>${paid ? "" : `<a class="button-link" href="${checkoutUrl}">Buy Bridge Plus</a><form id="license-form"><label>Have a license?<input name="license" required autocomplete="off"></label><button type="submit">Verify license</button></form>`}<p class="field-help">Sociobot is the merchant of record. See <a href="/terms">terms</a> and <a href="/privacy">privacy</a>.</p></section>
     ${demo ? `<p class="field-help">Demo changes use the temporary ${DEMO_STORE} session namespace.</p>` : ""}</div></dialog>`;
 }

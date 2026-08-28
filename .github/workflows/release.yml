@@ -96,3 +96,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release upload "${GITHUB_REF_NAME}" release-assets/SHA256SUMS release-assets/latest.json --clobber
+
+  windows-installer-smoke:
+    needs: manifest
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install and open the published Windows app
+        shell: pwsh
+        run: ./public/install.ps1

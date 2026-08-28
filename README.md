@@ -47,7 +47,7 @@ Desktop releases are built by GitHub Actions on macOS, Windows, and Linux. Taggi
 
 The free local roster holds five people with one contact route each. Bridge Plus costs $24 once. It raises the limit to ten and adds a second contact route. Checkout and license verification use the Sociobot billing API; no payment provider runs inside the app.
 
-Presence Bridge does not transport messages, scrape contacts, infer activity, or monitor employees. It has no analytics or advertising trackers.
+Presence Bridge does not transport messages or infer activity. Keyboard and pointer activity never change presence. It has no analytics or advertising trackers.
 
 ## Project map
 
@@ -61,7 +61,7 @@ Presence Bridge does not transport messages, scrape contacts, infer activity, or
 
 ## Deploy
 
-Publish `dist/site/` at `https://presence-bridge.sociobot.in`. The included `staticwebapp.config.json` supplies SPA fallback and security headers. Infrastructure, DNS, product registration, and signing stay outside this repository.
+Publish `dist/site/` at `https://presence-bridge.sociobot.in`. The included `staticwebapp.config.json` maps the known app routes, serves a real 404, and supplies security headers. Infrastructure, DNS, product registration, and signing stay outside this repository.
 
 ## License
 

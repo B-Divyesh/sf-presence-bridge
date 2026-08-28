@@ -26,7 +26,7 @@ Count method: words separated by spaces. Labels and headings are included for re
 | Start the conversation in the app your team already chose. | 10 |
 | A quiet boundary | 3 |
 | This is not another inbox | 5 |
-| Presence Bridge does not carry messages, scrape contacts, watch keystrokes, or infer activity. | 13 |
+| Presence Bridge does not carry messages or infer activity. | 9 |
 | You choose every status. | 4 |
 | Calendar import reads a local .ics file only when you select it. | 12 |
 | Bridge Plus · $24 once | 5 |

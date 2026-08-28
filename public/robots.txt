@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://presence-bridge.sociobot.in/sitemap.xml

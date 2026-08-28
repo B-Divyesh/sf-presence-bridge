@@ -1,0 +1,9 @@
+{
+  "name": "Presence Bridge",
+  "short_name": "Bridge",
+  "start_url": "/demo",
+  "display": "standalone",
+  "background_color": "#09151a",
+  "theme_color": "#09151a",
+  "icons": [{"src":"/apple-touch-icon.png","sizes":"180x180","type":"image/png"}]
+}

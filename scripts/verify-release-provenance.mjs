@@ -42,7 +42,7 @@ if (invokedPath === fileURLToPath(import.meta.url)) {
   if (!releasePath || !expectedCommit || !expectedTag) {
     throw new Error("Usage: node scripts/verify-release-provenance.mjs <release.json> <commit> <tag>");
   }
-  const root = resolve(fileURLToPath(new URL("..", import.meta.url)), "..");
+  const root = fileURLToPath(new URL("..", import.meta.url));
   const release = JSON.parse(readFileSync(resolve(releasePath), "utf8"));
   const result = verifyReleaseProvenance({ release, expectedCommit, expectedTag, versions: readProductVersions(root) });
   process.stdout.write(`Verified ${result.tag} targets ${result.sourceCommit}.\n`);

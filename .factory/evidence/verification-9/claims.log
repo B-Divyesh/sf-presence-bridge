@@ -1,0 +1,741 @@
+===== CLAIM contact-handoff =====
+npm test -- --grep @claim:contact-handoff
+
+> presence-bridge@0.1.13 test
+> npm run test:unit && playwright test --grep @claim:contact-handoff
+
+
+> presence-bridge@0.1.13 test:unit
+> vitest run
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/unit/release-contract.test.ts (6 tests) 196ms
+ ✓ tests/unit/model.test.ts (6 tests) 180ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  19:38:08
+   Duration  1.61s (transform 437ms, setup 0ms, collect 601ms, tests 375ms, environment 0ms, prepare 604ms)
+
+[WebServer] (node:1823) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:1850) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1844) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1844) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1850) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [mobile] › tests/e2e/claims.spec.ts:40:1 › @claim:contact-handoff opens every documented saved contact link (4.4s)
+  ✓  1 [chromium] › tests/e2e/claims.spec.ts:40:1 › @claim:contact-handoff opens every documented saved contact link (4.8s)
+
+  2 passed (10.4s)
+===== RESULT contact-handoff exit=0 =====
+===== CLAIM privacy-local =====
+npm test -- --grep @claim:privacy-local
+
+> presence-bridge@0.1.13 test
+> npm run test:unit && playwright test --grep @claim:privacy-local
+
+
+> presence-bridge@0.1.13 test:unit
+> vitest run
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/unit/model.test.ts (6 tests) 89ms
+ ✓ tests/unit/release-contract.test.ts (6 tests) 198ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  19:38:23
+   Duration  1.39s (transform 361ms, setup 0ms, collect 431ms, tests 287ms, environment 0ms, prepare 486ms)
+
+[WebServer] (node:2192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:2213) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2212) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2213) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2212) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [mobile] › tests/e2e/claims.spec.ts:80:1 › @claim:privacy-local demo roster sends no data away (4.9s)
+  ✓  2 [chromium] › tests/e2e/claims.spec.ts:80:1 › @claim:privacy-local demo roster sends no data away (5.1s)
+
+  2 passed (10.0s)
+===== RESULT privacy-local exit=0 =====
+===== CLAIM transparent-presence =====
+npm test -- --grep @claim:transparent-presence
+
+> presence-bridge@0.1.13 test
+> npm run test:unit && playwright test --grep @claim:transparent-presence
+
+
+> presence-bridge@0.1.13 test:unit
+> vitest run
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/unit/model.test.ts (6 tests) 27ms
+ ✓ tests/unit/release-contract.test.ts (6 tests) 121ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  19:38:37
+   Duration  1.44s (transform 373ms, setup 0ms, collect 478ms, tests 148ms, environment 0ms, prepare 673ms)
+
+[WebServer] (node:2560) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:2580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2581) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2581) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [mobile] › tests/e2e/claims.spec.ts:102:1 › @claim:transparent-presence activity never changes a chosen status (2.6s)
+  ✓  1 [chromium] › tests/e2e/claims.spec.ts:102:1 › @claim:transparent-presence activity never changes a chosen status (3.0s)
+
+  2 passed (7.7s)
+===== RESULT transparent-presence exit=0 =====
+===== CLAIM no-message-transport =====
+npm test -- --grep @claim:no-message-transport
+
+> presence-bridge@0.1.13 test
+> npm run test:unit && playwright test --grep @claim:no-message-transport
+
+
+> presence-bridge@0.1.13 test:unit
+> vitest run
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/unit/model.test.ts (6 tests) 84ms
+ ✓ tests/unit/release-contract.test.ts (6 tests) 198ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  19:38:48
+   Duration  1.47s (transform 326ms, setup 0ms, collect 408ms, tests 282ms, environment 0ms, prepare 508ms)
+
+[WebServer] (node:2950) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:2970) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2971) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2970) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2971) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [mobile] › tests/e2e/claims.spec.ts:114:1 › @claim:no-message-transport a handoff sends no message (2.6s)
+  ✓  1 [chromium] › tests/e2e/claims.spec.ts:114:1 › @claim:no-message-transport a handoff sends no message (3.0s)
+
+  2 passed (7.9s)
+===== RESULT no-message-transport exit=0 =====
+===== CLAIM calendar-local =====
+npm test -- --grep @claim:calendar-local
+
+> presence-bridge@0.1.13 test
+> npm run test:unit && playwright test --grep @claim:calendar-local
+
+
+> presence-bridge@0.1.13 test:unit
+> vitest run
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/unit/model.test.ts (6 tests) 84ms
+ ✓ tests/unit/release-contract.test.ts (6 tests) 127ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  19:39:00
+   Duration  1.49s (transform 411ms, setup 0ms, collect 437ms, tests 211ms, environment 0ms, prepare 673ms)
+
+[WebServer] (node:3322) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:3342) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3343) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3343) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3342) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [mobile] › tests/e2e/claims.spec.ts:175:1 › @claim:calendar-local imports an ICS file without upload (2.5s)
+  ✓  2 [chromium] › tests/e2e/claims.spec.ts:175:1 › @claim:calendar-local imports an ICS file without upload (2.5s)
+
+  2 passed (7.5s)
+===== RESULT calendar-local exit=0 =====
+===== CLAIM offline-reload =====
+npm test -- --grep @claim:offline-reload
+
+> presence-bridge@0.1.13 test
+> npm run test:unit && playwright test --grep @claim:offline-reload
+
+
+> presence-bridge@0.1.13 test:unit
+> vitest run
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/unit/release-contract.test.ts (6 tests) 191ms
+ ✓ tests/unit/model.test.ts (6 tests) 89ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  19:39:13
+   Duration  1.38s (transform 243ms, setup 0ms, collect 333ms, tests 280ms, environment 1ms, prepare 570ms)
+
+[WebServer] (node:3696) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:3717) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3716) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3717) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3716) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [mobile] › tests/e2e/claims.spec.ts:184:1 › @claim:offline-reload works offline after the first visit (3.7s)
+  ✓  2 [chromium] › tests/e2e/claims.spec.ts:184:1 › @claim:offline-reload works offline after the first visit (3.7s)
+
+  2 passed (8.5s)
+===== RESULT offline-reload exit=0 =====
+===== CLAIM free-limit =====
+npm test -- --grep @claim:free-limit
+
+> presence-bridge@0.1.13 test
+> npm run test:unit && playwright test --grep @claim:free-limit
+
+
+> presence-bridge@0.1.13 test:unit
+> vitest run
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/unit/model.test.ts (6 tests) 77ms
+ ✓ tests/unit/release-contract.test.ts (6 tests) 188ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  19:39:25
+   Duration  1.42s (transform 391ms, setup 0ms, collect 504ms, tests 264ms, environment 0ms, prepare 679ms)
+
+[WebServer] (node:4090) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:4112) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4113) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4113) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4112) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [mobile] › tests/e2e/claims.spec.ts:196:1 › @claim:free-limit keeps five people in a free roster (4.6s)
+  ✓  2 [chromium] › tests/e2e/claims.spec.ts:196:1 › @claim:free-limit keeps five people in a free roster (4.7s)
+
+  2 passed (9.7s)
+===== RESULT free-limit exit=0 =====
+===== CLAIM demo-isolation =====
+npm test -- --grep @claim:demo-isolation
+
+> presence-bridge@0.1.13 test
+> npm run test:unit && playwright test --grep @claim:demo-isolation
+
+
+> presence-bridge@0.1.13 test:unit
+> vitest run
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/unit/model.test.ts (6 tests) 99ms
+ ✓ tests/unit/release-contract.test.ts (6 tests) 203ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  19:39:39
+   Duration  1.47s (transform 304ms, setup 0ms, collect 476ms, tests 302ms, environment 1ms, prepare 690ms)
+
+[WebServer] (node:4464) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:4484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4486) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4486) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [mobile] › tests/e2e/claims.spec.ts:222:1 › @claim:demo-isolation never copies sample data into the real roster (2.7s)
+  ✓  1 [chromium] › tests/e2e/claims.spec.ts:222:1 › @claim:demo-isolation never copies sample data into the real roster (2.8s)
+
+  2 passed (7.6s)
+===== RESULT demo-isolation exit=0 =====
+===== CLAIM demo-exit-discard =====
+npm test -- --grep @claim:demo-exit-discard
+
+> presence-bridge@0.1.13 test
+> npm run test:unit && playwright test --grep @claim:demo-exit-discard
+
+
+> presence-bridge@0.1.13 test:unit
+> vitest run
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/unit/model.test.ts (6 tests) 31ms
+ ✓ tests/unit/release-contract.test.ts (6 tests) 142ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  19:39:50
+   Duration  1.38s (transform 303ms, setup 0ms, collect 376ms, tests 173ms, environment 9ms, prepare 596ms)
+
+[WebServer] (node:4835) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:4855) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4855) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [mobile] › tests/e2e/claims.spec.ts:229:1 › @claim:demo-exit-discard restores the seed after leaving the demo (4.3s)
+  ✓  2 [chromium] › tests/e2e/claims.spec.ts:229:1 › @claim:demo-exit-discard restores the seed after leaving the demo (4.2s)
+
+  2 passed (9.1s)
+===== RESULT demo-exit-discard exit=0 =====
+===== CLAIM paid-roster =====
+npm test -- --grep @claim:paid-roster
+
+> presence-bridge@0.1.13 test
+> npm run test:unit && playwright test --grep @claim:paid-roster
+
+
+> presence-bridge@0.1.13 test:unit
+> vitest run
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/unit/model.test.ts (6 tests) 21ms
+ ✓ tests/unit/release-contract.test.ts (6 tests) 107ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  19:40:03
+   Duration  1.39s (transform 466ms, setup 0ms, collect 489ms, tests 128ms, environment 0ms, prepare 680ms)
+
+[WebServer] (node:5227) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:5248) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5247) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5248) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5247) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [mobile] › tests/e2e/claims.spec.ts:242:1 › @claim:paid-roster enables ten people and a second contact tool (9.2s)
+  ✓  2 [chromium] › tests/e2e/claims.spec.ts:242:1 › @claim:paid-roster enables ten people and a second contact tool (10.2s)
+
+  2 passed (15.2s)
+===== RESULT paid-roster exit=0 =====
+===== CLAIM checkout-availability =====
+npm test -- --grep @claim:checkout-availability
+
+> presence-bridge@0.1.13 test
+> npm run test:unit && playwright test --grep @claim:checkout-availability
+
+
+> presence-bridge@0.1.13 test:unit
+> vitest run
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/unit/model.test.ts (6 tests) 36ms
+ ✓ tests/unit/release-contract.test.ts (6 tests) 178ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  19:40:23
+   Duration  1.47s (transform 380ms, setup 0ms, collect 433ms, tests 214ms, environment 59ms, prepare 446ms)
+
+[WebServer] (node:5601) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:5621) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5622) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5621) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5622) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [mobile] › tests/e2e/claims.spec.ts:124:1 › @claim:checkout-availability keeps an unavailable checkout out of every purchase surface (3.6s)
+  ✓  2 [chromium] › tests/e2e/claims.spec.ts:124:1 › @claim:checkout-availability keeps an unavailable checkout out of every purchase surface (3.8s)
+
+  2 passed (9.3s)
+===== RESULT checkout-availability exit=0 =====
+===== CLAIM license-minimization =====
+npm test -- --grep @claim:license-minimization
+
+> presence-bridge@0.1.13 test
+> npm run test:unit && playwright test --grep @claim:license-minimization
+
+
+> presence-bridge@0.1.13 test:unit
+> vitest run
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/unit/model.test.ts (6 tests) 22ms
+ ✓ tests/unit/release-contract.test.ts (6 tests) 111ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  19:40:36
+   Duration  1.40s (transform 382ms, setup 0ms, collect 483ms, tests 132ms, environment 0ms, prepare 704ms)
+
+[WebServer] (node:5995) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:6017) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:6016) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:6016) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:6017) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [mobile] › tests/e2e/claims.spec.ts:141:1 › @claim:license-minimization sends only the license token for verification (3.5s)
+  ✓  1 [chromium] › tests/e2e/claims.spec.ts:141:1 › @claim:license-minimization sends only the license token for verification (3.9s)
+
+  2 passed (8.5s)
+===== RESULT license-minimization exit=0 =====
+===== CLAIM json-backup =====
+npm test -- --grep @claim:json-backup
+
+> presence-bridge@0.1.13 test
+> npm run test:unit && playwright test --grep @claim:json-backup
+
+
+> presence-bridge@0.1.13 test:unit
+> vitest run
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/unit/model.test.ts (6 tests) 74ms
+ ✓ tests/unit/release-contract.test.ts (6 tests) 129ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  19:40:48
+   Duration  1.54s (transform 207ms, setup 0ms, collect 430ms, tests 203ms, environment 0ms, prepare 542ms)
+
+[WebServer] (node:6364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:6384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:6385) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:6384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:6385) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [mobile] › tests/e2e/claims.spec.ts:161:1 › @claim:json-backup downloads readable roster JSON (2.6s)
+  ✓  1 [chromium] › tests/e2e/claims.spec.ts:161:1 › @claim:json-backup downloads readable roster JSON (2.7s)
+
+  2 passed (7.6s)
+===== RESULT json-backup exit=0 =====
+===== CLAIM shared-presence =====
+npm test -- --grep @claim:shared-presence
+
+> presence-bridge@0.1.13 test
+> npm run test:unit && playwright test --grep @claim:shared-presence
+
+
+> presence-bridge@0.1.13 test:unit
+> vitest run
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/unit/model.test.ts (6 tests) 79ms
+ ✓ tests/unit/release-contract.test.ts (6 tests) 184ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  19:41:00
+   Duration  1.47s (transform 371ms, setup 0ms, collect 415ms, tests 263ms, environment 1ms, prepare 688ms)
+
+[WebServer] (node:6751) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:6771) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:6772) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:6771) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:6772) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [mobile] › tests/e2e/claims.spec.ts:269:1 › @claim:shared-presence carries a chosen status between isolated local rosters (4.4s)
+  ✓  1 [chromium] › tests/e2e/claims.spec.ts:269:1 › @claim:shared-presence carries a chosen status between isolated local rosters (4.8s)
+
+  2 passed (9.3s)
+===== RESULT shared-presence exit=0 =====
+===== CLAIM platform-download =====
+npm test -- --grep @claim:platform-download
+
+> presence-bridge@0.1.13 test
+> npm run test:unit && playwright test --grep @claim:platform-download
+
+
+> presence-bridge@0.1.13 test:unit
+> vitest run
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/unit/model.test.ts (6 tests) 34ms
+ ✓ tests/unit/release-contract.test.ts (6 tests) 202ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  19:41:13
+   Duration  1.44s (transform 430ms, setup 0ms, collect 470ms, tests 236ms, environment 0ms, prepare 598ms)
+
+[WebServer] (node:7148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:7168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7169) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7169) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [mobile] › tests/e2e/claims.spec.ts:302:1 › @claim:platform-download selects the detected platform package from release metadata (2.1s)
+  ✓  2 [chromium] › tests/e2e/claims.spec.ts:302:1 › @claim:platform-download selects the detected platform package from release metadata (2.1s)
+
+  2 passed (7.0s)
+===== RESULT platform-download exit=0 =====
+===== CLAIM release-checksums =====
+npm test -- --grep @claim:release-checksums
+
+> presence-bridge@0.1.13 test
+> npm run test:unit && playwright test --grep @claim:release-checksums
+
+
+> presence-bridge@0.1.13 test:unit
+> vitest run
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/unit/model.test.ts (6 tests) 22ms
+ ✓ tests/unit/release-contract.test.ts (6 tests) 253ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  19:41:24
+   Duration  1.48s (transform 348ms, setup 0ms, collect 422ms, tests 275ms, environment 0ms, prepare 758ms)
+
+[WebServer] (node:7513) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:7533) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7534) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7533) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7534) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [mobile] › tests/e2e/claims.spec.ts:315:1 › @claim:release-checksums shows the checksum and manifest shipped with a release (2.2s)
+  ✓  2 [chromium] › tests/e2e/claims.spec.ts:315:1 › @claim:release-checksums shows the checksum and manifest shipped with a release (2.2s)
+
+  2 passed (7.2s)
+===== RESULT release-checksums exit=0 =====
+===== CLAIM release-fallback =====
+npm test -- --grep @claim:release-fallback
+
+> presence-bridge@0.1.13 test
+> npm run test:unit && playwright test --grep @claim:release-fallback
+
+
+> presence-bridge@0.1.13 test:unit
+> vitest run
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/unit/model.test.ts (6 tests) 76ms
+ ✓ tests/unit/release-contract.test.ts (6 tests) 130ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  19:41:36
+   Duration  1.46s (transform 240ms, setup 0ms, collect 412ms, tests 206ms, environment 0ms, prepare 673ms)
+
+[WebServer] (node:7901) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:7923) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7922) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7923) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7922) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [mobile] › tests/e2e/claims.spec.ts:329:1 › @claim:release-fallback gives a usable release-page link when metadata is unavailable (2.0s)
+  ✓  1 [chromium] › tests/e2e/claims.spec.ts:329:1 › @claim:release-fallback gives a usable release-page link when metadata is unavailable (2.2s)
+
+  2 passed (6.9s)
+===== RESULT release-fallback exit=0 =====
+===== CLAIM linux-installer =====
+npm test -- --grep @claim:linux-installer
+
+> presence-bridge@0.1.13 test
+> npm run test:unit && playwright test --grep @claim:linux-installer
+
+
+> presence-bridge@0.1.13 test:unit
+> vitest run
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/unit/model.test.ts (6 tests) 30ms
+ ✓ tests/unit/release-contract.test.ts (6 tests) 185ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  19:41:47
+   Duration  1.40s (transform 199ms, setup 0ms, collect 462ms, tests 214ms, environment 0ms, prepare 543ms)
+
+[WebServer] (node:8273) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:8294) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8293) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8294) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8293) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [chromium] › tests/e2e/claims.spec.ts:336:1 › @claim:linux-installer installs only a checksum-verified AppImage (140ms)
+  ✓  1 [mobile] › tests/e2e/claims.spec.ts:336:1 › @claim:linux-installer installs only a checksum-verified AppImage (238ms)
+
+  2 passed (4.6s)
+===== RESULT linux-installer exit=0 =====
+===== CLAIM windows-installer =====
+npm test -- --grep @claim:windows-installer
+
+> presence-bridge@0.1.13 test
+> npm run test:unit && playwright test --grep @claim:windows-installer
+
+
+> presence-bridge@0.1.13 test:unit
+> vitest run
+
+
+ RUN  v3.2.7 /work/repo
+
+ ✓ tests/unit/release-contract.test.ts (6 tests) 194ms
+ ✓ tests/unit/model.test.ts (6 tests) 37ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  19:41:55
+   Duration  1.44s (transform 355ms, setup 0ms, collect 469ms, tests 231ms, environment 0ms, prepare 521ms)
+
+[WebServer] (node:8556) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:8577) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8578) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8577) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8578) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › tests/e2e/claims.spec.ts:376:1 › @claim:windows-installer verifies its setup before launch in the Windows release job (11ms)
+  ✓  2 [mobile] › tests/e2e/claims.spec.ts:376:1 › @claim:windows-installer verifies its setup before launch in the Windows release job (76ms)
+
+  2 passed (4.4s)
+===== RESULT windows-installer exit=0 =====

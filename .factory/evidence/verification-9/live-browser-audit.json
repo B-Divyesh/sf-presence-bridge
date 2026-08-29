@@ -1,0 +1,249 @@
+{
+  "routeResults": [
+    {
+      "viewport": "desktop",
+      "path": "/",
+      "status": 200,
+      "title": "Presence Bridge — See who is free before you message",
+      "lang": "en",
+      "h1": 1,
+      "main": 1,
+      "overflow": false,
+      "runningAnimations": 0,
+      "seriousCritical": [],
+      "errors": []
+    },
+    {
+      "viewport": "desktop",
+      "path": "/demo",
+      "status": 200,
+      "title": "Demo — Presence Bridge",
+      "lang": "en",
+      "h1": 1,
+      "main": 1,
+      "overflow": false,
+      "runningAnimations": 0,
+      "seriousCritical": [],
+      "errors": []
+    },
+    {
+      "viewport": "desktop",
+      "path": "/privacy",
+      "status": 200,
+      "title": "Privacy — Presence Bridge",
+      "lang": "en",
+      "h1": 1,
+      "main": 1,
+      "overflow": false,
+      "runningAnimations": 0,
+      "seriousCritical": [],
+      "errors": []
+    },
+    {
+      "viewport": "desktop",
+      "path": "/terms",
+      "status": 200,
+      "title": "Terms — Presence Bridge",
+      "lang": "en",
+      "h1": 1,
+      "main": 1,
+      "overflow": false,
+      "runningAnimations": 0,
+      "seriousCritical": [],
+      "errors": []
+    },
+    {
+      "viewport": "desktop",
+      "path": "/download",
+      "status": 200,
+      "title": "Download — Presence Bridge",
+      "lang": "en",
+      "h1": 1,
+      "main": 1,
+      "overflow": false,
+      "runningAnimations": 0,
+      "seriousCritical": [],
+      "errors": []
+    },
+    {
+      "viewport": "desktop",
+      "path": "/app.html",
+      "status": 200,
+      "title": "Presence Bridge — Your local team roster",
+      "lang": "en",
+      "h1": 1,
+      "main": 1,
+      "overflow": false,
+      "runningAnimations": 0,
+      "seriousCritical": [],
+      "errors": []
+    },
+    {
+      "viewport": "desktop",
+      "path": "/missing-verification-9",
+      "status": 404,
+      "title": "Page not found — Presence Bridge",
+      "lang": "en",
+      "h1": 1,
+      "main": 1,
+      "overflow": false,
+      "runningAnimations": 0,
+      "seriousCritical": [],
+      "errors": []
+    },
+    {
+      "viewport": "mobile",
+      "path": "/",
+      "status": 200,
+      "title": "Presence Bridge — See who is free before you message",
+      "lang": "en",
+      "h1": 1,
+      "main": 1,
+      "overflow": false,
+      "runningAnimations": 0,
+      "seriousCritical": [],
+      "errors": []
+    },
+    {
+      "viewport": "mobile",
+      "path": "/demo",
+      "status": 200,
+      "title": "Demo — Presence Bridge",
+      "lang": "en",
+      "h1": 1,
+      "main": 1,
+      "overflow": false,
+      "runningAnimations": 0,
+      "seriousCritical": [],
+      "errors": []
+    },
+    {
+      "viewport": "mobile",
+      "path": "/privacy",
+      "status": 200,
+      "title": "Privacy — Presence Bridge",
+      "lang": "en",
+      "h1": 1,
+      "main": 1,
+      "overflow": false,
+      "runningAnimations": 0,
+      "seriousCritical": [],
+      "errors": []
+    },
+    {
+      "viewport": "mobile",
+      "path": "/terms",
+      "status": 200,
+      "title": "Terms — Presence Bridge",
+      "lang": "en",
+      "h1": 1,
+      "main": 1,
+      "overflow": false,
+      "runningAnimations": 0,
+      "seriousCritical": [],
+      "errors": []
+    },
+    {
+      "viewport": "mobile",
+      "path": "/download",
+      "status": 200,
+      "title": "Download — Presence Bridge",
+      "lang": "en",
+      "h1": 1,
+      "main": 1,
+      "overflow": false,
+      "runningAnimations": 0,
+      "seriousCritical": [],
+      "errors": []
+    },
+    {
+      "viewport": "mobile",
+      "path": "/app.html",
+      "status": 200,
+      "title": "Presence Bridge — Your local team roster",
+      "lang": "en",
+      "h1": 1,
+      "main": 1,
+      "overflow": false,
+      "runningAnimations": 0,
+      "seriousCritical": [],
+      "errors": []
+    },
+    {
+      "viewport": "mobile",
+      "path": "/missing-verification-9",
+      "status": 404,
+      "title": "Page not found — Presence Bridge",
+      "lang": "en",
+      "h1": 1,
+      "main": 1,
+      "overflow": false,
+      "runningAnimations": 0,
+      "seriousCritical": [],
+      "errors": []
+    }
+  ],
+  "privacyFlow": {
+    "documentStatus": 200,
+    "responseHeaders": {
+      "cache-control": "public, must-revalidate, max-age=30",
+      "content-encoding": "br",
+      "content-security-policy": "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self' https://api.github.com https://api.sociobot.in; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://api.sociobot.in",
+      "content-type": "text/html",
+      "date": "Sat, 29 Aug 2026 19:59:39 GMT",
+      "etag": "\"43674220\"",
+      "last-modified": "Sat, 29 Aug 2026 19:12:34 GMT",
+      "permissions-policy": "camera=(), microphone=(), geolocation=()",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "strict-transport-security": "max-age=10886400; includeSubDomains; preload",
+      "vary": "Accept-Encoding",
+      "x-content-type-options": "nosniff",
+      "x-dns-prefetch-control": "off",
+      "x-xss-protection": "1; mode=block"
+    },
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://presence-bridge.sociobot.in/demo",
+        "resourceType": "document"
+      },
+      {
+        "method": "GET",
+        "url": "https://presence-bridge.sociobot.in/assets/app-core-CMdSeuHi.js",
+        "resourceType": "script"
+      },
+      {
+        "method": "GET",
+        "url": "https://presence-bridge.sociobot.in/assets/site-evR2mFCR.js",
+        "resourceType": "script"
+      },
+      {
+        "method": "GET",
+        "url": "https://presence-bridge.sociobot.in/assets/app-core-DATIMoXw.css",
+        "resourceType": "stylesheet"
+      }
+    ],
+    "externalRequests": [],
+    "errors": [],
+    "sw": {
+      "scriptURL": "https://presence-bridge.sociobot.in/sw.js?build=0.1.13-197f7aacfb15",
+      "caches": [
+        "presence-bridge-0.1.13-197f7aacfb15"
+      ],
+      "storage": {
+        "local": [],
+        "session": [
+          "demo:presence-bridge:v1"
+        ]
+      }
+    }
+  },
+  "focus": {
+    "tag": "A",
+    "text": "Try it with sample data",
+    "outlineStyle": "solid",
+    "outlineWidth": "3px",
+    "outlineColor": "rgb(255, 241, 180)",
+    "visible": true
+  }
+}

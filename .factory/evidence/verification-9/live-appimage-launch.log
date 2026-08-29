@@ -1,0 +1,8 @@
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+
+(presence-bridge:28348): libappindicator-WARNING **: 20:02:46.304: Unable to get the session bus: Failed to execute child process “dbus-launch” (No such file or directory)
+
+(presence-bridge:28348): LIBDBUSMENU-GLIB-WARNING **: 20:02:46.304: Unable to get session bus: Failed to execute child process “dbus-launch” (No such file or directory)
+GStreamer element appsink not found. Please install it.
+exit=124 (124 means the GUI remained running until the 10s smoke timeout)

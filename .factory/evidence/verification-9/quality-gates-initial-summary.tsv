@@ -1,0 +1,7 @@
+npm-test	0
+npm-lint	0
+npm-build	0
+npm-audit	0
+cargo-fmt	0
+cargo-check	101
+cargo-test	101

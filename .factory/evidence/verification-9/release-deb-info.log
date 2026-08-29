@@ -1,0 +1,13 @@
+ new Debian package, version 2.0.
+ size 4602610 bytes: control archive=533 bytes.
+     319 bytes,     9 lines      control
+     412 bytes,     5 lines      md5sums
+ Package: presence-bridge
+ Version: 0.1.13
+ Architecture: amd64
+ Installed-Size: 15288
+ Maintainer: Param Factory
+ Priority: optional
+ Depends: libappindicator3-1, libwebkit2gtk-4.1-0, libgtk-3-0
+ Description: See who is free before you message
+  A local team presence roster that opens the chat and call tools you already use.

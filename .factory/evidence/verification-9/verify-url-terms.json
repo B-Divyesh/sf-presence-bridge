@@ -1,0 +1,14 @@
+{
+  "url": "https://presence-bridge.sociobot.in/terms",
+  "loadMs": 566,
+  "errors": [],
+  "a11y": {
+    "title": "Terms — Presence Bridge",
+    "lang": "en",
+    "h1": 1,
+    "main": true,
+    "imgsMissingAlt": 0,
+    "buttonsUnlabeled": 0,
+    "textLength": 1096
+  }
+}

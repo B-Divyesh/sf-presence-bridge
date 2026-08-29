@@ -1,0 +1,19 @@
+{
+  "version": "0.1.13",
+  "source_commit": "197f7aacfb15119df43ace265a6098c7f29a8360",
+  "platforms": {
+    "macos": [
+      "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.13/Presence.Bridge_universal.app.tar.gz",
+      "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.13/Presence.Bridge_0.1.13_universal.dmg"
+    ],
+    "windows": [
+      "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.13/Presence.Bridge_0.1.13_x64_en-US.msi",
+      "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.13/Presence.Bridge_0.1.13_x64-setup.exe"
+    ],
+    "linux": [
+      "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.13/Presence.Bridge_0.1.13_amd64.deb",
+      "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.13/Presence.Bridge-0.1.13-1.x86_64.rpm",
+      "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.13/Presence.Bridge_0.1.13_amd64.AppImage"
+    ]
+  }
+}

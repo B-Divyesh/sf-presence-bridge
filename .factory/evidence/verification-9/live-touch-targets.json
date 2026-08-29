@@ -1,0 +1,46 @@
+[
+  {
+    "path": "/",
+    "small": []
+  },
+  {
+    "path": "/demo",
+    "small": []
+  },
+  {
+    "path": "/app.html",
+    "small": [
+      {
+        "tag": "A",
+        "text": "Terms",
+        "width": 40,
+        "height": 44
+      }
+    ]
+  },
+  {
+    "path": "/privacy",
+    "small": []
+  },
+  {
+    "path": "/terms",
+    "small": []
+  },
+  {
+    "path": "/download",
+    "small": [
+      {
+        "tag": "A",
+        "text": "Check SHA256SUMS",
+        "width": 163.8,
+        "height": 19
+      },
+      {
+        "tag": "A",
+        "text": "Read latest.json",
+        "width": 209.1,
+        "height": 43.8
+      }
+    ]
+  }
+]

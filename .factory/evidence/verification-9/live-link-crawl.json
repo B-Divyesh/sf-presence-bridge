@@ -1,0 +1,97 @@
+[
+  {
+    "url": "https://github.com/B-Divyesh/sf-presence-bridge/releases",
+    "status": 200,
+    "final": "https://github.com/B-Divyesh/sf-presence-bridge/releases"
+  },
+  {
+    "url": "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.13/Presence.Bridge_0.1.13_amd64.AppImage",
+    "status": 200,
+    "final": "https://release-assets.githubusercontent.com/github-production-release-asset/1349595430/f30b60f9-46dc-4d26-9fd5-c34fc8f2e584?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-08-29T20%3A38%3A37Z&rscd=attachment%3B+filename%3DPresence.Bridge_0.1.13_amd64.AppImage&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-08-29T19%3A38%3A20Z&ske=2026-08-29T20%3A38%3A37Z&sks=b&skv=2018-11-09&sig=wGIJ3tBEdnzeQ2yOmcaoAX4ibboYzfgJthYqxeCABCU%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc4ODAzNTQwMCwibmJmIjoxNzg4MDMzNjAwLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.evYR0dCBGtATyTLYyFRsxJYRW1ybo_HDTcc9VCWT_DU&response-content-disposition=attachment%3B%20filename%3DPresence.Bridge_0.1.13_amd64.AppImage&response-content-type=application%2Foctet-stream"
+  },
+  {
+    "url": "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.13/SHA256SUMS",
+    "status": 200,
+    "final": "https://release-assets.githubusercontent.com/github-production-release-asset/1349595430/5d7d9026-5255-4963-875e-cbfa46db1cd5?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-08-29T20%3A35%3A07Z&rscd=attachment%3B+filename%3DSHA256SUMS&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-08-29T19%3A35%3A03Z&ske=2026-08-29T20%3A35%3A07Z&sks=b&skv=2018-11-09&sig=WunjC%2FBFzrJ6kc1vOrEBEufmPJ5UWwnF%2B8lvWDppL6I%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc4ODAzMzkwMSwibmJmIjoxNzg4MDMzNjAxLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.3iRB_IzKI4qNfj2A1zlBIOijkknt4wJzqskTQBj-554&response-content-disposition=attachment%3B%20filename%3DSHA256SUMS&response-content-type=application%2Foctet-stream"
+  },
+  {
+    "url": "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.13/latest.json",
+    "status": 200,
+    "final": "https://release-assets.githubusercontent.com/github-production-release-asset/1349595430/a998331b-d4a2-4c17-bacf-6adf2667d5ee?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-08-29T20%3A54%3A18Z&rscd=attachment%3B+filename%3Dlatest.json&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-08-29T19%3A53%3A19Z&ske=2026-08-29T20%3A54%3A18Z&sks=b&skv=2018-11-09&sig=s9dYiWywfJSXizGhF1Jv0FtziB%2B3bBRRgss3GUaG3ok%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc4ODAzMzkwMSwibmJmIjoxNzg4MDMzNjAxLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.3iRB_IzKI4qNfj2A1zlBIOijkknt4wJzqskTQBj-554&response-content-disposition=attachment%3B%20filename%3Dlatest.json&response-content-type=application%2Foctet-stream"
+  },
+  {
+    "url": "https://presence-bridge.sociobot.in/",
+    "status": 200,
+    "final": "https://presence-bridge.sociobot.in/"
+  },
+  {
+    "url": "https://presence-bridge.sociobot.in/#main",
+    "status": 200,
+    "final": "https://presence-bridge.sociobot.in/"
+  },
+  {
+    "url": "https://presence-bridge.sociobot.in/?demo=1",
+    "status": 200,
+    "final": "https://presence-bridge.sociobot.in/?demo=1"
+  },
+  {
+    "url": "https://presence-bridge.sociobot.in/app.html",
+    "status": 200,
+    "final": "https://presence-bridge.sociobot.in/app.html"
+  },
+  {
+    "url": "https://presence-bridge.sociobot.in/app.html#main",
+    "status": 200,
+    "final": "https://presence-bridge.sociobot.in/app.html"
+  },
+  {
+    "url": "https://presence-bridge.sociobot.in/demo",
+    "status": 200,
+    "final": "https://presence-bridge.sociobot.in/demo"
+  },
+  {
+    "url": "https://presence-bridge.sociobot.in/demo#main",
+    "status": 200,
+    "final": "https://presence-bridge.sociobot.in/demo"
+  },
+  {
+    "url": "https://presence-bridge.sociobot.in/download",
+    "status": 200,
+    "final": "https://presence-bridge.sociobot.in/download"
+  },
+  {
+    "url": "https://presence-bridge.sociobot.in/download#main",
+    "status": 200,
+    "final": "https://presence-bridge.sociobot.in/download"
+  },
+  {
+    "url": "https://presence-bridge.sociobot.in/missing-verification-9#main",
+    "status": 404,
+    "final": "https://presence-bridge.sociobot.in/missing-verification-9"
+  },
+  {
+    "url": "https://presence-bridge.sociobot.in/privacy",
+    "status": 200,
+    "final": "https://presence-bridge.sociobot.in/privacy"
+  },
+  {
+    "url": "https://presence-bridge.sociobot.in/privacy#main",
+    "status": 200,
+    "final": "https://presence-bridge.sociobot.in/privacy"
+  },
+  {
+    "url": "https://presence-bridge.sociobot.in/terms",
+    "status": 200,
+    "final": "https://presence-bridge.sociobot.in/terms"
+  },
+  {
+    "url": "https://presence-bridge.sociobot.in/terms#main",
+    "status": 200,
+    "final": "https://presence-bridge.sociobot.in/terms"
+  },
+  {
+    "url": "https://sociobot.in/",
+    "status": 200,
+    "final": "https://sociobot.in/"
+  }
+]

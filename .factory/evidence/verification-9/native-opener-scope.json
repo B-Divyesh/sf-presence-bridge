@@ -1,0 +1,44 @@
+{
+  "configured": [
+    "core:default",
+    "opener:default"
+  ],
+  "defaultPermission": {
+    "identifier": "default",
+    "description": "This permission set allows opening `mailto:`, `tel:`, `https://` and `http://` urls using their default application\nas well as reveal file in directories using default file explorer",
+    "permissions": [
+      "allow-open-url",
+      "allow-reveal-item-in-dir",
+      "allow-default-urls"
+    ]
+  },
+  "defaultUrlScope": {
+    "allow": [
+      {
+        "url": "mailto:*"
+      },
+      {
+        "url": "tel:*"
+      },
+      {
+        "url": "http://*"
+      },
+      {
+        "url": "https://*"
+      }
+    ]
+  },
+  "advertisedAndAcceptedByModel": [
+    "mailto:",
+    "https:",
+    "slack:",
+    "msteams:",
+    "zoommtg:",
+    "tel:"
+  ],
+  "nativeDefaultScopeMissing": [
+    "slack:",
+    "msteams:",
+    "zoommtg:"
+  ]
+}

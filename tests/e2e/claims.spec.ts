@@ -100,7 +100,7 @@ test("@claim:checkout-availability keeps an unavailable checkout out of every pu
     await route.fulfill({ status: 404, contentType: "application/json", body: '{"error":"enabled factory product","status":404}' });
   });
   await page.goto("/");
-  await expect(page.getByText("Bridge Plus · $24 once when available")).toBeVisible();
+  await expect(page.getByText("Bridge Plus is not available in this release")).toBeVisible();
   await expect(page.getByText("Bridge Plus purchases are not available right now.")).toBeVisible();
   await expect(page.getByRole("link", { name: "Buy Bridge Plus" })).toHaveCount(0);
   await page.goto("/app.html");
@@ -170,7 +170,7 @@ test("@claim:free-limit keeps five people in a free roster", async ({ page }) =>
   await page.getByRole("button", { name: "Add person" }).click();
   await page.getByLabel("Name", { exact: true }).fill("Sam Rivera");
   await page.getByLabel("Role").fill("Support");
-  await page.getByLabel("Contact link").fill("mailto:sam@example.com");
+  await page.getByLabel("Contact tool link").fill("mailto:sam@example.com");
   await page.getByRole("button", { name: "Save person" }).click();
   await expect(page.locator(".roster-heading")).toContainText("5 people");
 
@@ -186,7 +186,7 @@ test("@claim:free-limit keeps five people in a free roster", async ({ page }) =>
   await page.getByRole("button", { name: "Close" }).click();
   await page.getByRole("button", { name: "Add person" }).click();
   await page.getByLabel("Name", { exact: true }).fill("Iris Bell");
-  await page.getByLabel("Contact link").fill("mailto:iris@example.com");
+  await page.getByLabel("Contact tool link").fill("mailto:iris@example.com");
   await page.getByRole("button", { name: "Save person" }).click();
   await expect(page.locator(".toast")).toContainText("free roster holds five people");
 });
@@ -198,23 +198,36 @@ test("@claim:demo-isolation never copies sample data into the real roster", asyn
   await expect(page.getByText("Your roster is empty.")).toBeVisible();
 });
 
-test("@claim:paid-roster enables ten people and a second route", async ({ page }) => {
+test("@claim:demo-exit-discard restores the seed after leaving the demo", async ({ page }) => {
+  await page.goto("/?demo=1");
+  await expect(page.getByText("Demo — sample data, nothing is saved")).toBeVisible();
+  await page.locator("#own-status").selectOption("away");
+  await page.getByRole("link", { name: "Start for real" }).click();
+  await expect(page).toHaveURL(/\/app\.html$/);
+  expect(await page.evaluate(() => sessionStorage.getItem("demo:presence-bridge:v1"))).toBeNull();
+  await page.goBack();
+  await expect(page.locator("#own-status")).toHaveValue("available");
+  await expect(page.getByRole("option", { name: /Ava Shah/ })).toBeVisible();
+  expect(await page.evaluate(() => sessionStorage.getItem("demo:presence-bridge:v1"))).toBeNull();
+});
+
+test("@claim:paid-roster enables ten people and a second contact tool", async ({ page }) => {
   await page.route("https://api.sociobot.in/api/v1/products/presence-bridge/verify?license=*", route => route.fulfill({ json: { valid: true, reason: "ok" } }));
   await page.goto("/app.html");
   await page.evaluate(() => localStorage.setItem("sb_license:presence-bridge", "test-license"));
   await Promise.all([page.waitForResponse(response => response.url().includes("/verify?license=")), page.reload()]);
   await page.getByRole("button", { name: "Add person" }).click();
-  await expect(page.getByLabel("Second contact link")).toBeVisible();
+  await expect(page.getByLabel("Second contact tool link")).toBeVisible();
   for (let index = 1; index <= 10; index += 1) {
     await page.getByLabel("Name", { exact: true }).fill(`Teammate ${index}`);
-    await page.getByLabel("Contact link", { exact: true }).fill(`mailto:member${index}@example.com`);
+    await page.getByLabel("Contact tool link", { exact: true }).fill(`mailto:member${index}@example.com`);
     await page.getByRole("button", { name: "Save person" }).click();
     if (index < 10) await page.getByRole("button", { name: "Add person" }).click();
   }
   await expect(page.locator(".roster-heading")).toContainText("10 people");
   await page.getByRole("button", { name: "Add person" }).click();
   await page.getByLabel("Name", { exact: true }).fill("Eleven Person");
-  await page.getByLabel("Contact link", { exact: true }).fill("mailto:eleven@example.com");
+  await page.getByLabel("Contact tool link", { exact: true }).fill("mailto:eleven@example.com");
   await page.getByRole("button", { name: "Save person" }).click();
   await expect(page.locator(".toast")).toContainText("limit to ten");
 

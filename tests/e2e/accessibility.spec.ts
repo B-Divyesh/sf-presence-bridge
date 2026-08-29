@@ -29,6 +29,45 @@ test("unknown paths return the styled 404 on navigation and refresh", async ({ p
   const refreshResponse = await page.reload();
   expect(refreshResponse?.status()).toBe(404);
   await expect(page.getByRole("link", { name: "Return home" })).toBeVisible();
+  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", "Page not found — Presence Bridge");
+});
+
+test("site routes update metadata, history, and heading focus", async ({ page }) => {
+  const metadata = [
+    ["/demo", "Demo — Presence Bridge", "Try Presence Bridge with an isolated five-person sample roster."],
+    ["/privacy", "Privacy — Presence Bridge", "Read what Presence Bridge stores on your device"],
+    ["/terms", "Terms — Presence Bridge", "Read the consent, usage, license, and warranty terms"],
+    ["/download", "Download — Presence Bridge", "Download Presence Bridge for macOS, Windows, or Linux"]
+  ] as const;
+  await page.goto("/");
+  for (const [path, title, description] of metadata) {
+    await page.goto(path);
+    await expect(page).toHaveTitle(title);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `https://presence-bridge.sociobot.in${path}`);
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", new RegExp(description));
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", title);
+    await expect(page.locator('meta[property="og:description"]')).toHaveAttribute("content", new RegExp(description));
+    await expect(page.locator('meta[name="twitter:title"]')).toHaveAttribute("content", title);
+  }
+
+  await page.goto("/");
+  await page.getByRole("link", { name: "Privacy" }).first().click();
+  await expect(page).toHaveURL(/\/privacy$/);
+  await expect(page.locator("h1")).toBeFocused();
+  await page.goBack();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.locator("h1")).toBeFocused();
+});
+
+test("the real roster route has complete metadata and legal navigation", async ({ page }) => {
+  await page.goto("/app.html");
+  await expect(page).toHaveTitle("Presence Bridge — Your local team roster");
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://presence-bridge.sociobot.in/app.html");
+  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", "Presence Bridge — Your local team roster");
+  await expect(page.locator('meta[name="twitter:description"]')).toHaveAttribute("content", /saved contact tool/);
+  await expect(page.locator(".app-wordmark")).toHaveAttribute("href", "/");
+  await expect(page.getByRole("navigation", { name: "App navigation" }).getByRole("link", { name: "Privacy" })).toHaveAttribute("href", "/privacy");
+  await expect(page.getByRole("navigation", { name: "App footer navigation" }).getByRole("link", { name: "Terms" })).toHaveAttribute("href", "/terms");
 });
 
 test("a new service worker retires the old cache and reloads offline", async ({ page, context, browserName }) => {
@@ -108,6 +147,18 @@ test("390px routes and download names reflow without horizontal scrolling and ke
     await page.goto(path);
     const box = await page.getByRole("link", { name: linkName }).boundingBox();
     expect(box?.height || 0).toBeGreaterThanOrEqual(44);
+  }
+});
+
+test("390px first screen keeps Privacy and all three facts visible", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "mobile");
+  await page.goto("/");
+  await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link", { name: "Privacy" })).toBeVisible();
+  const facts = page.locator(".plain-facts li");
+  await expect(facts).toHaveCount(3);
+  for (let index = 0; index < 3; index += 1) {
+    const box = await facts.nth(index).boundingBox();
+    expect(box && box.y + box.height, `fact ${index + 1} must fit in the initial viewport`).toBeLessThanOrEqual(844);
   }
 });
 

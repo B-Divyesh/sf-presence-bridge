@@ -18,7 +18,7 @@ function boundedText(value: unknown, maxLength: number, required = false): strin
   return text;
 }
 
-/** A share file deliberately excludes calendar events, contact routes, and any message content. */
+/** A share file deliberately excludes calendar events, contact tools, and any message content. */
 export function createPresenceUpdate(state: RosterState, now = new Date()): PresenceUpdate {
   const { name, role, initials, status, note, until, source } = state.me;
   return {

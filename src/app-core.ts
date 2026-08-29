@@ -43,7 +43,7 @@ const contactRouteLimit = (paid: boolean): number => paid ? PAID_CONTACT_ROUTE_L
 
 function importErrorMessage(error: RosterImportError): string {
   if (error === "member-limit") return "This import has more people than your plan allows. The free roster holds five people. Bridge Plus raises the limit to ten.";
-  if (error === "contact-route-limit") return "This backup has more contact routes than your plan allows. Bridge Plus adds a second contact route.";
+  if (error === "contact-route-limit") return "This backup has more contact tools than your plan allows. Bridge Plus adds a second contact tool.";
   return "That backup could not be read. It was not saved. Choose a valid Presence Bridge JSON file.";
 }
 
@@ -80,10 +80,11 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
     const visible = state.members.filter(member => `${member.name} ${member.role} ${member.status}`.toLowerCase().includes(filter.toLowerCase()));
     const person = selected();
     const heading = options.embedded ? "h2" : "h1";
-    root.innerHTML = `<section class="presence-app ${options.embedded ? "embedded" : ""}" aria-label="Presence Bridge roster">
-      ${demo ? `<div class="demo-banner"><span><strong>Demo</strong> — sample data, nothing is saved</span><span><button class="text-button" data-action="reset-demo">Reset demo</button><a href="/app.html">Start for real</a></span></div>` : ""}
+    root.innerHTML = `<div class="presence-app ${options.embedded ? "embedded" : ""}">
+      ${demo ? `<div class="demo-banner"><span><strong>Demo</strong> — sample data, nothing is saved</span><span><button class="text-button" data-action="reset-demo">Reset demo</button><a href="/app.html" data-demo-exit>Start for real</a></span></div>` : ""}
       <header class="app-bar">
-        <a class="app-wordmark" href="${options.embedded ? "/" : "#"}" aria-label="Presence Bridge home"><span aria-hidden="true">⌁</span> Presence Bridge</a>
+        <a class="app-wordmark" href="/" aria-label="Presence Bridge home"><span aria-hidden="true">⌁</span> Presence Bridge</a>
+        ${options.embedded ? "" : `<nav class="app-nav" aria-label="App navigation"><a href="/">Home</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav>`}
         <button class="icon-button" data-action="settings" aria-label="Open settings">Settings</button>
       </header>
       <div class="app-layout">
@@ -104,15 +105,16 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
             ${visible.map(member => memberRow(member, member.id === selectedId)).join("") || `<div class="empty-state"><span class="unlit-window" aria-hidden="true"></span><strong>${state.members.length ? "No teammate matches that search." : "Your roster is empty."}</strong><span>${state.members.length ? "Clear the search to see everyone." : "Add a person or load the included sample roster."}</span><div class="inline-actions"><button data-action="${state.members.length ? "clear-search" : "add-member"}">${state.members.length ? "Clear search" : "Add your first person"}</button>${state.members.length || demo ? "" : `<button class="secondary" data-action="load-sample">Load sample project</button>`}</div></div>`}
           </div>
         </${options.embedded ? "section" : "main"}>
-        <aside class="detail-panel" aria-label="Selected teammate">
+        <section class="detail-panel" aria-label="Selected teammate">
           ${person ? `<div class="detail-person"><span class="large-avatar">${esc(person.initials)}</span><p class="eyebrow">${esc(person.role || "Team member")}</p><h2>${esc(person.name)}</h2><p class="detail-status"><span class="status-light ${person.status}"></span>${esc(person.status)}${person.until ? ` until ${esc(person.until)}` : ""}</p><p>${esc(person.note || "No status note")}</p><p class="source-note">Set ${person.source === "calendar" ? "from an imported calendar" : "manually"}</p></div>
-          <div class="handoffs"><h3>Open their tool</h3>${person.tools.length ? person.tools.map((tool, index) => `<button class="handoff ${index === 0 ? "primary" : ""}" data-url="${esc(tool.url)}" data-label="${esc(tool.label)}"><span>${esc(tool.label)}</span><span aria-hidden="true">↗</span></button>`).join("") : `<p>No contact tool is saved.</p>`}<button class="secondary" data-action="edit-member">Edit person</button><button class="danger-text" data-action="delete-member">Remove from roster</button></div>` : `<div class="detail-empty"><span class="window-mark" aria-hidden="true"></span><h2>Select a teammate</h2><p>Their current note and contact tools will appear here.</p></div>`}
-        </aside>
+          <div class="handoffs"><h3>Open a contact tool</h3>${person.tools.length ? person.tools.map((tool, index) => `<button class="handoff ${index === 0 ? "primary" : ""}" data-url="${esc(tool.url)}" data-label="${esc(tool.label)}"><span>${esc(tool.label)}</span><span aria-hidden="true">↗</span></button>`).join("") : `<p>No contact tool is saved.</p>`}<button class="secondary" data-action="edit-member">Edit person</button><button class="danger-text" data-action="delete-member">Remove from roster</button></div>` : `<div class="detail-empty"><span class="window-mark" aria-hidden="true"></span><h2>Select a teammate</h2><p>Their current note and contact tools will appear here.</p></div>`}
+        </section>
       </div>
       <div class="toast" aria-live="polite" aria-atomic="true">${esc(notice)}</div>
       ${addOpen ? memberDialog(person, license.valid) : ""}
       ${settingsOpen ? settingsDialog(state, license.valid, demo) : ""}
-    </section>`;
+      ${options.embedded ? "" : `<footer class="app-footer"><p>See who is free, then open a contact tool.</p><nav aria-label="App footer navigation"><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="https://sociobot.in" rel="external">Built by Param Factory</a></nav><p>v0.1.8</p></footer>`}
+    </div>`;
     bind();
     if (returnFocusSelector && !addOpen && !settingsOpen) {
       const selector = returnFocusSelector; returnFocusSelector = "";
@@ -140,6 +142,7 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
       if (event.key === "Enter") root.querySelector<HTMLButtonElement>(".handoff")?.click();
     });
     root.querySelectorAll<HTMLElement>("[data-action]").forEach(element => element.addEventListener("click", () => action(element.dataset.action || "")));
+    root.querySelector<HTMLAnchorElement>("[data-demo-exit]")?.addEventListener("click", () => sessionStorage.removeItem(DEMO_STORE));
     root.querySelector<HTMLFormElement>("#member-form")?.addEventListener("submit", saveMember);
     root.querySelector<HTMLFormElement>("#settings-form")?.addEventListener("submit", saveSettings);
     root.querySelector<HTMLInputElement>("#calendar-file")?.addEventListener("change", importCalendar);
@@ -181,14 +184,14 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
     const name = String(data.get("name") || "").trim();
     const url = String(data.get("url") || "").trim();
     const label = String(data.get("tool") || "Contact").trim();
-    if (!name || !allowedDeepLink(url)) return tell("Enter a name and a supported contact link, such as mailto: or https:.");
+    if (!name || !allowedDeepLink(url)) return tell("Enter a name and a supported contact tool link, such as mailto: or https:.");
     const existing = selected();
     if (!existing && state.members.length >= rosterLimit(license.valid)) return tell("The free roster holds five people. Bridge Plus raises the limit to ten.");
     const secondUrl = String(data.get("url-2") || "").trim();
     const secondLabel = String(data.get("tool-2") || "").trim();
     const tools = [{ id: existing?.tools[0]?.id || crypto.randomUUID(), label, url }];
     if (license.valid && secondUrl && secondLabel) {
-      if (!allowedDeepLink(secondUrl)) return tell("The second contact link is not supported.");
+      if (!allowedDeepLink(secondUrl)) return tell("The second contact tool link is not supported.");
       tools.push({ id: existing?.tools[1]?.id || crypto.randomUUID(), label: secondLabel, url: secondUrl });
     } else if (license.valid && existing?.tools[1]) tools.push(existing.tools[1]);
     const member: TeamMember = {
@@ -276,6 +279,14 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
   const refreshOnResume = () => {
     if (document.visibilityState === "visible") refreshCalendar();
   };
+  const resetDiscardedDemo = () => {
+    if (!demo || sessionStorage.getItem(DEMO_STORE)) return;
+    state = sampleState();
+    selectedId = state.members[0]?.id || "";
+    filter = "";
+    notice = "";
+    render();
+  };
   const handoff = async (event: Event) => {
     const button = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-url]");
     if (!button || !root.contains(button)) return;
@@ -295,6 +306,7 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
   document.addEventListener("keydown", keyboard);
   document.addEventListener("visibilitychange", refreshOnResume);
   window.addEventListener("focus", refreshCalendar);
+  window.addEventListener("pageshow", resetDiscardedDemo);
   root.addEventListener("click", handoff);
   render();
   if (!demo && localStorage.getItem("sb_license:presence-bridge")) verifyLicense().then(result => { license = result; render(); });
@@ -303,6 +315,7 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
     document.removeEventListener("keydown", keyboard);
     document.removeEventListener("visibilitychange", refreshOnResume);
     window.removeEventListener("focus", refreshCalendar);
+    window.removeEventListener("pageshow", resetDiscardedDemo);
     root.removeEventListener("click", handoff);
   };
 }
@@ -313,9 +326,9 @@ function memberDialog(member: TeamMember | undefined, paid: boolean): string {
     <label>Role<input name="role" maxlength="50" value="${esc(member?.role || "")}"></label>
     <label>Status<select name="status">${["available", "busy", "away", "offline"].map(value => `<option ${member?.status === value ? "selected" : ""}>${value}</option>`).join("")}</select></label>
     <label>Status note<input name="note" maxlength="80" value="${esc(member?.note || "")}"></label>
-    <div class="form-pair"><label>Tool name<input name="tool" required maxlength="24" value="${esc(member?.tools[0]?.label || "Email")}"></label><label>Contact link<input name="url" required value="${esc(member?.tools[0]?.url || "mailto:")}" aria-describedby="link-help"></label></div>
+    <div class="form-pair"><label>Contact tool name<input name="tool" required maxlength="24" value="${esc(member?.tools[0]?.label || "Email")}"></label><label>Contact tool link<input name="url" required value="${esc(member?.tools[0]?.url || "mailto:")}" aria-describedby="link-help"></label></div>
     <p class="field-help" id="link-help">Use a documented mailto, https, Slack, Teams, Zoom, or phone link.</p>
-    ${paid ? `<div class="form-pair"><label>Second tool name<input name="tool-2" maxlength="24" value="${esc(member?.tools[1]?.label || "")}"></label><label>Second contact link<input name="url-2" value="${esc(member?.tools[1]?.url || "")}"></label></div>` : ""}
+    ${paid ? `<div class="form-pair"><label>Second contact tool name<input name="tool-2" maxlength="24" value="${esc(member?.tools[1]?.label || "")}"></label><label>Second contact tool link<input name="url-2" value="${esc(member?.tools[1]?.url || "")}"></label></div>` : ""}
     <div class="dialog-actions"><button type="button" class="secondary" data-action="close-member">Cancel</button><button type="submit">Save person</button></div>
   </form></dialog>`;
 }
@@ -329,7 +342,7 @@ function settingsDialog(state: RosterState, paid: boolean, demo: boolean): strin
       <button type="submit">Save settings</button>
     </form>
     <section class="settings-section"><h3>Back up this roster</h3><p>Download or restore a readable JSON file.</p><div class="inline-actions"><button data-action="export">Download backup</button><label class="file-label secondary">Import backup<input id="import-roster" type="file" accept="application/json"></label></div></section>
-    <section class="settings-section"><h3>Share your chosen presence</h3><p>Download a small availability file, then send it through a shared folder or your existing tool. Import a teammate's file to update this local roster. Nothing sends automatically.</p><p class="field-help">The file includes only their name, role, status, note, status source, and update time. It never includes calendar events, contact routes, activity, or messages.</p><div class="inline-actions"><button data-action="export-presence">Download presence update</button><label class="file-label secondary">Import presence update<input id="import-presence" type="file" accept="application/json,.presence.json"></label></div></section>
-    <section class="settings-section"><p class="eyebrow">Bridge Plus · $24 once when available</p><h3>${paid ? "Bridge Plus is active" : "Add room for a larger team"}</h3><p>Keep up to ten people and add more contact routes in the desktop app. Free rosters hold five people.</p>${paid ? "" : `<div class="checkout-actions"><p>Bridge Plus purchases are not available right now. You can still restore an existing license below.</p><form id="license-form"><label>Have a license?<input name="license" required autocomplete="off"></label><button type="submit">Verify license</button></form></div>`}<p class="field-help">Sociobot is the merchant of record. See <a href="/terms">terms</a> and <a href="/privacy">privacy</a>.</p></section>
+    <section class="settings-section"><h3>Share your chosen presence</h3><p>Download a small availability file, then send it through a shared folder or a contact tool. Import a teammate's file to update this local roster. Nothing sends automatically.</p><p class="field-help">The file includes only their name, role, status, note, status source, and update time. It never includes calendar events, contact tools, activity, or messages.</p><div class="inline-actions"><button data-action="export-presence">Download presence update</button><label class="file-label secondary">Import presence update<input id="import-presence" type="file" accept="application/json,.presence.json"></label></div></section>
+    <section class="settings-section"><p class="eyebrow">Bridge Plus is not available in this release</p><h3>${paid ? "Bridge Plus is active" : "Bridge Plus limits and contact tools"}</h3><p>Bridge Plus supports up to ten people and two contact tools per person. Free rosters hold five people.</p>${paid ? "" : `<div class="checkout-actions"><p>Bridge Plus purchases are not available right now. You can still restore an existing license below.</p><form id="license-form"><label>Have a license?<input name="license" required autocomplete="off"></label><button type="submit">Verify license</button></form></div>`}<p class="field-help">Sociobot is the merchant of record. See <a href="/terms">terms</a> and <a href="/privacy">privacy</a>.</p></section>
     ${demo ? `<p class="field-help">Demo changes use the temporary ${DEMO_STORE} session namespace.</p>` : ""}</div></dialog>`;
 }

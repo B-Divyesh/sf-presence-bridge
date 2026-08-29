@@ -22,10 +22,10 @@
   },
   {
     "id": "no-message-transport",
-    "claim": "Presence Bridge does not transport messages; a handoff only opens the saved communication tool",
+    "claim": "Presence Bridge does not transport messages; it only opens the saved contact tool",
     "where": "landing privacy section, terms, README",
     "test": "npm test -- --grep @claim:no-message-transport",
-    "sandbox": "fresh browser context at /demo; use Ava's Slack handoff, assert the explicit handoff result, and assert no external request occurs"
+    "sandbox": "fresh browser context at /demo; use Ava's Slack contact tool, assert the explicit open result, and assert no external request occurs"
   },
   {
     "id": "calendar-local",
@@ -56,11 +56,18 @@
     "sandbox": "fresh browser context; change demo status, open app.html, and assert the real roster remains empty"
   },
   {
+    "id": "demo-exit-discard",
+    "claim": "Leaving the demo discards demo changes",
+    "where": "demo banner, README",
+    "test": "npm test -- --grep @claim:demo-exit-discard",
+    "sandbox": "fresh browser context at /?demo=1; change status to away, use Start for real, return to the demo, and assert the seed status and sample roster are restored"
+  },
+  {
     "id": "paid-roster",
-    "claim": "Bridge Plus raises the roster limit to ten and adds a second contact route",
+    "claim": "Bridge Plus supports ten people and two contact tools per person",
     "where": "landing pricing section, app settings, terms, README",
     "test": "npm test -- --grep @claim:paid-roster",
-    "sandbox": "fresh browser context with the license verify endpoint fulfilled by a valid fixture; assert the second route field is enabled"
+    "sandbox": "fresh browser context with the license verify endpoint fulfilled by a valid fixture; assert the second contact tool field and ten-person limit"
   },
   {
     "id": "checkout-availability",
@@ -88,11 +95,11 @@
     "claim": "A teammate can import an explicitly shared chosen presence update into their local roster",
     "where": "app settings, landing privacy section, privacy page, terms, README",
     "test": "npm test -- --grep @claim:shared-presence",
-    "sandbox": "two isolated browser contexts at /app.html; one downloads a chosen status update and the other imports it, asserting the status appears with no calendar, contact-route, or message data"
+    "sandbox": "two isolated browser contexts at /app.html; one downloads a chosen status update and the other imports it, asserting the status appears with no calendar, contact-tool, or message data"
   },
   {
     "id": "platform-download",
-    "claim": "The download page selects a package for the detected platform from GitHub Release metadata",
+    "claim": "The download page chooses a package for the detected platform from GitHub release information",
     "where": "download page, README",
     "test": "npm test -- --grep @claim:platform-download",
     "sandbox": "fresh Chromium browser context on /download with a recorded GitHub release fixture; assert the detected Linux AppImage link is rendered"
@@ -106,7 +113,7 @@
   },
   {
     "id": "release-fallback",
-    "claim": "The download page gives a release-page link when release metadata is unavailable",
+    "claim": "The download page gives a release-page link when release information is unavailable",
     "where": "download page, README",
     "test": "npm test -- --grep @claim:release-fallback",
     "sandbox": "fresh Chromium browser context on /download with the GitHub metadata request returning 503; assert the calm fallback and release-page link"

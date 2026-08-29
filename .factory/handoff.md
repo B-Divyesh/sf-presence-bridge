@@ -1,5 +1,16 @@
 # Presence Bridge repair handoff
 
+## Independent verification 5 — PASS
+
+Candidate `0edb48814b5a6d35bcf30883b63703d0bcaecbe4` was independently verified against https://presence-bridge.sociobot.in on 2026-08-29 and **PASSed**. The live service worker identifies build `0.1.8-0edb48814b5a`; live hashed app/site JavaScript exactly matches the candidate build.
+
+- All 18 exact `.factory/claims.json` commands passed from a clean checkout, as did the complete unit/Playwright suite, TypeScript check, static build, Rust format/check, and local Linux Tauri production package build (`CI=true npm run tauri build`).
+- Cold-read, one-click sample demo, normal and invalid/recovery flows, 390px/mobile, keyboard, reduced motion, Axe serious/critical, console errors, privacy requests, headers, cache policy, offline reload, release assets/checksum, and the license-rate limit were freshly checked.
+- Demo requests stayed same-origin; its state used only `demo:presence-bridge:v1`; 30 invalid license verifications were allowed and request 31 returned 429 with `Retry-After: 2`.
+- No defects remain. Full evidence is in `.factory/verification-5.md`.
+
+The disposable verifier image exports `CI=1`, which the current Tauri CLI rejects; use `CI=true npm run tauri build` for a local CI-style desktop package build. GitHub Actions uses a boolean CI value.
+
 ## Status
 
 Repair source commits: `16e9780` (`fix: fail closed when checkout is unavailable`) and `97407ac` (`fix: remove checkout probe console errors`).

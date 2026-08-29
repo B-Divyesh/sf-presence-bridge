@@ -176,26 +176,49 @@ test("invalid contact links preserve the add-person form and expose an inline re
   await expect(page.getByRole("button", { name: /Support chat/ })).toBeVisible();
 });
 
-test("390px routes and download names reflow without horizontal scrolling and keep touch targets", async ({ page }, testInfo) => {
+async function expectEveryVisibleTargetToBeAtLeast44px(page: import("@playwright/test").Page, surface: string) {
+  const targets = page.locator('a[href], button, input:not([type="hidden"]):not([type="file"]), select, textarea, [role="button"], [tabindex]:not([tabindex="-1"]), .file-label');
+  const count = await targets.count();
+  for (let index = 0; index < count; index += 1) {
+    const target = targets.nth(index);
+    if (!await target.isVisible()) continue;
+    const box = await target.boundingBox();
+    const identity = await target.evaluate(element => ({
+      tag: element.tagName.toLowerCase(),
+      text: (element.textContent || "").trim().replace(/\s+/g, " ").slice(0, 60),
+      name: element.getAttribute("aria-label") || element.getAttribute("name") || ""
+    }));
+    expect(box?.width || 0, `${surface}: ${JSON.stringify(identity)} width`).toBeGreaterThanOrEqual(44);
+    expect(box?.height || 0, `${surface}: ${JSON.stringify(identity)} height`).toBeGreaterThanOrEqual(44);
+  }
+}
+
+test("390px routes, dynamic release links, dialogs, and app footer keep 44px targets", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile");
-  for (const path of ["/", "/demo", "/privacy", "/terms", "/download", "/app.html"]) {
+  await page.route("https://api.github.com/repos/B-Divyesh/sf-presence-bridge/releases?per_page=1", route => route.fulfill({
+    contentType: "application/json",
+    body: JSON.stringify([{ tag_name: "v0.1.14", assets: [
+      { name: "Presence.Bridge_0.1.14_amd64.AppImage", size: 1_200, browser_download_url: "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.14/Presence.Bridge_0.1.14_amd64.AppImage" },
+      { name: "Presence.Bridge_0.1.14_x64-setup.exe", size: 1_200, browser_download_url: "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.14/Presence.Bridge_0.1.14_x64-setup.exe" },
+      { name: "SHA256SUMS", size: 900, browser_download_url: "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.14/SHA256SUMS" },
+      { name: "latest.json", size: 800, browser_download_url: "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.14/latest.json" }
+    ] }])
+  }));
+
+  for (const path of ["/", "/privacy", "/terms", "/download", "/app.html"]) {
     await page.goto(path);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+    if (path === "/download") await page.getByRole("link", { name: "Check SHA256SUMS" }).waitFor();
+    await expectEveryVisibleTargetToBeAtLeast44px(page, path);
   }
+
   await page.goto("/demo");
-  for (const locator of [page.locator(".site-header nav a"), page.locator(".demo-banner a"), page.locator(".app-wordmark"), page.locator(".site-footer a")]) {
-    const count = await locator.count();
-    for (let index = 0; index < count; index += 1) {
-      if (!await locator.nth(index).isVisible()) continue;
-      const box = await locator.nth(index).boundingBox();
-      expect(box?.height || 0).toBeGreaterThanOrEqual(44);
-    }
-  }
-  for (const [path, linkName] of [["/privacy", "privacy@sociobot.in"], ["/terms", "support@sociobot.in"], ["/download", "View all releases on GitHub"]] as const) {
-    await page.goto(path);
-    const box = await page.getByRole("link", { name: linkName }).boundingBox();
-    expect(box?.height || 0).toBeGreaterThanOrEqual(44);
-  }
+  await expectEveryVisibleTargetToBeAtLeast44px(page, "/demo");
+  await page.getByRole("button", { name: "Settings" }).click();
+  await expectEveryVisibleTargetToBeAtLeast44px(page, "/demo settings dialog");
+  await page.getByRole("button", { name: "Close" }).click();
+  await page.getByRole("button", { name: "Add person" }).click();
+  await expectEveryVisibleTargetToBeAtLeast44px(page, "/demo add-person dialog");
 });
 
 test("390px first screen keeps Privacy and all three facts visible", async ({ page }, testInfo) => {

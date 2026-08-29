@@ -9,21 +9,21 @@ const root = resolve(import.meta.dirname, "../..");
 describe("release repair contracts", () => {
   it("keeps every package version aligned and rejects a release from a stale commit", () => {
     const versions = readProductVersions(root);
-    expect(new Set(Object.values(versions))).toEqual(new Set(["0.1.13"]));
+    expect(new Set(Object.values(versions))).toEqual(new Set(["0.1.14"]));
 
     const expectedCommit = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-    const matchingRelease = { tag_name: "v0.1.13", target_commitish: expectedCommit };
+    const matchingRelease = { tag_name: "v0.1.14", target_commitish: expectedCommit };
     expect(verifyReleaseProvenance({
       release: matchingRelease,
       expectedCommit,
-      expectedTag: "v0.1.13",
+      expectedTag: "v0.1.14",
       versions
-    })).toEqual({ version: "0.1.13", tag: "v0.1.13", sourceCommit: expectedCommit });
+    })).toEqual({ version: "0.1.14", tag: "v0.1.14", sourceCommit: expectedCommit });
 
     expect(() => verifyReleaseProvenance({
       release: { ...matchingRelease, target_commitish: "166e4d6b6690157e154c22e0e2359116ae7734e1" },
       expectedCommit,
-      expectedTag: "v0.1.13",
+      expectedTag: "v0.1.14",
       versions
     })).toThrow("Published release targets 166e4d6b6690157e154c22e0e2359116ae7734e1; expected aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.");
   });
@@ -31,11 +31,11 @@ describe("release repair contracts", () => {
   it("runs the same provenance CLI used by the release job from the repository checkout", () => {
     const output = execFileSync(process.execPath, [
       resolve(root, "scripts/verify-release-provenance.mjs"),
-      resolve(root, "tests/fixtures/release-v0.1.13.json"),
+      resolve(root, "tests/fixtures/release-v0.1.14.json"),
       "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "v0.1.13"
+      "v0.1.14"
     ], { encoding: "utf8" });
-    expect(output).toBe("Verified v0.1.13 targets aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.\n");
+    expect(output).toBe("Verified v0.1.14 targets aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.\n");
   });
 
   it("records and verifies release source provenance in the publishing workflow", () => {
@@ -44,6 +44,27 @@ describe("release repair contracts", () => {
     expect(workflow).toContain("\"${GITHUB_SHA}\" \"${GITHUB_REF_NAME}\"");
     expect(workflow).toContain('"source_commit": os.environ[\'GITHUB_SHA\']');
     expect(workflow).toContain("GITHUB_TOKEN: ${{ github.token }}");
+  });
+
+  it("allows every advertised protocol through the native opener and exercises the packaged command", () => {
+    const capability = JSON.parse(readFileSync(resolve(root, "src-tauri/capabilities/default.json"), "utf8"));
+    const customScope = capability.permissions.find((permission: unknown) =>
+      typeof permission === "object" && permission !== null && (permission as { identifier?: string }).identifier === "opener:allow-open-url"
+    );
+    expect(customScope).toEqual({
+      identifier: "opener:allow-open-url",
+      allow: [{ url: "slack:*" }, { url: "msteams:*" }, { url: "zoommtg:*" }]
+    });
+
+    const nativeSource = readFileSync(resolve(root, "src-tauri/src/lib.rs"), "utf8");
+    const workflow = readFileSync(resolve(root, ".github/workflows/release.yml"), "utf8");
+    for (const protocol of ["slack://", "msteams://", "https://", "mailto:", "zoommtg://", "tel:"]) {
+      expect(nativeSource).toContain(protocol);
+      expect(workflow).toContain(protocol);
+    }
+    expect(nativeSource).toContain('invoke("plugin:opener|open_url", { url })');
+    expect(workflow).toContain('presence-bridge" --smoke-opener');
+    expect(workflow).toContain('diff -u <(cat');
   });
 
   it("runs the checksum-verified Windows setup and launches the installed app", () => {

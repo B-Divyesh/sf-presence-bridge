@@ -1,106 +1,69 @@
-# Presence Bridge — adversarial review 2 handoff
+# Presence Bridge — polish round 2 handoff
 
 ## Result
 
-**FAIL** for live release `v0.1.17` and repository base
-`a0d07180eea0192f2f6395766130c025656cebd9`.
+**PASS.** Every finding in `.factory/review-1.md` and `.factory/review-2.md` is fixed and reverified. The product repair is commit `16aff877e2b476fe9278cdde31638cb952aa791a`, tagged `v0.1.18`, and deployed at <https://presence-bridge.sociobot.in>.
 
-The full report is `.factory/review-2.md`. No product code was changed. The
-review found one blocker and four minor findings:
+The exact finding-by-finding record is `.factory/polish-2.md`.
 
-- The one-click mobile demo does not show a teammate row in its first viewport,
-  while the landing action promises a five-person roster and the UI says
-  “4 PEOPLE.”
-- Public demo, signing, release-platform, and payment-runtime statements are
-  not all represented by exact entries in `.factory/claims.json`.
-- `.factory/copy-audit.md` has 13 incorrect word counts and omits some copy.
-- The visible Settings and Slack buttons do not use result-naming verbs.
-- Teammate status updates still require a manual download/send/import cycle;
-  the report proposes an opt-in watched shared folder.
+## What changed
 
-## Verification performed
+- Reworded the first-screen promise to “See four sample teammates and your status in one click.”
+- Compressed the phone demo layout so Ava and Leo appear before 844 px, with the persistent demo banner and current status still visible.
+- Kept `?demo=1` isolated in session storage. Reset, Start for real, Back, and close/reopen discard edits and restore the shipped sample.
+- Expanded `.factory/claims.json` from 19 to 24 entries. Every entry has exactly one tagged test, enforced by a contract test.
+- Added claim coverage for the mobile sample view, full demo disposal, three-platform release workflow, conditional signing, no payment runtime, and watched-folder refresh.
+- Generated `.factory/copy-audit.md` from rendered landing content and README prose. A browser test fails on any drift.
+- Changed visible noun-only actions to “Open settings” and “Open {contact tool}.”
+- Added the desktop-only, opt-in shared-folder watcher. It reads bounded `.presence.json` files, imports only newer updates, displays update times, marks day-old entries stale, polls every five seconds, and can stop watching.
+- Preserved the blue-hour studio, warm-window status lights, clipped panels, brass rules, typography, and motion policy documented in `.factory/design.md`.
+- Updated `.factory/catalog-description.txt` to: “Check who is free, then open the contact tool your team already uses.”
 
-- Cold live Chromium contexts at 390 × 844 and 1440 × 900.
-- One-click demo, Reset, Start for real, Back, demo/real storage keys, request
-  origins, and live offline reload.
-- Every exact command in `.factory/claims.json` from a fresh clone: 19/19 pass.
-- Full fresh-clone `npm test`: 13 Vitest and 76 Playwright tests pass; two
-  desktop skips are intentional.
-- `npm run lint` and `npm run build`: pass; `dist/site/` produced.
-- Live route metadata, deep links, History focus, designed 404, sitemap, and
-  internal/external link crawl.
-- `/opt/fleet/lib/verify-url.sh` on `/`, `/demo`, and `/app.html`.
-- Playwright Axe on `/`, `/demo`, `/privacy`, `/terms`, `/download`, and
-  `/app.html`: zero violations.
-- Every F-1-1 through F-1-8 item from the earlier review was rechecked live and
-  in source and is confirmed fixed.
+## Verification
 
-## Work left
+### Clean clone and claims
 
-Resolve F-2-1 through F-2-5, update the claims registry and generated copy
-audit, deploy the repaired site, and rerun the entire adversarial checklist from
-fresh browser contexts and a fresh clone.
+Clean clone: `/tmp/presence-bridge-claims-FAOUNW` at `16aff877e2b476fe9278cdde31638cb952aa791a`.
 
----
-
-# Presence Bridge — verification 10 handoff
-
-## Independent QA result
-
-**PASS** for candidate `3bcd3e50d23963398d0f416f3e7450a4b79fc1dc` / release `v0.1.17` at https://presence-bridge.sociobot.in.
-
-Independent verification found no release-blocking defects. The live public files match a fresh `npm run build` output byte-for-byte, the release targets the candidate SHA, and the checksum-verified published AppImage accepted all six actual Tauri contact handoffs (Slack, Teams, HTTPS/Meet, email, Zoom, and phone) in its native smoke path.
-
-Verified with `npm ci`, every claim command in `.factory/claims.json`, `npm test` (76 Playwright passed, 2 intentional skips; 13 Vitest passed), `npm run lint`, `npm run build`, `npm audit --audit-level=high`, Rust fmt/check/test after documented Linux prerequisites, published deb checksum/package metadata, published AppImage native smoke, live request/header/cache inspection, 390 px keyboard/accessibility checks, and a 30-request license allowance followed by 429/`Retry-After: 4` on request 31. Full evidence is in `.factory/verification-10.md`.
-
-Known product defects: none. The existing unsigned-package/operator-action note remains below.
-
-# Presence Bridge repair 8 handoff
-
-## Result
-
-Release blockers P1 and P2 from independent verification 9 are repaired in version `0.1.17`. The immutable product-code repair commit is `878f7737530b9d02bcf8b47976a9d45fac6fcfb1`. The researched scope and existing passing behavior are unchanged.
-
-## Failure reproduced before repair
-
-- Native ACL inspection resolved `opener:default` to `mailto:*`, `tel:*`, `http://*`, and `https://*`. It rejected the advertised `slack:*`, `msteams:*`, and `zoommtg:*` schemes and exited 1.
-- A fresh 390 × 844 Chromium measurement reproduced the verifier's exact missed targets: `Check SHA256SUMS` 163.8125 × 19 px; `Read latest.json` 209.109375 × 43.796875 px; Settings `terms` 37.0625 × 15 px; Settings `privacy` 45.140625 × 15 px; standalone footer `Terms` 40.03125 × 44 px. The reproduction exited 1.
-
-## Repairs
-
-- `src-tauri/capabilities/default.json` now adds explicit `opener:allow-open-url` scopes for `slack:*`, `msteams:*`, and `zoommtg:*`. Tauri's existing default permission remains responsible for HTTPS, email, and phone links.
-- The native `--smoke-opener` path invokes the real `plugin:opener|open_url` IPC command inside the packaged webview for exact Slack, Teams, Meet/HTTPS, email, Zoom, and phone fixtures. It exits nonzero if any URL is rejected or reordered.
-- The release job installs the checksum-verified Linux AppImage, runs that native command under Xvfb, records OS-opener calls, and diffs all six exact URLs. This closes the prior browser-only false positive.
-- Every visible link and control now has a minimum 44 × 44 CSS-pixel hit area. Release proof links wrap with 8 px gaps, dialog legal links inherit full target sizing, checkboxes are 44 px, and mobile header links retain 8 px separation.
-- The mobile regression scans every visible interactive element on home, privacy, terms, download with dynamic release metadata, standalone app, demo, Settings, and Add person. Failure output identifies the route, element, text, width, and height.
-- Product, Rust, lockfile, UI, fixture, and release-workflow versions are aligned at `0.1.17`.
-
-## Verification evidence
-
-- `npm ci`: 66 packages installed; 67 audited; 0 vulnerabilities.
-- `npm test`: 13 Vitest tests and 76 Playwright tests passed across desktop Chromium and 390 × 844 mobile; 2 desktop skips are intentionally mobile-only.
-- `PLAYWRIGHT_BASE_URL=http://127.0.0.1:4174 npx playwright test` against `vite preview`: 76 passed; 2 intentional desktop skips.
-- `npm run lint`: passed (`tsc --noEmit`).
-- `npm run build`: passed and wrote `dist/site/`. Initial JS is 40.85 KB raw / 14.73 KB gzip; CSS is 19.04 KB raw / 5.21 KB gzip; mobile hero is 30.48 KB.
-- `npm audit --audit-level=high`: 0 vulnerabilities.
+- `npm ci`: passed.
+- Every exact command in `.factory/claims.json`: **24/24 passed** independently. Evidence: `.factory/evidence/polish-2/clean-claims.json`.
+- `npm test`: **14 Vitest passed; 88 Playwright passed; 2 desktop-project skips were intentionally mobile-only**.
+- `npm run lint`: passed.
+- `npm run build`: passed and produced `dist/site/`.
+- `npm run audit:copy`: passed.
+- `npm audit --audit-level=high`: passed with no high-severity issue.
 - `cargo fmt --manifest-path src-tauri/Cargo.toml -- --check`: passed.
 - `cargo check --locked --manifest-path src-tauri/Cargo.toml`: passed.
-- `cargo test --locked --manifest-path src-tauri/Cargo.toml`: passed.
-- `CI=true npx tauri build --bundles appimage`: produced the versioned Linux AppImage.
-- The locally packaged AppImage ran under Xvfb with `--smoke-opener` and printed `native opener accepted` for all six exact fixtures: Slack, Teams, Meet, email, Zoom, and phone. Exit code was 0.
-- The full browser suite covers keyboard search and arrow/Enter navigation, Escape focus return, invalid-input focus, dialog focus containment, Axe scans, 200% text, reduced motion, demo isolation, no-analytics request capture, offline reload, service-worker replacement, license response policy fixtures, and every declared claim.
-- Fresh mobile Lighthouse on the production preview: Performance 100, Accessibility 100, Best Practices 100, SEO 100; LCP 1,731.7 ms; CLS 0; TBT 32 ms; transfer 134,218 bytes.
-- `.factory/copy-audit.md` remains current: no landing or README sentence exceeds 22 words and no banned term appears.
+- `cargo test --locked --manifest-path src-tauri/Cargo.toml`: passed, including `reads_only_bounded_presence_files`.
 
-## Release and deployment identity
+The production build emits 19.49 KB CSS (5.31 KB gzip), 30.63 KB shared JavaScript, and 12.81 KB site JavaScript, below the product budgets.
 
-- Tag and accepted release: `v0.1.17`. The preceding `v0.1.14` through `v0.1.16` matrices published packages while the new gate exposed clean-runner dependencies and an AppImage PATH assumption. The accepted job installs EGL and GLES, disables WebKit compositing for headless execution, captures the packaged command's results, and asserts all six exact accepted URLs.
-- The tag commit, GitHub release target, `latest.json.source_commit`, release-workflow source SHA, and deployed build SHA were compared for equality after publication.
-- The release publishes macOS, Windows, and Linux packages plus `SHA256SUMS` and `latest.json`. The Linux release smoke installs the published AppImage only after checksum verification, then exercises the native opener command.
-- Static output was rebuilt from the tagged commit and deployed from `dist/site/` with `/opt/fleet/lib/deploy-static.sh presence-bridge dist/site`.
-- Live checks used `/opt/fleet/lib/verify-url.sh`, browser desktop and 390 px suites, security/cache headers, offline/update behavior, same-origin privacy logging, and build-ID comparison.
+### Accessibility, privacy, offline, and browser behavior
 
-## Run it
+- The full Playwright suite also ran against the deployed origin: **88 passed, 2 intentional skips**.
+- Playwright Axe reported zero serious or critical violations across `/`, `/demo`, `/privacy`, `/terms`, `/download`, `/app.html`, and the styled 404.
+- `/opt/fleet/lib/verify-url.sh` passed the live home, demo, and app routes: correct title/lang, one h1, main landmark, alt text, button names, and no unexpected console error.
+- Cold live 390 × 844 check: all three first-screen facts end by 667.45 px; Ava ends at 568.69 px and Leo at 666.66 px; no horizontal overflow.
+- The cold landing-to-demo flow contacted only `https://presence-bridge.sociobot.in`. The real roster key remained null.
+- A fresh service-worker context reloaded `/demo` offline with the sample roster intact.
+- Reset restored `available`; Start for real removed demo state; Browser Back recreated the original sample.
+- `/privacy`, `/terms`, `/download`, and `/app.html` returned 200 with distinct titles and canonicals. An unknown deep link returned the designed page with HTTP 404 and a working return link.
+- Live Lighthouse mobile: **Performance 100, Accessibility 100, Best Practices 100, SEO 100**; LCP 1.21 s, CLS 0, TBT 18.5 ms, transfer 149,378 bytes. Evidence: `.factory/evidence/polish-2/lighthouse-live.json`.
+
+Browser evidence is under `.factory/evidence/polish-2/`, including `live-browser-check.json`, `live-mobile-first-screen.png`, `live-mobile-demo-first-view.png`, and the three `live-verify-*` directories.
+
+### Release and deployment
+
+- Static site built with `npm run build:site` and deployed through `/opt/fleet/lib/deploy-static.sh presence-bridge dist/site`.
+- Custom domain returned HTTP 200 with managed TLS after deployment.
+- Live `index.html`, service worker, CSS, and both main JavaScript files match the deployed local build byte-for-byte. Evidence: `.factory/evidence/polish-2/live-local-hashes.tsv`.
+- GitHub Actions release run: <https://github.com/B-Divyesh/sf-presence-bridge/actions/runs/33280817377>.
+- Release: <https://github.com/B-Divyesh/sf-presence-bridge/releases/tag/v0.1.18>.
+- The tag, release target, and `latest.json.source_commit` identify `16aff877e2b476fe9278cdde31638cb952aa791a`.
+- The release publishes macOS, Windows, AppImage, Debian, and RPM packages plus `SHA256SUMS` and `latest.json`. One published Linux package was downloaded and verified against `SHA256SUMS`.
+- The cold live download page detected Linux and linked the `v0.1.18` AppImage, `SHA256SUMS`, and `latest.json` without a console error. Evidence: `.factory/evidence/polish-2/live-download-check.json`.
+
+## Run locally
 
 ```sh
 npm ci
@@ -110,13 +73,13 @@ npm run build
 cargo fmt --manifest-path src-tauri/Cargo.toml -- --check
 cargo check --locked --manifest-path src-tauri/Cargo.toml
 cargo test --locked --manifest-path src-tauri/Cargo.toml
-CI=true npx tauri build --bundles appimage
 ```
 
-For the one-click sandbox, open `http://localhost:4173/demo` after `npm run dev`.
+Open `http://localhost:4173/?demo=1` after `npm run dev` for the isolated sample.
 
-## Known gaps and operator action
+## Operator action
 
-- macOS and Windows packages remain unsigned unless the operator supplies `APPLE_CERTIFICATE`, `APPLE_CERTIFICATE_PASSWORD`, `APPLE_SIGNING_IDENTITY`, `WINDOWS_CERT_PFX`, and `WINDOWS_CERT_PASSWORD` to GitHub Actions.
-- Bridge Plus checkout remains unavailable because the external Sociobot product is not registered. The UI continues to disclose this and exposes no dead purchase link; the free roster remains complete.
-- No repository, release, deployment, accessibility, privacy, offline, or native-opener blocker is known. Independent verification is the next step.
+- macOS and Windows packages are unsigned unless the owner supplies `APPLE_CERTIFICATE`, `APPLE_CERTIFICATE_PASSWORD`, `APPLE_SIGNING_IDENTITY`, `WINDOWS_CERT_PFX`, and `WINDOWS_CERT_PASSWORD` to GitHub Actions.
+- Bridge Plus checkout remains unavailable because the external Sociobot product is not registered. The UI shows no dead purchase link, and the free five-person roster remains complete.
+
+Known product or review defects: **none**.

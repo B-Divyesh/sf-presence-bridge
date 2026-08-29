@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-08-29T23:29:46.419Z",
+  "title": "Download — Presence Bridge",
+  "copy": "We detected Linux.",
+  "links": [
+    {
+      "text": "Download Presence.Bridge_0.1.18_amd64.AppImage",
+      "href": "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.18/Presence.Bridge_0.1.18_amd64.AppImage"
+    },
+    {
+      "text": "Check SHA256SUMS",
+      "href": "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.18/SHA256SUMS"
+    },
+    {
+      "text": "Read latest.json",
+      "href": "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.18/latest.json"
+    }
+  ],
+  "errors": [],
+  "pass": true
+}

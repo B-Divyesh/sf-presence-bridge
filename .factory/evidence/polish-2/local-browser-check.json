@@ -1,0 +1,24 @@
+{
+  "url": "http://127.0.0.1:4173/?demo=1",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "rows": [
+    {
+      "text": "AS\n    Ava ShahDesign\n    available",
+      "top": 470.71875,
+      "bottom": 568.6875
+    },
+    {
+      "text": "LM\n    Leo MartinEngineering\n    busy",
+      "top": 568.6875,
+      "bottom": 666.65625
+    }
+  ],
+  "errors": [],
+  "storage": {
+    "demo": null,
+    "real": null
+  }
+}

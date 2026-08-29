@@ -1,0 +1,150 @@
+{
+  "clone": "/tmp/presence-bridge-claims-FAOUNW",
+  "commit": "16aff877e2b476fe9278cdde31638cb952aa791a",
+  "results": [
+    {
+      "id": "contact-handoff",
+      "result": "PASS",
+      "seconds": 8.5,
+      "command": "npm test -- --grep @claim:contact-handoff"
+    },
+    {
+      "id": "privacy-local",
+      "result": "PASS",
+      "seconds": 8.3,
+      "command": "npm test -- --grep @claim:privacy-local"
+    },
+    {
+      "id": "transparent-presence",
+      "result": "PASS",
+      "seconds": 7.8,
+      "command": "npm test -- --grep @claim:transparent-presence"
+    },
+    {
+      "id": "no-message-transport",
+      "result": "PASS",
+      "seconds": 7.5,
+      "command": "npm test -- --grep @claim:no-message-transport"
+    },
+    {
+      "id": "calendar-local",
+      "result": "PASS",
+      "seconds": 7.2,
+      "command": "npm test -- --grep @claim:calendar-local"
+    },
+    {
+      "id": "offline-reload",
+      "result": "PASS",
+      "seconds": 7.6,
+      "command": "npm test -- --grep @claim:offline-reload"
+    },
+    {
+      "id": "free-limit",
+      "result": "PASS",
+      "seconds": 8.2,
+      "command": "npm test -- --grep @claim:free-limit"
+    },
+    {
+      "id": "demo-isolation",
+      "result": "PASS",
+      "seconds": 7.3,
+      "command": "npm test -- --grep @claim:demo-isolation"
+    },
+    {
+      "id": "demo-exit-discard",
+      "result": "PASS",
+      "seconds": 9,
+      "command": "npm test -- --grep @claim:demo-exit-discard"
+    },
+    {
+      "id": "demo-seed-and-first-view",
+      "result": "PASS",
+      "seconds": 7.6,
+      "command": "npm test -- --grep @claim:demo-seed-and-first-view"
+    },
+    {
+      "id": "paid-roster",
+      "result": "PASS",
+      "seconds": 10.9,
+      "command": "npm test -- --grep @claim:paid-roster"
+    },
+    {
+      "id": "checkout-availability",
+      "result": "PASS",
+      "seconds": 7.6,
+      "command": "npm test -- --grep @claim:checkout-availability"
+    },
+    {
+      "id": "license-minimization",
+      "result": "PASS",
+      "seconds": 7.9,
+      "command": "npm test -- --grep @claim:license-minimization"
+    },
+    {
+      "id": "json-backup",
+      "result": "PASS",
+      "seconds": 7.5,
+      "command": "npm test -- --grep @claim:json-backup"
+    },
+    {
+      "id": "shared-presence",
+      "result": "PASS",
+      "seconds": 8.2,
+      "command": "npm test -- --grep @claim:shared-presence"
+    },
+    {
+      "id": "shared-folder-refresh",
+      "result": "PASS",
+      "seconds": 7.3,
+      "command": "npm test -- --grep @claim:shared-folder-refresh"
+    },
+    {
+      "id": "release-platforms",
+      "result": "PASS",
+      "seconds": 5.7,
+      "command": "npm test -- --grep @claim:release-platforms"
+    },
+    {
+      "id": "signing-configuration",
+      "result": "PASS",
+      "seconds": 5.7,
+      "command": "npm test -- --grep @claim:signing-configuration"
+    },
+    {
+      "id": "no-payment-runtime",
+      "result": "PASS",
+      "seconds": 6.7,
+      "command": "npm test -- --grep @claim:no-payment-runtime"
+    },
+    {
+      "id": "platform-download",
+      "result": "PASS",
+      "seconds": 6.8,
+      "command": "npm test -- --grep @claim:platform-download"
+    },
+    {
+      "id": "release-checksums",
+      "result": "PASS",
+      "seconds": 7,
+      "command": "npm test -- --grep @claim:release-checksums"
+    },
+    {
+      "id": "release-fallback",
+      "result": "PASS",
+      "seconds": 7,
+      "command": "npm test -- --grep @claim:release-fallback"
+    },
+    {
+      "id": "linux-installer",
+      "result": "PASS",
+      "seconds": 5.7,
+      "command": "npm test -- --grep @claim:linux-installer"
+    },
+    {
+      "id": "windows-installer",
+      "result": "PASS",
+      "seconds": 5.6,
+      "command": "npm test -- --grep @claim:windows-installer"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "asset": "Presence.Bridge_0.1.18_amd64.deb",
+  "expected": "17c2805970a4f9e79b77135f5ad39ddc3d50eaa4a92e95687ec1d0bd42d5c29f",
+  "actual": "17c2805970a4f9e79b77135f5ad39ddc3d50eaa4a92e95687ec1d0bd42d5c29f",
+  "result": "PASS"
+}

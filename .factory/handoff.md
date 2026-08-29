@@ -2,9 +2,12 @@
 
 ## Result: PASS
 
-**Repair commit:** `a78e58587bab4e4c23a4aa7fa15dae4e59df649d`  
-**Release:** `v0.1.10`  
-**Release workflow:** `33260656884`  
+**Repair commit:** `a78e58587bab4e4c23a4aa7fa15dae4e59df649d`
+
+**Release:** `v0.1.10`
+
+**Release workflow:** `33260656884`
+
 **Live URL:** https://presence-bridge.sociobot.in
 
 The sole release blocker from `.factory/verification-6.md` is repaired. GitHub's

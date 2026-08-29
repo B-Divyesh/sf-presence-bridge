@@ -1,4 +1,21 @@
-import { allowedDeepLink, applyCalendar, emptyState, initialsFor, parseCalendar, sampleState, type Presence, type RosterState, type TeamMember } from "./model";
+import {
+  allowedDeepLink,
+  applyCalendar,
+  emptyState,
+  FREE_CONTACT_ROUTE_LIMIT,
+  FREE_ROSTER_LIMIT,
+  initialsFor,
+  nextCalendarBoundary,
+  normalizeRosterBackup,
+  PAID_CONTACT_ROUTE_LIMIT,
+  PAID_ROSTER_LIMIT,
+  parseCalendar,
+  sampleState,
+  type Presence,
+  type RosterImportError,
+  type RosterState,
+  type TeamMember
+} from "./model";
 import { cachedLicense, checkoutUrl, restoreLicense, verifyLicense } from "./license";
 import { applyPresenceUpdate, createPresenceUpdate, parsePresenceUpdate } from "./sharing";
 
@@ -15,8 +32,19 @@ function loadState(demo: boolean): RosterState {
   const storage = demo ? sessionStorage : localStorage;
   try {
     const value = storage.getItem(demo ? DEMO_STORE : STORE);
-    return applyCalendar(value ? JSON.parse(value) as RosterState : (demo ? sampleState() : emptyState()));
+    if (!value) return applyCalendar(demo ? sampleState() : emptyState());
+    const restored = normalizeRosterBackup(JSON.parse(value), { memberLimit: PAID_ROSTER_LIMIT, contactRouteLimit: PAID_CONTACT_ROUTE_LIMIT });
+    return applyCalendar(restored.state || (demo ? sampleState() : emptyState()));
   } catch { return demo ? sampleState() : emptyState(); }
+}
+
+const rosterLimit = (paid: boolean): number => paid ? PAID_ROSTER_LIMIT : FREE_ROSTER_LIMIT;
+const contactRouteLimit = (paid: boolean): number => paid ? PAID_CONTACT_ROUTE_LIMIT : FREE_CONTACT_ROUTE_LIMIT;
+
+function importErrorMessage(error: RosterImportError): string {
+  if (error === "member-limit") return "This import has more people than your plan allows. The free roster holds five people. Bridge Plus raises the limit to ten.";
+  if (error === "contact-route-limit") return "This backup has more contact routes than your plan allows. Bridge Plus adds a second contact route.";
+  return "That backup could not be read. It was not saved. Choose a valid Presence Bridge JSON file.";
 }
 
 function memberRow(member: TeamMember, selected: boolean): string {
@@ -37,6 +65,7 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
   let addOpen = false;
   let license = cachedLicense();
   let returnFocusSelector = "";
+  let calendarTimer: number | undefined;
   const storage = demo ? sessionStorage : localStorage;
   const key = demo ? DEMO_STORE : STORE;
 
@@ -90,6 +119,7 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
       // Native dialog cancellation restores focus after the cancel event; wait one task so it cannot overwrite our explicit return target.
       setTimeout(() => root.querySelector<HTMLElement>(selector)?.focus(), 0);
     }
+    scheduleCalendarBoundary();
   };
 
   const bind = () => {
@@ -153,7 +183,7 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
     const label = String(data.get("tool") || "Contact").trim();
     if (!name || !allowedDeepLink(url)) return tell("Enter a name and a supported contact link, such as mailto: or https:.");
     const existing = selected();
-    if (!existing && state.members.length >= (license.valid ? 10 : 5)) return tell("The free roster holds five people. Bridge Plus raises the limit to ten.");
+    if (!existing && state.members.length >= rosterLimit(license.valid)) return tell("The free roster holds five people. Bridge Plus raises the limit to ten.");
     const secondUrl = String(data.get("url-2") || "").trim();
     const secondLabel = String(data.get("tool-2") || "").trim();
     const tools = [{ id: existing?.tools[0]?.id || crypto.randomUUID(), label, url }];
@@ -204,6 +234,8 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
     const file = (event.target as HTMLInputElement).files?.[0]; if (!file) return;
     const update = parsePresenceUpdate(await file.text());
     if (!update) return tell("That presence update could not be read. Choose a Presence Bridge availability file.");
+    const existing = state.members.some(member => member.sharedFrom === update.publisherId);
+    if (!existing && state.members.length >= rosterLimit(license.valid)) return tell("This import has more people than your plan allows. The free roster holds five people. Bridge Plus raises the limit to ten.");
     state = applyPresenceUpdate(state, update); selectedId = state.members.find(member => member.sharedFrom === update.publisherId)?.id || selectedId;
     save(); tell(`${update.person.name}'s chosen presence was added to this local roster.`);
   };
@@ -211,10 +243,13 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
   const importRoster = async (event: Event) => {
     const file = (event.target as HTMLInputElement).files?.[0]; if (!file) return;
     try {
-      const next = JSON.parse(await file.text()) as RosterState;
-      if (!next.me || !Array.isArray(next.members)) throw new Error();
-      state = next; selectedId = state.members[0]?.id || ""; save(); tell("Roster backup imported.");
-    } catch { tell("That backup could not be read. Choose a Presence Bridge JSON file."); }
+      const imported = normalizeRosterBackup(JSON.parse(await file.text()), {
+        memberLimit: rosterLimit(license.valid),
+        contactRouteLimit: contactRouteLimit(license.valid)
+      });
+      if (!imported.state) return tell(importErrorMessage(imported.error));
+      state = imported.state; selectedId = state.members[0]?.id || ""; save(); tell("Roster backup imported.");
+    } catch { tell(importErrorMessage("invalid")); }
   };
 
   const submitLicense = async (event: SubmitEvent) => {
@@ -226,6 +261,20 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
   const keyboard = (event: KeyboardEvent) => {
     if (event.key === "/" && !(event.target instanceof HTMLInputElement) && !(event.target instanceof HTMLTextAreaElement)) { event.preventDefault(); root.querySelector<HTMLInputElement>("#roster-search")?.focus(); }
     if (event.key === "Escape" && (addOpen || settingsOpen)) { event.preventDefault(); closeDialog(); }
+  };
+  const refreshCalendar = () => {
+    if (!state.calendarEnabled) return;
+    state = applyCalendar(state);
+    render();
+  };
+  const scheduleCalendarBoundary = () => {
+    if (calendarTimer !== undefined) window.clearTimeout(calendarTimer);
+    const boundary = nextCalendarBoundary(state);
+    if (!boundary) { calendarTimer = undefined; return; }
+    calendarTimer = window.setTimeout(refreshCalendar, Math.max(0, boundary.getTime() - Date.now()) + 30);
+  };
+  const refreshOnResume = () => {
+    if (document.visibilityState === "visible") refreshCalendar();
   };
   const handoff = async (event: Event) => {
     const button = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-url]");
@@ -244,10 +293,18 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
     } catch { tell(`Could not open ${button.dataset.label}. Check that the app is installed.`); }
   };
   document.addEventListener("keydown", keyboard);
+  document.addEventListener("visibilitychange", refreshOnResume);
+  window.addEventListener("focus", refreshCalendar);
   root.addEventListener("click", handoff);
   render();
   if (!demo && localStorage.getItem("sb_license:presence-bridge")) verifyLicense().then(result => { license = result; render(); });
-  return () => { document.removeEventListener("keydown", keyboard); root.removeEventListener("click", handoff); };
+  return () => {
+    if (calendarTimer !== undefined) window.clearTimeout(calendarTimer);
+    document.removeEventListener("keydown", keyboard);
+    document.removeEventListener("visibilitychange", refreshOnResume);
+    window.removeEventListener("focus", refreshCalendar);
+    root.removeEventListener("click", handoff);
+  };
 }
 
 function memberDialog(member: TeamMember | undefined, paid: boolean): string {

@@ -8,7 +8,7 @@ type Route = { title: string; render: () => string; after?: () => void };
 let cleanupApp: (() => void) | undefined;
 
 const header = `<header class="site-header"><a class="wordmark" href="/" data-route><span class="bridge-mark" aria-hidden="true"><i></i><i></i></span><span>Presence Bridge</span></a><nav aria-label="Main navigation"><a href="/demo" data-route>Demo</a><a href="/download" data-route>Download</a><a href="/privacy" data-route>Privacy</a></nav></header>`;
-const footer = `<footer class="site-footer"><p><strong>Presence Bridge</strong><br><span>See who is free, then open your existing tool.</span></p><nav aria-label="Footer navigation"><a href="/privacy" data-route>Privacy</a><a href="/terms" data-route>Terms</a><a href="https://sociobot.in" rel="external">Built by Param Factory</a></nav><p>v0.1.5 · Original generated artwork</p></footer>`;
+const footer = `<footer class="site-footer"><p><strong>Presence Bridge</strong><br><span>See who is free, then open your existing tool.</span></p><nav aria-label="Footer navigation"><a href="/privacy" data-route>Privacy</a><a href="/terms" data-route>Terms</a><a href="https://sociobot.in" rel="external">Built by Param Factory</a></nav><p>v0.1.6 · Original generated artwork</p></footer>`;
 
 const home = (): string => `<div class="site-page home-page">${header}<main id="main">
   <section class="hero">
@@ -32,7 +32,7 @@ function legalPage(title: string, headline: string, body: string): string {
   return `<div class="site-page">${header}<main id="main" class="legal"><p class="eyebrow">${title.split(" — ")[0]}</p><h1>${headline}</h1><p class="legal-date">Effective 28 August 2026</p>${body}</main>${footer}</div>`;
 }
 
-const download = (): string => `<div class="site-page">${header}<main id="main" class="download-page"><div class="page-heading"><p class="eyebrow">Desktop app</p><h1>Install your local presence roster</h1><p>Choose your platform. Release files are unsigned until the project owner adds signing certificates.</p></div><section class="download-console" aria-labelledby="download-title"><div><span class="window-mark" aria-hidden="true"></span><h2 id="download-title">Download Presence Bridge</h2><p id="platform-copy">Checking the latest release…</p></div><div id="download-actions" aria-live="polite"><span class="loading-line">Reading release details</span></div></section><section class="install-notes"><h2>Before you install</h2><p>macOS and Windows may show an unsigned app warning. Use the system's “Open anyway” path only after checking the release checksum.</p><p>Linux releases include AppImage and Debian packages. Every release includes SHA256SUMS.</p><a href="https://github.com/B-Divyesh/sf-presence-bridge/releases" rel="external">View all releases on GitHub</a></section></main>${footer}</div>`;
+const download = (): string => `<div class="site-page">${header}<main id="main" class="download-page"><div class="page-heading"><p class="eyebrow">Desktop app</p><h1>Install your local presence roster</h1><p>Choose your platform. Release files are unsigned until the project owner adds signing certificates.</p></div><section class="download-console" aria-labelledby="download-title"><div><span class="window-mark" aria-hidden="true"></span><h2 id="download-title">Download Presence Bridge</h2><p id="platform-copy">Checking the latest release…</p></div><div id="download-actions" aria-live="polite"><span class="loading-line">Reading release details</span></div></section><section class="install-notes"><h2>Before you install</h2><p>macOS and Windows may show an unsigned app warning. Use the system's “Open anyway” path only after checking the release checksum.</p><p>Linux releases include AppImage and Debian packages. Every published release includes SHA256SUMS and latest.json.</p><a href="https://github.com/B-Divyesh/sf-presence-bridge/releases" rel="external">View all releases on GitHub</a></section></main>${footer}</div>`;
 
 const notFound = (): string => `<div class="site-page not-found">${header}<main id="main"><div class="lost-window" aria-hidden="true"><span></span></div><p class="eyebrow">404 · Unlit window</p><h1>This path does not reach the roster</h1><p>The page may have moved, but the bridge home is still lit.</p><a class="primary-link" href="/" data-route>Return home</a></main>${footer}</div>`;
 
@@ -81,7 +81,13 @@ async function loadRelease(): Promise<void> {
     const pattern = platform === "mac" ? /\.(dmg|app\.tar\.gz)$/i : platform === "windows" ? /\.(msi|exe)$/i : /\.(AppImage|deb)$/i;
     const asset = data.assets.find(item => pattern.test(item.name));
     if (!asset) throw new Error();
-    actions.innerHTML = `<a class="primary-link" href="${asset.browser_download_url}">Download ${asset.name}</a><span>${data.tag_name} · ${(asset.size / 1_048_576).toFixed(1)} MB</span>`;
+    const checksum = data.assets.find(item => item.name === "SHA256SUMS");
+    const manifest = data.assets.find(item => item.name === "latest.json");
+    const proofs = [
+      checksum ? `<a href="${checksum.browser_download_url}">Check SHA256SUMS</a>` : "Checksums are being published.",
+      manifest ? `<a href="${manifest.browser_download_url}">Read latest.json</a>` : "Release manifest is being published."
+    ].join(" ");
+    actions.innerHTML = `<a class="primary-link" href="${asset.browser_download_url}">Download ${asset.name}</a><span>${data.tag_name} · ${(asset.size / 1_048_576).toFixed(1)} MB</span><span class="release-proofs">${proofs}</span>`;
   } catch {
     actions.innerHTML = `<p>Downloads are being published. The source and release notes are available now.</p><a class="secondary-link" href="https://github.com/B-Divyesh/sf-presence-bridge/releases" rel="external">Check the release page</a>`;
   }

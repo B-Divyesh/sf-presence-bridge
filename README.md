@@ -45,7 +45,17 @@ Build the current platform package:
 npm run tauri build
 ```
 
-Desktop releases are built by GitHub Actions on macOS, Windows, and Linux. Tagging `v*` creates the platform packages, checksums, and `latest.json`. The download page selects the matching package from GitHub Release metadata and has a calm fallback when no release exists.
+Desktop releases are built by GitHub Actions on macOS, Windows, and Linux. Tagging `v*` creates the platform packages, `SHA256SUMS`, and `latest.json`. The download page selects the matching package from GitHub Release metadata and has a calm fallback when no release exists.
+
+For a terminal install, use the script for your platform. The Linux script verifies `SHA256SUMS` before installing the AppImage. The Windows release job verifies the setup checksum before it launches the installer.
+
+```sh
+curl -fsSL https://presence-bridge.sociobot.in/install.sh | sh
+```
+
+```powershell
+irm https://presence-bridge.sociobot.in/install.ps1 | iex
+```
 
 ## Product limits and price
 

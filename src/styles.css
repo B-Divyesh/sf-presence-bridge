@@ -104,6 +104,7 @@ h3 { font-size: 1.15rem; }
 .loading-line { color: var(--mist); }
 .install-notes { max-width: 720px; padding-top: 64px; }
 .install-notes p { color: var(--mist); }
+.legal a, .install-notes > a { display: inline-flex; align-items: center; min-height: 44px; max-width: 100%; overflow-wrap: anywhere; }
 .not-found main { min-height: 70vh; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; max-width: 960px; padding: 64px 32px; margin: auto; }
 .not-found main > p { color: var(--mist); }.not-found .eyebrow { color: var(--lantern); }
 .lost-window { width: 120px; height: 160px; border: 3px solid var(--slate); margin-bottom: 32px; position: relative; }.lost-window::after { content: ""; position: absolute; left: 59px; height: 100%; border-left: 2px solid var(--slate); }.lost-window span { position: absolute; height: 2px; background: var(--lantern); width: 220px; left: 60px; bottom: -30px; transform: rotate(8deg); transform-origin: left; }

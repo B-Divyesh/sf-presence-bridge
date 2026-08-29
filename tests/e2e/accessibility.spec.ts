@@ -104,6 +104,11 @@ test("390px routes and download names reflow without horizontal scrolling and ke
       expect(box?.height || 0).toBeGreaterThanOrEqual(44);
     }
   }
+  for (const [path, linkName] of [["/privacy", "privacy@sociobot.in"], ["/terms", "support@sociobot.in"], ["/download", "View all releases on GitHub"]] as const) {
+    await page.goto(path);
+    const box = await page.getByRole("link", { name: linkName }).boundingBox();
+    expect(box?.height || 0).toBeGreaterThanOrEqual(44);
+  }
 });
 
 test("200 percent text size keeps every site route within the viewport", async ({ page }) => {

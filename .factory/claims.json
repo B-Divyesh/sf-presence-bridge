@@ -96,5 +96,33 @@
     "where": "download page, README",
     "test": "npm test -- --grep @claim:platform-download",
     "sandbox": "fresh Chromium browser context on /download with a recorded GitHub release fixture; assert the detected Linux AppImage link is rendered"
+  },
+  {
+    "id": "release-checksums",
+    "claim": "Each published desktop release includes SHA256SUMS and latest.json",
+    "where": "download page, README",
+    "test": "npm test -- --grep @claim:release-checksums",
+    "sandbox": "fresh Chromium browser context on /download with a recorded GitHub release fixture; assert checksum and manifest links are rendered"
+  },
+  {
+    "id": "release-fallback",
+    "claim": "The download page gives a release-page link when release metadata is unavailable",
+    "where": "download page, README",
+    "test": "npm test -- --grep @claim:release-fallback",
+    "sandbox": "fresh Chromium browser context on /download with the GitHub metadata request returning 503; assert the calm fallback and release-page link"
+  },
+  {
+    "id": "linux-installer",
+    "claim": "The Linux installer verifies SHA256SUMS before it installs the AppImage",
+    "where": "public/install.sh, README",
+    "test": "npm test -- --grep @claim:linux-installer",
+    "sandbox": "isolated temporary PATH with a recorded release response and AppImage fixture; run install.sh and execute the installed checksum-verified fixture"
+  },
+  {
+    "id": "windows-installer",
+    "claim": "The Windows release job verifies the setup checksum before it launches the installer",
+    "where": "public/install.ps1, .github/workflows/release.yml",
+    "test": "npm test -- --grep @claim:windows-installer",
+    "sandbox": "read the shipped PowerShell installer and Windows release job; assert Get-FileHash and the checksum failure branch occur before Start-Process, then assert the Windows smoke job invokes the installer"
   }
 ]

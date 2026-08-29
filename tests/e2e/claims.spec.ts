@@ -1,5 +1,41 @@
 import { expect, test } from "@playwright/test";
-import { readFile } from "node:fs/promises";
+import { chmod, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { execFile } from "node:child_process";
+import { createHash } from "node:crypto";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
+import { promisify } from "node:util";
+
+const execFileAsync = promisify(execFile);
+
+const backupMember = (index: number, routes = 1) => ({
+  id: `member-${index}`,
+  name: `Member ${index}`,
+  role: "Team",
+  initials: `M${index}`,
+  status: "available",
+  note: "Ready to help",
+  source: "manual",
+  tools: Array.from({ length: routes }, (_, route) => ({
+    id: `member-${index}-route-${route}`,
+    label: route ? "Phone" : "Email",
+    url: route ? `tel:+1555000${index}` : `mailto:member-${index}@example.com`
+  }))
+});
+
+const backupWithMembers = (count: number, routes = 1) => ({
+  me: { id: "me", name: "You", role: "Studio lead", initials: "YO", status: "available", note: "Free", source: "manual", tools: [] },
+  members: Array.from({ length: count }, (_, index) => backupMember(index + 1, routes)),
+  calendar: [],
+  calendarEnabled: false
+});
+
+const presenceUpdate = (name: string) => ({
+  format: "presence-bridge-presence-v1",
+  updatedAt: "2026-08-29T10:00:00.000Z",
+  publisherId: `publisher-${name.toLowerCase().replaceAll(" ", "-")}`,
+  person: { name, role: "Team", initials: "TM", status: "available", note: "Ready", source: "manual" }
+});
 
 test("@claim:contact-handoff opens a saved team tool", async ({ page }) => {
   await page.addInitScript(() => {
@@ -133,6 +169,18 @@ test("@claim:free-limit keeps five people in a free roster", async ({ page }) =>
   await page.getByLabel("Role").fill("Support");
   await page.getByLabel("Contact link").fill("mailto:sam@example.com");
   await page.getByRole("button", { name: "Save person" }).click();
+  await expect(page.locator(".roster-heading")).toContainText("5 people");
+
+  await page.getByRole("button", { name: "Settings" }).click();
+  await page.locator("#import-roster").setInputFiles({ name: "six-person-backup.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(backupWithMembers(6))) });
+  await expect(page.locator(".toast")).toContainText("free roster holds five people");
+  expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem("demo:presence-bridge:v1") || "{}").members.length)).toBe(5);
+
+  await page.locator("#import-presence").setInputFiles({ name: "sixth-person.presence.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(presenceUpdate("Sixth Person"))) });
+  await expect(page.locator(".toast")).toContainText("free roster holds five people");
+  await expect(page.locator(".roster-heading")).toContainText("5 people");
+
+  await page.getByRole("button", { name: "Close" }).click();
   await page.getByRole("button", { name: "Add person" }).click();
   await page.getByLabel("Name", { exact: true }).fill("Iris Bell");
   await page.getByLabel("Contact link").fill("mailto:iris@example.com");
@@ -166,12 +214,19 @@ test("@claim:paid-roster enables ten people and a second route", async ({ page }
   await page.getByLabel("Contact link", { exact: true }).fill("mailto:eleven@example.com");
   await page.getByRole("button", { name: "Save person" }).click();
   await expect(page.locator(".toast")).toContainText("limit to ten");
+
+  await page.getByRole("button", { name: "Close" }).click();
+  await page.getByRole("button", { name: "Settings" }).click();
+  await page.locator("#import-roster").setInputFiles({ name: "ten-person-paid-backup.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(backupWithMembers(10, 2))) });
+  await expect(page.locator(".toast")).toHaveText("Roster backup imported.");
+  await expect(page.locator(".roster-heading")).toContainText("10 people");
 });
 
-test("@claim:shared-presence carries a chosen status between isolated local rosters", async ({ browser }) => {
+test("@claim:shared-presence carries a chosen status between isolated local rosters", async ({ browser, baseURL }) => {
+  const appUrl = new URL("/app.html", baseURL || "http://127.0.0.1:4173").toString();
   const senderContext = await browser.newContext();
   const sender = await senderContext.newPage();
-  await sender.goto("http://127.0.0.1:4173/app.html");
+  await sender.goto(appUrl);
   await sender.getByRole("button", { name: "Settings" }).click();
   await sender.getByLabel("Your name").fill("Nia Flores");
   await sender.getByRole("button", { name: "Save settings" }).click();
@@ -191,7 +246,7 @@ test("@claim:shared-presence carries a chosen status between isolated local rost
 
   const receiverContext = await browser.newContext();
   const receiver = await receiverContext.newPage();
-  await receiver.goto("http://127.0.0.1:4173/app.html");
+  await receiver.goto(appUrl);
   await receiver.getByRole("button", { name: "Settings" }).click();
   await receiver.locator("#import-presence").setInputFiles({ name: "nia.presence.json", mimeType: "application/json", buffer });
   await expect(receiver.locator(".toast")).toContainText("Nia Flores's chosen presence was added");
@@ -211,4 +266,110 @@ test("@claim:platform-download selects the detected platform package from releas
   const expected = userAgent.includes("win") ? "Presence.Bridge_0.1.6_x64-setup.exe" : "Presence.Bridge_0.1.6_amd64.AppImage";
   await page.goto("/download");
   await expect(page.getByRole("link", { name: `Download ${expected}` })).toHaveAttribute("href", new RegExp(expected.replaceAll(".", "\\.") + "$"));
+});
+
+test("@claim:release-checksums shows the checksum and manifest shipped with a release", async ({ page }) => {
+  await page.route("https://api.github.com/repos/B-Divyesh/sf-presence-bridge/releases?per_page=1", route => route.fulfill({ json: [{
+    tag_name: "v0.1.6", assets: [
+      { name: "Presence.Bridge_0.1.6_amd64.AppImage", size: 79_000_000, browser_download_url: "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.6/Presence.Bridge_0.1.6_amd64.AppImage" },
+      { name: "Presence.Bridge_0.1.6_x64-setup.exe", size: 60_000_000, browser_download_url: "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.6/Presence.Bridge_0.1.6_x64-setup.exe" },
+      { name: "SHA256SUMS", size: 1_200, browser_download_url: "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.6/SHA256SUMS" },
+      { name: "latest.json", size: 900, browser_download_url: "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.6/latest.json" }
+    ]
+  }] }));
+  await page.goto("/download");
+  await expect(page.getByRole("link", { name: "Check SHA256SUMS" })).toHaveAttribute("href", /SHA256SUMS$/);
+  await expect(page.getByRole("link", { name: "Read latest.json" })).toHaveAttribute("href", /latest\.json$/);
+});
+
+test("@claim:release-fallback gives a usable release-page link when metadata is unavailable", async ({ page }) => {
+  await page.route("https://api.github.com/repos/B-Divyesh/sf-presence-bridge/releases?per_page=1", route => route.fulfill({ status: 503 }));
+  await page.goto("/download");
+  await expect(page.getByText("Downloads are being published. The source and release notes are available now.")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Check the release page" })).toHaveAttribute("href", "https://github.com/B-Divyesh/sf-presence-bridge/releases");
+});
+
+test("@claim:linux-installer installs only a checksum-verified AppImage", async () => {
+  const temp = await mkdtemp(join(tmpdir(), "presence-bridge-installer-"));
+  const bin = join(temp, "bin");
+  const fakeBin = join(temp, "fake-bin");
+  const appName = "Presence.Bridge_0.1.6_amd64.AppImage";
+  const app = join(temp, appName);
+  const payload = "#!/bin/sh\necho Presence Bridge fixture\n";
+  const checksum = createHash("sha256").update(payload).digest("hex");
+  try {
+    await mkdir(fakeBin);
+    await writeFile(app, payload, { mode: 0o755 });
+    const curl = `#!/bin/sh
+out=""
+url=""
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -o) out="$2"; shift 2 ;;
+    -*) shift ;;
+    *) url="$1"; shift ;;
+  esac
+done
+case "$url" in
+  *releases/latest) printf '%s' '{"assets":[{"name":"${appName}","browser_download_url":"https://fixture.invalid/${appName}"},{"name":"SHA256SUMS","browser_download_url":"https://fixture.invalid/SHA256SUMS"}]}' > "$out" ;;
+  *${appName}) cp "$FAKE_APP" "$out" ;;
+  *SHA256SUMS) printf '%s  %s\\n' "$FAKE_SHA" "${appName}" > "$out" ;;
+  *) exit 1 ;;
+esac
+`;
+    const curlPath = join(fakeBin, "curl");
+    await writeFile(curlPath, curl, { mode: 0o755 });
+    await chmod(curlPath, 0o755);
+    const environment = { ...process.env, PATH: `${fakeBin}:${process.env.PATH}`, XDG_BIN_HOME: bin, FAKE_APP: app, FAKE_SHA: checksum };
+    await execFileAsync("sh", [resolve("public/install.sh")], { env: environment });
+    const { stdout } = await execFileAsync(join(bin, "presence-bridge"));
+    expect(stdout).toContain("Presence Bridge fixture");
+  } finally {
+    await rm(temp, { recursive: true, force: true });
+  }
+});
+
+test("@claim:windows-installer verifies its setup before launch in the Windows release job", async () => {
+  const [installer, workflow] = await Promise.all([readFile("public/install.ps1", "utf8"), readFile(".github/workflows/release.yml", "utf8")]);
+  expect(installer.indexOf("Checksum failed. The setup was not run.")).toBeLessThan(installer.indexOf("Start-Process -FilePath $installer"));
+  expect(installer).toContain("Get-FileHash $installer -Algorithm SHA256");
+  expect(workflow).toContain("windows-installer-smoke:");
+  expect(workflow).toContain("run: ./public/install.ps1");
+});
+
+test("backup import rejects malformed state, preserves the prior roster, and reloads safely", async ({ page }) => {
+  await page.goto("/demo");
+  await page.locator("#own-status").selectOption("away");
+  const before = await page.evaluate(() => sessionStorage.getItem("demo:presence-bridge:v1"));
+  await page.getByRole("button", { name: "Settings" }).click();
+  await page.locator("#import-roster").setInputFiles({ name: "malformed.json", mimeType: "application/json", buffer: Buffer.from('{"me":{},"members":[{}]}') });
+  await expect(page.locator(".toast")).toContainText("It was not saved");
+  expect(await page.evaluate(() => sessionStorage.getItem("demo:presence-bridge:v1"))).toBe(before);
+  await page.reload();
+  await expect(page.getByRole("heading", { name: "Try a complete team roster" })).toBeVisible();
+  await expect(page.getByRole("option", { name: /Ava Shah/ })).toBeVisible();
+});
+
+test("a legacy malformed saved backup fails closed without blanking the app", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", error => errors.push(error.message));
+  await page.addInitScript(() => localStorage.setItem("presence-bridge:v1", '{"me":{},"members":[{}]}'));
+  await page.goto("/app.html");
+  await expect(page.getByRole("heading", { name: "Who is free?" })).toBeVisible();
+  await expect(page.getByText("Your roster is empty.")).toBeVisible();
+  expect(errors).toEqual([]);
+});
+
+test("calendar-derived status changes at an imported event boundary without reload", async ({ page }) => {
+  test.setTimeout(20_000);
+  await page.goto("/demo");
+  await page.getByRole("button", { name: "Settings" }).click();
+  const now = new Date();
+  const start = new Date(now.getTime() - 10_000);
+  const end = new Date(now.getTime() + 3_000);
+  const stamp = (date: Date) => date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  const ics = ["BEGIN:VCALENDAR", "BEGIN:VEVENT", `DTSTART:${stamp(start)}`, `DTEND:${stamp(end)}`, "SUMMARY:Boundary meeting", "END:VEVENT", "END:VCALENDAR"].join("\n");
+  await page.locator("#calendar-file").setInputFiles({ name: "boundary.ics", mimeType: "text/calendar", buffer: Buffer.from(ics) });
+  await expect(page.locator(".status-summary")).toContainText("busy · Boundary meeting");
+  await expect(page.locator(".status-summary")).toContainText("available · Calendar is clear", { timeout: 7_000 });
 });

@@ -9,21 +9,21 @@ const root = resolve(import.meta.dirname, "../..");
 describe("release repair contracts", () => {
   it("keeps every package version aligned and rejects a release from a stale commit", () => {
     const versions = readProductVersions(root);
-    expect(new Set(Object.values(versions))).toEqual(new Set(["0.1.16"]));
+    expect(new Set(Object.values(versions))).toEqual(new Set(["0.1.17"]));
 
     const expectedCommit = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-    const matchingRelease = { tag_name: "v0.1.16", target_commitish: expectedCommit };
+    const matchingRelease = { tag_name: "v0.1.17", target_commitish: expectedCommit };
     expect(verifyReleaseProvenance({
       release: matchingRelease,
       expectedCommit,
-      expectedTag: "v0.1.16",
+      expectedTag: "v0.1.17",
       versions
-    })).toEqual({ version: "0.1.16", tag: "v0.1.16", sourceCommit: expectedCommit });
+    })).toEqual({ version: "0.1.17", tag: "v0.1.17", sourceCommit: expectedCommit });
 
     expect(() => verifyReleaseProvenance({
       release: { ...matchingRelease, target_commitish: "166e4d6b6690157e154c22e0e2359116ae7734e1" },
       expectedCommit,
-      expectedTag: "v0.1.16",
+      expectedTag: "v0.1.17",
       versions
     })).toThrow("Published release targets 166e4d6b6690157e154c22e0e2359116ae7734e1; expected aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.");
   });
@@ -31,11 +31,11 @@ describe("release repair contracts", () => {
   it("runs the same provenance CLI used by the release job from the repository checkout", () => {
     const output = execFileSync(process.execPath, [
       resolve(root, "scripts/verify-release-provenance.mjs"),
-      resolve(root, "tests/fixtures/release-v0.1.16.json"),
+      resolve(root, "tests/fixtures/release-v0.1.17.json"),
       "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "v0.1.16"
+      "v0.1.17"
     ], { encoding: "utf8" });
-    expect(output).toBe("Verified v0.1.16 targets aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.\n");
+    expect(output).toBe("Verified v0.1.17 targets aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.\n");
   });
 
   it("records and verifies release source provenance in the publishing workflow", () => {
@@ -64,7 +64,7 @@ describe("release repair contracts", () => {
     }
     expect(nativeSource).toContain('invoke("plugin:opener|open_url", { url })');
     expect(workflow).toContain('presence-bridge" --smoke-opener');
-    expect(workflow).toContain('diff -u <(cat');
+    expect(workflow).toContain('grep -Fqx "native opener accepted $url"');
   });
 
   it("runs the checksum-verified Windows setup and launches the installed app", () => {

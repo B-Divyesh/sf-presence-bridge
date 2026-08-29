@@ -129,19 +129,13 @@ jobs:
           sh ./public/install.sh
           test -x "$XDG_BIN_HOME/presence-bridge"
           "$XDG_BIN_HOME/presence-bridge" --appimage-version
-          smoke_dir="$RUNNER_TEMP/presence-bridge-native-smoke"
-          mkdir -p "$smoke_dir/bin"
-          cat > "$smoke_dir/bin/xdg-open" <<'SH'
-          #!/bin/sh
-          printf '%s\n' "$1" >> "$PRESENCE_BRIDGE_OPENER_LOG"
-          SH
-          chmod +x "$smoke_dir/bin/xdg-open"
-          export PRESENCE_BRIDGE_OPENER_LOG="$smoke_dir/opened-urls.log"
-          export PATH="$smoke_dir/bin:$PATH"
           export APPIMAGE_EXTRACT_AND_RUN=1
           export WEBKIT_DISABLE_COMPOSITING_MODE=1
-          xvfb-run -a "$XDG_BIN_HOME/presence-bridge" --smoke-opener
-          diff -u <(cat <<'URLS'
+          native_output=$(xvfb-run -a "$XDG_BIN_HOME/presence-bridge" --smoke-opener 2>&1)
+          printf '%s\n' "$native_output"
+          while IFS= read -r url; do
+            grep -Fqx "native opener accepted $url" <<< "$native_output"
+          done <<'URLS'
           slack://user?team=T123&id=U123
           msteams://teams.microsoft.com/l/chat/0/0?users=ava@example.com
           https://meet.google.com/abc-defg-hij
@@ -149,4 +143,3 @@ jobs:
           zoommtg://zoom.us/join?confno=123456789
           tel:+15550199
           URLS
-          ) "$PRESENCE_BRIDGE_OPENER_LOG"

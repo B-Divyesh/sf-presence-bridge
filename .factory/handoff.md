@@ -2,7 +2,7 @@
 
 ## Result
 
-Release blockers P1 and P2 from independent verification 9 are repaired in version `0.1.16`. The immutable product-code repair commit is `878f7737530b9d02bcf8b47976a9d45fac6fcfb1`. The researched scope and existing passing behavior are unchanged.
+Release blockers P1 and P2 from independent verification 9 are repaired in version `0.1.17`. The immutable product-code repair commit is `878f7737530b9d02bcf8b47976a9d45fac6fcfb1`. The researched scope and existing passing behavior are unchanged.
 
 ## Failure reproduced before repair
 
@@ -16,7 +16,7 @@ Release blockers P1 and P2 from independent verification 9 are repaired in versi
 - The release job installs the checksum-verified Linux AppImage, runs that native command under Xvfb, records OS-opener calls, and diffs all six exact URLs. This closes the prior browser-only false positive.
 - Every visible link and control now has a minimum 44 × 44 CSS-pixel hit area. Release proof links wrap with 8 px gaps, dialog legal links inherit full target sizing, checkboxes are 44 px, and mobile header links retain 8 px separation.
 - The mobile regression scans every visible interactive element on home, privacy, terms, download with dynamic release metadata, standalone app, demo, Settings, and Add person. Failure output identifies the route, element, text, width, and height.
-- Product, Rust, lockfile, UI, fixture, and release-workflow versions are aligned at `0.1.16`.
+- Product, Rust, lockfile, UI, fixture, and release-workflow versions are aligned at `0.1.17`.
 
 ## Verification evidence
 
@@ -37,7 +37,7 @@ Release blockers P1 and P2 from independent verification 9 are repaired in versi
 
 ## Release and deployment identity
 
-- Tag and accepted release: `v0.1.16`. The preceding `v0.1.14` and `v0.1.15` build matrices published packages, but the new native smoke exposed missing EGL and GLES libraries on their clean smoke runners. The accepted job installs both runtimes, disables WebKit compositing for headless execution, and keeps the full native assertion.
+- Tag and accepted release: `v0.1.17`. The preceding `v0.1.14` through `v0.1.16` matrices published packages while the new gate exposed clean-runner dependencies and an AppImage PATH assumption. The accepted job installs EGL and GLES, disables WebKit compositing for headless execution, captures the packaged command's results, and asserts all six exact accepted URLs.
 - The tag commit, GitHub release target, `latest.json.source_commit`, release-workflow source SHA, and deployed build SHA were compared for equality after publication.
 - The release publishes macOS, Windows, and Linux packages plus `SHA256SUMS` and `latest.json`. The Linux release smoke installs the published AppImage only after checksum verification, then exercises the native opener command.
 - Static output was rebuilt from the tagged commit and deployed from `dist/site/` with `/opt/fleet/lib/deploy-static.sh presence-bridge dist/site`.

@@ -1,0 +1,99 @@
+{
+  "mobile": {
+    "privacyVisible": true,
+    "facts": [
+      {
+        "text": "Your roster stays on this device unless you share an update.",
+        "bottom": 596.46875
+      },
+      {
+        "text": "Works after the first visit, even offline.",
+        "bottom": 620.796875
+      },
+      {
+        "text": "Free for up to five people.",
+        "bottom": 645.125
+      }
+    ],
+    "scrollWidth": [
+      390,
+      390
+    ]
+  },
+  "demoEntry": {
+    "url": "https://presence-bridge.sociobot.in/?demo=1",
+    "title": "Demo — Presence Bridge",
+    "banner": true,
+    "realBefore": null
+  },
+  "demoExit": {
+    "url": "https://presence-bridge.sociobot.in/app.html",
+    "demoKeyAfterExit": null,
+    "realKey": null,
+    "statusAfterBack": "available"
+  },
+  "app": {
+    "title": "Presence Bridge — Your local team roster",
+    "canonical": "https://presence-bridge.sociobot.in/app.html",
+    "ogTitle": "Presence Bridge — Your local team roster",
+    "home": "/",
+    "privacy": "/privacy",
+    "terms": "/terms"
+  },
+  "routes": {
+    "/demo": {
+      "title": "Demo — Presence Bridge",
+      "description": "Try Presence Bridge with an isolated five-person sample roster. Demo changes never touch your real roster.",
+      "canonical": "https://presence-bridge.sociobot.in/demo",
+      "ogTitle": "Demo — Presence Bridge",
+      "twitterTitle": "Demo — Presence Bridge"
+    },
+    "/privacy": {
+      "title": "Privacy — Presence Bridge",
+      "description": "Read what Presence Bridge stores on your device, what leaves only when you choose, and how to delete local data.",
+      "canonical": "https://presence-bridge.sociobot.in/privacy",
+      "ogTitle": "Privacy — Presence Bridge",
+      "twitterTitle": "Privacy — Presence Bridge"
+    },
+    "/terms": {
+      "title": "Terms — Presence Bridge",
+      "description": "Read the consent, usage, license, and warranty terms for the Presence Bridge local availability roster.",
+      "canonical": "https://presence-bridge.sociobot.in/terms",
+      "ogTitle": "Terms — Presence Bridge",
+      "twitterTitle": "Terms — Presence Bridge"
+    },
+    "/download": {
+      "title": "Download — Presence Bridge",
+      "description": "Download Presence Bridge for macOS, Windows, or Linux and check each published release checksum.",
+      "canonical": "https://presence-bridge.sociobot.in/download",
+      "ogTitle": "Download — Presence Bridge",
+      "twitterTitle": "Download — Presence Bridge"
+    }
+  },
+  "notFound": {
+    "status": 404,
+    "title": "Page not found — Presence Bridge",
+    "ogTitle": "Page not found — Presence Bridge"
+  },
+  "network": {
+    "origins": [
+      "https://presence-bridge.sociobot.in",
+      "https://api.github.com"
+    ],
+    "errors": [],
+    "demoOrigins": [
+      "https://presence-bridge.sociobot.in"
+    ]
+  },
+  "offline": {
+    "title": "Demo — Presence Bridge",
+    "banner": true,
+    "ava": true
+  },
+  "copy": {
+    "noDollar24": true,
+    "splitPrivacy": true,
+    "noFlaggedPhrases": true,
+    "noDollar24Live": true
+  }
+}

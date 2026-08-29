@@ -193,6 +193,21 @@ test("@claim:offline-reload works offline after the first visit", async ({ page,
   await expect(page.getByRole("option", { name: /Ava Shah/ })).toBeVisible();
 });
 
+test("@claim:demo-seed-and-first-view shows four sample teammates in one mobile click", async ({ browser, baseURL }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const page = await context.newPage();
+  await page.goto(new URL("/", baseURL || "http://127.0.0.1:4173").toString());
+  await page.getByRole("link", { name: "Try it with sample data" }).click();
+  await expect(page).toHaveURL(/\?demo=1$/);
+  await expect(page.locator(".roster-heading")).toContainText("4 people");
+  await expect(page.getByRole("option", { name: /Ava Shah/ })).toBeVisible();
+  await expect(page.getByRole("option", { name: /Leo Martin/ })).toBeVisible();
+  const firstTwo = await page.locator(".person-row").evaluateAll(rows => rows.slice(0, 2).map(row => row.getBoundingClientRect().bottom));
+  expect(firstTwo).toHaveLength(2);
+  expect(Math.max(...firstTwo)).toBeLessThanOrEqual(844);
+  await context.close();
+});
+
 test("@claim:free-limit keeps five people in a free roster", async ({ page }) => {
   await page.goto("/demo");
   await page.getByRole("button", { name: "Add person" }).click();
@@ -226,10 +241,17 @@ test("@claim:demo-isolation never copies sample data into the real roster", asyn
   await expect(page.getByText("Your roster is empty.")).toBeVisible();
 });
 
-test("@claim:demo-exit-discard restores the seed after leaving the demo", async ({ page }) => {
-  await page.goto("/?demo=1");
+test("@claim:demo-exit-discard reset, exit, and tab close discard demo changes", async ({ browser, baseURL }) => {
+  const demoUrl = new URL("/?demo=1", baseURL || "http://127.0.0.1:4173").toString();
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  await page.goto(demoUrl);
   await expect(page.getByText("Demo — sample data, nothing is saved")).toBeVisible();
   await page.locator("#own-status").selectOption("away");
+  await page.getByRole("button", { name: "Reset demo" }).click();
+  await expect(page.locator("#own-status")).toHaveValue("available");
+  expect(await page.evaluate(() => sessionStorage.getItem("demo:presence-bridge:v1"))).toBeNull();
+  await page.locator("#own-status").selectOption("busy");
   await page.getByRole("link", { name: "Start for real" }).click();
   await expect(page).toHaveURL(/\/app\.html$/);
   expect(await page.evaluate(() => sessionStorage.getItem("demo:presence-bridge:v1"))).toBeNull();
@@ -237,6 +259,15 @@ test("@claim:demo-exit-discard restores the seed after leaving the demo", async 
   await expect(page.locator("#own-status")).toHaveValue("available");
   await expect(page.getByRole("option", { name: /Ava Shah/ })).toBeVisible();
   expect(await page.evaluate(() => sessionStorage.getItem("demo:presence-bridge:v1"))).toBeNull();
+  await page.locator("#own-status").selectOption("away");
+  await context.close();
+
+  const reopenedContext = await browser.newContext();
+  const reopened = await reopenedContext.newPage();
+  await reopened.goto(demoUrl);
+  await expect(reopened.locator("#own-status")).toHaveValue("available");
+  await expect(reopened.getByRole("option", { name: /Ava Shah/ })).toBeVisible();
+  await reopenedContext.close();
 });
 
 test("@claim:paid-roster enables ten people and a second contact tool", async ({ page }) => {
@@ -297,6 +328,79 @@ test("@claim:shared-presence carries a chosen status between isolated local rost
   await expect(receiver.getByRole("option", { name: /Nia Flores/ })).toContainText("away");
   await senderContext.close();
   await receiverContext.close();
+});
+
+test("@claim:shared-folder-refresh imports newer opted-in updates and can stop", async ({ page }) => {
+  await page.addInitScript(() => {
+    const now = new Date();
+    const fixture = (name: string, publisherId: string, status: string, updatedAt: string) => JSON.stringify({
+      format: "presence-bridge-presence-v1",
+      updatedAt,
+      publisherId,
+      person: { name, role: "Studio", initials: "NF", status, note: "Shared by choice", source: "manual" }
+    });
+    const state = {
+      files: [{ path: "/Team/Presence/nia.presence.json", contents: fixture("Nia Flores", "nia", "available", now.toISOString()), modifiedMs: now.getTime() }]
+    };
+    (window as unknown as { __WATCH_FIXTURE__: typeof state }).__WATCH_FIXTURE__ = state;
+    window.__PRESENCE_BRIDGE_NATIVE__ = {
+      chooseSharedFolder: async () => "/Team/Presence",
+      readPresenceFolder: async () => state.files
+    };
+  });
+  await page.goto("/app.html");
+  await page.getByRole("button", { name: "Open settings" }).click();
+  await page.getByRole("button", { name: "Watch a shared folder" }).click();
+  await expect(page.getByRole("option", { name: /Nia Flores/ })).toContainText("available");
+  await expect(page.locator(".toast")).toContainText("1 teammate updated from the shared folder");
+  expect(await page.evaluate(() => localStorage.getItem("presence-bridge:watch-folder:v1"))).toBe("/Team/Presence");
+
+  await page.evaluate(() => {
+    const holder = window as unknown as { __WATCH_FIXTURE__: { files: { path: string; contents: string; modifiedMs: number }[] } };
+    const next = new Date(Date.now() + 1_000);
+    const stale = new Date(Date.now() - 2 * 24 * 60 * 60 * 1_000);
+    holder.__WATCH_FIXTURE__.files = [
+      { path: "/Team/Presence/nia.presence.json", modifiedMs: next.getTime(), contents: JSON.stringify({ format: "presence-bridge-presence-v1", updatedAt: next.toISOString(), publisherId: "nia", person: { name: "Nia Flores", role: "Studio", initials: "NF", status: "away", note: "Supplier visit", source: "manual" } }) },
+      { path: "/Team/Presence/omar.presence.json", modifiedMs: Date.now(), contents: JSON.stringify({ format: "presence-bridge-presence-v1", updatedAt: stale.toISOString(), publisherId: "omar", person: { name: "Omar Chen", role: "Support", initials: "OC", status: "busy", note: "Heads down", source: "manual" } }) }
+    ];
+  });
+  await page.getByRole("button", { name: "Check shared folder now" }).click();
+  await expect(page.getByRole("option", { name: /Nia Flores/ })).toContainText("away");
+  await expect(page.getByRole("option", { name: /Omar Chen/ })).toContainText("Stale");
+  await page.getByRole("button", { name: "Stop watching" }).click();
+  expect(await page.evaluate(() => localStorage.getItem("presence-bridge:watch-folder:v1"))).toBeNull();
+  await expect(page.getByRole("button", { name: "Watch a shared folder" })).toBeVisible();
+});
+
+test("@claim:release-platforms tags build macOS, Windows, AppImage, and Debian packages", async () => {
+  const [workflow, config] = await Promise.all([
+    readFile(".github/workflows/release.yml", "utf8"),
+    readFile("src-tauri/tauri.conf.json", "utf8").then(value => JSON.parse(value) as { bundle: { targets: string } })
+  ]);
+  expect(workflow).toContain('tags: ["v*"]');
+  for (const runner of ["macos-latest", "windows-latest", "ubuntu-latest"]) expect(workflow).toContain(`platform: ${runner}`);
+  expect(workflow).toContain("tauri-apps/tauri-action@v0");
+  expect(config.bundle.targets).toBe("all");
+  expect(workflow).toContain("f.endswith(('.AppImage', '.deb', '.rpm'))");
+});
+
+test("@claim:signing-configuration leaves signing off unless owner certificates are configured", async () => {
+  const workflow = await readFile(".github/workflows/release.yml", "utf8");
+  expect(workflow).toContain("Configure optional signing");
+  expect(workflow).toContain('if [ -n "$APPLE_CERTIFICATE_SECRET" ]');
+  expect(workflow).toContain('if [ -n "$WINDOWS_CERT_PFX_SECRET" ]');
+  expect(workflow).toContain("Builds are unsigned unless signing secrets are configured.");
+});
+
+test("@claim:no-payment-runtime loads Settings without a payment provider", async ({ page }) => {
+  const requests: string[] = [];
+  page.on("request", request => requests.push(request.url()));
+  await page.goto("/app.html");
+  await page.getByRole("button", { name: "Open settings" }).click();
+  await expect(page.getByText("Bridge Plus purchases are not available right now.")).toBeVisible();
+  expect(requests.every(url => !/(stripe|dodo|checkout|payment)/i.test(url))).toBe(true);
+  const sources = await Promise.all(["package.json", "src/app-core.ts", "src/license.ts", "src/site.ts"].map(path => readFile(path, "utf8")));
+  expect(sources.join("\n")).not.toMatch(/stripe|dodo/i);
 });
 
 test("@claim:platform-download selects the detected platform package from release metadata", async ({ page }) => {

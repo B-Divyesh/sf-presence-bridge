@@ -57,10 +57,17 @@
   },
   {
     "id": "demo-exit-discard",
-    "claim": "Leaving the demo discards demo changes",
+    "claim": "Resetting, leaving, or closing the demo discards its changes",
     "where": "demo banner, README",
     "test": "npm test -- --grep @claim:demo-exit-discard",
-    "sandbox": "fresh browser context at /?demo=1; change status to away, use Start for real, return to the demo, and assert the seed status and sample roster are restored"
+    "sandbox": "fresh isolated browser contexts at /?demo=1; change status, exercise Reset and Start for real, close the context, reopen the demo, and assert the seed is restored after every path"
+  },
+  {
+    "id": "demo-seed-and-first-view",
+    "claim": "One click shows four sample teammates and the user's status, with named teammate rows in the first 390 by 844 viewport",
+    "where": "landing first screen, demo route metadata, README",
+    "test": "npm test -- --grep @claim:demo-seed-and-first-view",
+    "sandbox": "fresh 390 by 844 browser context at /; click Try it with sample data once, assert four rows and realistic names, and measure the first two row bottoms inside the viewport"
   },
   {
     "id": "paid-roster",
@@ -96,6 +103,34 @@
     "where": "app settings, landing privacy section, privacy page, terms, README",
     "test": "npm test -- --grep @claim:shared-presence",
     "sandbox": "two isolated browser contexts at /app.html; one downloads a chosen status update and the other imports it, asserting the status appears with no calendar, contact-tool, or message data"
+  },
+  {
+    "id": "shared-folder-refresh",
+    "claim": "The installed desktop app can watch a user-chosen shared folder, import newer presence files, mark day-old updates stale, and stop watching",
+    "where": "app settings, README",
+    "test": "npm test -- --grep @claim:shared-folder-refresh",
+    "sandbox": "fresh browser context with the native folder commands fulfilled by recorded local-file fixtures; choose a folder, assert initial and changed statuses, assert stale marking, stop watching, and assert the local grant is removed"
+  },
+  {
+    "id": "release-platforms",
+    "claim": "A v* tag runs GitHub Actions builds for macOS, Windows, and Linux, including AppImage and Debian package targets",
+    "where": "download page, README, release workflow",
+    "test": "npm test -- --grep @claim:release-platforms",
+    "sandbox": "clean repository; inspect the tag trigger, three-runner matrix, Tauri all-target bundle configuration, and Linux manifest package filters"
+  },
+  {
+    "id": "signing-configuration",
+    "claim": "macOS and Windows release builds remain unsigned unless the owner configures signing certificates",
+    "where": "download page, release workflow",
+    "test": "npm test -- --grep @claim:signing-configuration",
+    "sandbox": "clean repository; inspect the release workflow and assert Apple and Windows signing variables are set only inside non-empty owner-secret guards"
+  },
+  {
+    "id": "no-payment-runtime",
+    "claim": "No payment provider runs inside this release of the app",
+    "where": "README, app settings",
+    "test": "npm test -- --grep @claim:no-payment-runtime",
+    "sandbox": "fresh browser context at /app.html; record requests while opening Settings and inspect the production dependency/import surface for embedded payment-provider code"
   },
   {
     "id": "platform-download",

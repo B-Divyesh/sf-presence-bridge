@@ -63,6 +63,7 @@ export function applyPresenceUpdate(state: RosterState, update: PresenceUpdate):
   const member: TeamMember = {
     id,
     sharedFrom: update.publisherId,
+    sharedUpdatedAt: update.updatedAt,
     ...update.person,
     tools: existing?.tools || []
   };

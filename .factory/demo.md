@@ -9,7 +9,7 @@
 
 ## Included sample
 
-The demo contains four colleagues in a five-person studio: Ava Shah, Leo Martin, Noor Okafor, and Mina Park. Their statuses cover available, calendar-derived busy, away, and offline. Saved contact tools cover Slack, Teams, Google Meet, and email.
+The demo contains four teammates plus the visitor's status: Ava Shah, Leo Martin, Noor Okafor, and Mina Park. Their statuses cover available, calendar-derived busy, away, and offline. Saved contact tools cover Slack, Teams, Google Meet, and email. At 390 × 844, the compact demo heading keeps the first two teammate rows in the initial viewport.
 
 ## Isolation and reset
 

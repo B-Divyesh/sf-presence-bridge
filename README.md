@@ -14,11 +14,13 @@ Run the site and open `http://localhost:4173/?demo=1`, or use the hosted path:
 https://presence-bridge.sociobot.in/?demo=1
 ```
 
-The demo starts with four colleagues and several contact tools. It uses the separate `demo:presence-bridge:v1` session key. Resetting, leaving, or closing the demo discards its changes. None of these actions changes the real roster.
+The demo starts with four teammates and your status. It uses the separate `demo:presence-bridge:v1` session key. Resetting, leaving, or closing the demo discards its changes. None of these actions changes the real roster.
 
 ## Share a chosen status
 
 Open **Settings**, choose **Download presence update**, then send that file using a shared folder or a contact tool. A teammate imports it from the same Settings panel. Updates never send automatically, and an imported status remains a local roster row. This is the sharing boundary: no activity tracking, message transport, contact scraping, or hosted roster relay.
+
+The installed desktop app can watch a shared folder you choose. It imports newer `.presence.json` files and marks updates older than one day as stale. Choose **Stop watching** to remove the saved folder grant. Publishing remains an explicit download; the watcher never publishes your status.
 
 ## Run and test
 
@@ -28,6 +30,7 @@ Requirements: Node.js 22, npm, Rust stable, and the [Tauri 2 system packages](ht
 npm ci
 npm run dev
 npm test
+npm run audit:copy
 npm run build:site
 ```
 
@@ -66,6 +69,7 @@ Presence Bridge does not transport messages or infer activity. Keyboard and poin
 ## Project map
 
 - `src/app-core.ts`: roster, calendar import, contact tools, backup, and license state
+- `src-tauri/src/lib.rs`: tray behavior, native contact handoff checks, and shared-folder access
 - `src/site.ts`: landing pages, demo route, download detection, privacy, terms, and 404
 - `src-tauri/`: Tauri tray shell and packaging configuration
 - `.github/workflows/release.yml`: cross-platform release builds

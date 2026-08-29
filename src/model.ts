@@ -17,6 +17,8 @@ export type TeamMember = {
   source: "manual" | "calendar";
   /** Stable publisher id when this row came from an opt-in presence update. */
   sharedFrom?: string;
+  /** Timestamp supplied by the teammate's explicit presence update. */
+  sharedUpdatedAt?: string;
   tools: ContactTool[];
 };
 
@@ -221,7 +223,9 @@ function normalizeMember(value: unknown): TeamMember | undefined {
   if (tools.some(tool => !tool)) return undefined;
   const until = member.until === undefined ? undefined : stringField(member.until, 100, true);
   const sharedFrom = member.sharedFrom === undefined ? undefined : stringField(member.sharedFrom, 100, true);
-  if ((member.until !== undefined && !until) || (member.sharedFrom !== undefined && !sharedFrom)) return undefined;
+  const sharedUpdatedAt = member.sharedUpdatedAt === undefined ? undefined : stringField(member.sharedUpdatedAt, 100, true);
+  if ((member.until !== undefined && !until) || (member.sharedFrom !== undefined && !sharedFrom) ||
+    (member.sharedUpdatedAt !== undefined && (!sharedUpdatedAt || Number.isNaN(Date.parse(sharedUpdatedAt))))) return undefined;
   return {
     id,
     name,
@@ -232,6 +236,7 @@ function normalizeMember(value: unknown): TeamMember | undefined {
     ...(until ? { until } : {}),
     source: source as TeamMember["source"],
     ...(sharedFrom ? { sharedFrom } : {}),
+    ...(sharedUpdatedAt ? { sharedUpdatedAt: new Date(sharedUpdatedAt).toISOString() } : {}),
     tools: tools as ContactTool[]
   };
 }

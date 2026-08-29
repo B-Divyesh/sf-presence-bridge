@@ -1,7 +1,7 @@
 {
   "name": "presence-bridge",
   "private": true,
-  "version": "0.1.17",
+  "version": "0.1.18",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
@@ -11,6 +11,7 @@
     "test": "npm run test:unit && playwright test",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
+    "audit:copy": "playwright test tests/e2e/copy-audit.spec.ts",
     "lint": "tsc --noEmit",
     "preview": "vite preview --host 0.0.0.0"
   },

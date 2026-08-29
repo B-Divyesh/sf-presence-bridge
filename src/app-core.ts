@@ -21,8 +21,40 @@ import { applyPresenceUpdate, createPresenceUpdate, parsePresenceUpdate } from "
 
 type MountOptions = { demo?: boolean; embedded?: boolean };
 
+type WatchedPresenceFile = { path: string; contents: string; modifiedMs: number };
+type NativePresenceBridge = {
+  chooseSharedFolder: () => Promise<string | null>;
+  readPresenceFolder: (path: string) => Promise<WatchedPresenceFile[]>;
+};
+
+declare global {
+  interface Window { __PRESENCE_BRIDGE_NATIVE__?: NativePresenceBridge }
+}
+
 const STORE = "presence-bridge:v1";
 const DEMO_STORE = "demo:presence-bridge:v1";
+const WATCH_STORE = "presence-bridge:watch-folder:v1";
+const STALE_AFTER_MS = 24 * 60 * 60 * 1000;
+
+function isNativeRuntime(): boolean {
+  return Boolean(window.__PRESENCE_BRIDGE_NATIVE__ || (window as unknown as { __TAURI_INTERNALS__?: unknown }).__TAURI_INTERNALS__);
+}
+
+async function nativeBridge(): Promise<NativePresenceBridge> {
+  if (window.__PRESENCE_BRIDGE_NATIVE__) return window.__PRESENCE_BRIDGE_NATIVE__;
+  const { invoke } = await import("@tauri-apps/api/core");
+  return {
+    chooseSharedFolder: () => invoke<string | null>("choose_shared_folder"),
+    readPresenceFolder: path => invoke<WatchedPresenceFile[]>("read_presence_folder", { path })
+  };
+}
+
+function sharedUpdateText(member: TeamMember): string {
+  if (!member.sharedUpdatedAt) return "";
+  const stale = Date.now() - Date.parse(member.sharedUpdatedAt) > STALE_AFTER_MS;
+  const time = new Intl.DateTimeFormat([], { dateStyle: "medium", timeStyle: "short" }).format(new Date(member.sharedUpdatedAt));
+  return `${stale ? "Stale" : "Updated"} ${time}`;
+}
 
 function esc(value: string): string {
   return value.replace(/[&<>'"]/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[char]!);
@@ -48,10 +80,11 @@ function importErrorMessage(error: RosterImportError): string {
 }
 
 function memberRow(member: TeamMember, selected: boolean): string {
+  const shared = sharedUpdateText(member);
   return `<button class="person-row ${selected ? "selected" : ""}" role="option" aria-selected="${selected}" data-member="${esc(member.id)}">
     <span class="avatar" aria-hidden="true">${esc(member.initials)}</span>
     <span class="person-copy"><strong>${esc(member.name)}</strong><span>${esc(member.role || "Team member")}</span></span>
-    <span class="presence ${member.status}"><i aria-hidden="true"></i>${member.status}</span>
+    <span class="presence ${member.status}"><i aria-hidden="true"></i>${member.status}${shared ? `<small>${esc(shared)}</small>` : ""}</span>
   </button>`;
 }
 
@@ -66,6 +99,9 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
   let license = cachedLicense();
   let returnFocusSelector = "";
   let calendarTimer: number | undefined;
+  let watchTimer: number | undefined;
+  let watchFolder = demo ? "" : localStorage.getItem(WATCH_STORE) || "";
+  let watchScanning = false;
   const storage = demo ? sessionStorage : localStorage;
   const key = demo ? DEMO_STORE : STORE;
 
@@ -85,7 +121,7 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
       <header class="app-bar">
         <a class="app-wordmark" href="/" aria-label="Presence Bridge home"><span aria-hidden="true">⌁</span> Presence Bridge</a>
         ${options.embedded ? "" : `<nav class="app-nav" aria-label="App navigation"><a href="/">Home</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav>`}
-        <button class="icon-button" data-action="settings" aria-label="Open settings">Settings</button>
+        <button class="icon-button" data-action="settings">Open settings</button>
       </header>
       <div class="app-layout">
         <${options.embedded ? "section" : "main"} id="${options.embedded ? "roster" : "main"}" class="roster-panel">
@@ -106,14 +142,14 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
           </div>
         </${options.embedded ? "section" : "main"}>
         <section class="detail-panel" aria-label="Selected teammate">
-          ${person ? `<div class="detail-person"><span class="large-avatar">${esc(person.initials)}</span><p class="eyebrow">${esc(person.role || "Team member")}</p><h2>${esc(person.name)}</h2><p class="detail-status"><span class="status-light ${person.status}"></span>${esc(person.status)}${person.until ? ` until ${esc(person.until)}` : ""}</p><p>${esc(person.note || "No status note")}</p><p class="source-note">Set ${person.source === "calendar" ? "from an imported calendar" : "manually"}</p></div>
-          <div class="handoffs"><h3>Open a contact tool</h3>${person.tools.length ? person.tools.map((tool, index) => `<button class="handoff ${index === 0 ? "primary" : ""}" data-url="${esc(tool.url)}" data-label="${esc(tool.label)}"><span>${esc(tool.label)}</span><span aria-hidden="true">↗</span></button>`).join("") : `<p>No contact tool is saved.</p>`}<button class="secondary" data-action="edit-member">Edit person</button><button class="danger-text" data-action="delete-member">Remove from roster</button></div>` : `<div class="detail-empty"><span class="window-mark" aria-hidden="true"></span><h2>Select a teammate</h2><p>Their current note and contact tools will appear here.</p></div>`}
+          ${person ? `<div class="detail-person"><span class="large-avatar">${esc(person.initials)}</span><p class="eyebrow">${esc(person.role || "Team member")}</p><h2>${esc(person.name)}</h2><p class="detail-status"><span class="status-light ${person.status}"></span>${esc(person.status)}${person.until ? ` until ${esc(person.until)}` : ""}</p><p>${esc(person.note || "No status note")}</p><p class="source-note">Set ${person.source === "calendar" ? "from an imported calendar" : "manually"}${person.sharedUpdatedAt ? ` · ${esc(sharedUpdateText(person))}` : ""}</p></div>
+          <div class="handoffs"><h3>Open a contact tool</h3>${person.tools.length ? person.tools.map((tool, index) => `<button class="handoff ${index === 0 ? "primary" : ""}" data-url="${esc(tool.url)}" data-label="${esc(tool.label)}"><span>Open ${esc(tool.label)}</span><span aria-hidden="true">↗</span></button>`).join("") : `<p>No contact tool is saved.</p>`}<button class="secondary" data-action="edit-member">Edit person</button><button class="danger-text" data-action="delete-member">Remove from roster</button></div>` : `<div class="detail-empty"><span class="window-mark" aria-hidden="true"></span><h2>Select a teammate</h2><p>Their current note and contact tools will appear here.</p></div>`}
         </section>
       </div>
       <div class="toast" aria-live="polite" aria-atomic="true">${esc(notice)}</div>
       ${addOpen ? memberDialog(person, license.valid) : ""}
-      ${settingsOpen ? settingsDialog(state, license.valid, demo) : ""}
-      ${options.embedded ? "" : `<footer class="app-footer"><p>See who is free, then open a contact tool.</p><nav aria-label="App footer navigation"><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="https://sociobot.in" rel="external">Built by Param Factory</a></nav><p>v0.1.17</p></footer>`}
+      ${settingsOpen ? settingsDialog(state, license.valid, demo, watchFolder, isNativeRuntime()) : ""}
+      ${options.embedded ? "" : `<footer class="app-footer"><p>See who is free, then open a contact tool.</p><nav aria-label="App footer navigation"><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="https://sociobot.in" rel="external">Built by Param Factory</a></nav><p>v0.1.18</p></footer>`}
     </div>`;
     bind();
     if (returnFocusSelector && !addOpen && !settingsOpen) {
@@ -169,6 +205,9 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
     if (name === "delete-member" && current && confirm(`Remove ${current.name} from this local roster?`)) { state.members = state.members.filter(item => item.id !== current.id); selectedId = state.members[0]?.id || ""; save(); notice = `${current.name} was removed.`; }
     if (name === "export") exportRoster();
     if (name === "export-presence") exportPresence();
+    if (name === "watch-folder") void chooseWatchFolder();
+    if (name === "scan-folder") void scanWatchFolder(true);
+    if (name === "stop-watching") stopWatching();
     render();
   };
 
@@ -262,6 +301,64 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
     save(); tell(`${update.person.name}'s chosen presence was added to this local roster.`);
   };
 
+  const chooseWatchFolder = async () => {
+    try {
+      const folder = await (await nativeBridge()).chooseSharedFolder();
+      if (!folder) return;
+      watchFolder = folder;
+      localStorage.setItem(WATCH_STORE, folder);
+      notice = "Watching the shared folder for chosen presence updates.";
+      render();
+      scheduleWatch(0);
+    } catch { tell("The folder could not be opened. Choose a local folder and try again."); }
+  };
+
+  const stopWatching = () => {
+    watchFolder = "";
+    localStorage.removeItem(WATCH_STORE);
+    if (watchTimer !== undefined) window.clearTimeout(watchTimer);
+    watchTimer = undefined;
+    notice = "Stopped watching the shared folder.";
+  };
+
+  const scanWatchFolder = async (announce = false) => {
+    if (!watchFolder || watchScanning || !isNativeRuntime()) return;
+    watchScanning = true;
+    try {
+      const files = await (await nativeBridge()).readPresenceFolder(watchFolder);
+      let changed = 0;
+      let ignored = 0;
+      for (const file of files) {
+        const update = parsePresenceUpdate(file.contents);
+        if (!update) { ignored += 1; continue; }
+        const current = state.members.find(member => member.sharedFrom === update.publisherId);
+        if (current?.sharedUpdatedAt && Date.parse(current.sharedUpdatedAt) >= Date.parse(update.updatedAt)) continue;
+        if (!current && state.members.length >= rosterLimit(license.valid)) { ignored += 1; continue; }
+        state = applyPresenceUpdate(state, update);
+        changed += 1;
+      }
+      if (changed) {
+        save();
+        notice = `${changed} ${changed === 1 ? "teammate" : "teammates"} updated from the shared folder.`;
+        render();
+      } else if (announce) {
+        tell(ignored ? "No valid new presence updates were found." : "The shared folder is up to date.");
+      }
+    } catch {
+      if (announce) tell("The shared folder could not be read. Choose it again or stop watching.");
+    } finally {
+      watchScanning = false;
+      scheduleWatch();
+    }
+  };
+
+  const scheduleWatch = (delay = 5_000) => {
+    if (watchTimer !== undefined) window.clearTimeout(watchTimer);
+    watchTimer = undefined;
+    if (!watchFolder || demo || !isNativeRuntime()) return;
+    watchTimer = window.setTimeout(() => void scanWatchFolder(), delay);
+  };
+
   const importRoster = async (event: Event) => {
     const file = (event.target as HTMLInputElement).files?.[0]; if (!file) return;
     try {
@@ -328,9 +425,11 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
   window.addEventListener("pageshow", resetDiscardedDemo);
   root.addEventListener("click", handoff);
   render();
+  scheduleWatch(0);
   if (!demo && localStorage.getItem("sb_license:presence-bridge")) verifyLicense().then(result => { license = result; render(); });
   return () => {
     if (calendarTimer !== undefined) window.clearTimeout(calendarTimer);
+    if (watchTimer !== undefined) window.clearTimeout(watchTimer);
     document.removeEventListener("keydown", keyboard);
     document.removeEventListener("visibilitychange", refreshOnResume);
     window.removeEventListener("focus", refreshCalendar);
@@ -352,7 +451,7 @@ function memberDialog(member: TeamMember | undefined, paid: boolean): string {
   </form></dialog>`;
 }
 
-function settingsDialog(state: RosterState, paid: boolean, demo: boolean): string {
+function settingsDialog(state: RosterState, paid: boolean, demo: boolean, watchFolder: string, native: boolean): string {
   return `<dialog aria-labelledby="settings-title"><div class="dialog-scroll"><div class="dialog-head"><h2 id="settings-title">Settings</h2><button type="button" class="icon-button" data-action="close-settings" aria-label="Close">Close</button></div>
     <form id="settings-form"><label>Your name<input name="my-name" value="${esc(state.me.name)}"></label><label>Your role<input name="my-role" value="${esc(state.me.role)}"></label><label>Your note<input name="my-note" maxlength="80" value="${esc(state.me.note)}"></label>
       <label class="check"><input name="calendar-enabled" type="checkbox" ${state.calendarEnabled ? "checked" : ""}> Let imported calendar events set busy status</label>
@@ -362,6 +461,7 @@ function settingsDialog(state: RosterState, paid: boolean, demo: boolean): strin
     </form>
     <section class="settings-section"><h3>Back up this roster</h3><p>Download or restore a readable JSON file.</p><div class="inline-actions"><button data-action="export">Download backup</button><label class="file-label secondary">Import backup<input id="import-roster" type="file" accept="application/json"></label></div></section>
     <section class="settings-section"><h3>Share your chosen presence</h3><p>Download a small availability file, then send it through a shared folder or a contact tool. Import a teammate's file to update this local roster. Nothing sends automatically.</p><p class="field-help">The file includes only their name, role, status, note, status source, and update time. It never includes calendar events, contact tools, activity, or messages.</p><div class="inline-actions"><button data-action="export-presence">Download presence update</button><label class="file-label secondary">Import presence update<input id="import-presence" type="file" accept="application/json,.presence.json"></label></div></section>
+    <section class="settings-section"><h3>Refresh from a shared folder</h3><p>Watch a folder you choose for newer <code>.presence.json</code> files. Presence Bridge reads only those files and marks updates older than one day as stale.</p>${native ? watchFolder ? `<p class="watched-path"><strong>Watching:</strong> ${esc(watchFolder)}</p><div class="inline-actions"><button data-action="scan-folder">Check shared folder now</button><button class="secondary" data-action="stop-watching">Stop watching</button></div>` : `<button data-action="watch-folder">Watch a shared folder</button>` : `<p class="field-help">Folder watching is available in the installed desktop app.</p>`}</section>
     <section class="settings-section"><p class="eyebrow">Bridge Plus is not available in this release</p><h3>${paid ? "Bridge Plus is active" : "Bridge Plus limits and contact tools"}</h3><p>Bridge Plus supports up to ten people and two contact tools per person. Free rosters hold five people.</p>${paid ? "" : `<div class="checkout-actions"><p>Bridge Plus purchases are not available right now. You can still restore an existing license below.</p><form id="license-form"><label>Have a license?<input name="license" required autocomplete="off"></label><button type="submit">Verify license</button></form></div>`}<p class="field-help">Sociobot is the merchant of record. See <a href="/terms">terms</a> and <a href="/privacy">privacy</a>.</p></section>
     ${demo ? `<p class="field-help">Demo changes use the temporary ${DEMO_STORE} session namespace.</p>` : ""}</div></dialog>`;
 }

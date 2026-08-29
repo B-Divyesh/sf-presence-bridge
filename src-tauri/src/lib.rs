@@ -3,6 +3,92 @@ use tauri::{
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
     Manager, Webview,
 };
+use tauri_plugin_dialog::{DialogExt, FilePath};
+
+#[derive(serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+struct WatchedPresenceFile {
+    path: String,
+    contents: String,
+    modified_ms: u128,
+}
+
+#[tauri::command]
+fn choose_shared_folder(app: tauri::AppHandle) -> Option<String> {
+    match app.dialog().file().blocking_pick_folder() {
+        Some(FilePath::Path(path)) => Some(path.to_string_lossy().into_owned()),
+        _ => None,
+    }
+}
+
+#[tauri::command]
+fn read_presence_folder(path: String) -> Result<Vec<WatchedPresenceFile>, String> {
+    let directory = std::fs::canonicalize(path)
+        .map_err(|_| "The selected folder is unavailable.".to_string())?;
+    if !directory.is_dir() {
+        return Err("The selected path is not a folder.".to_string());
+    }
+
+    let mut updates = Vec::new();
+    let entries = std::fs::read_dir(&directory)
+        .map_err(|_| "The selected folder cannot be read.".to_string())?;
+    for entry in entries.take(200) {
+        let entry = entry.map_err(|_| "A folder entry could not be read.".to_string())?;
+        let file_path = entry.path();
+        let file_name = entry.file_name().to_string_lossy().into_owned();
+        if !file_name.ends_with(".presence.json") || !file_path.is_file() {
+            continue;
+        }
+        let metadata = entry
+            .metadata()
+            .map_err(|_| "A presence file could not be inspected.".to_string())?;
+        if metadata.len() > 1_048_576 {
+            continue;
+        }
+        let contents = std::fs::read_to_string(&file_path)
+            .map_err(|_| "A presence file could not be read.".to_string())?;
+        let modified_ms = metadata
+            .modified()
+            .ok()
+            .and_then(|time| time.duration_since(std::time::UNIX_EPOCH).ok())
+            .map(|duration| duration.as_millis())
+            .unwrap_or_default();
+        updates.push(WatchedPresenceFile {
+            path: file_path.to_string_lossy().into_owned(),
+            contents,
+            modified_ms,
+        });
+    }
+    updates.sort_by_key(|file| file.modified_ms);
+    Ok(updates)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::read_presence_folder;
+
+    #[test]
+    fn shared_folder_reads_only_bounded_presence_files() {
+        let unique = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("system clock")
+            .as_nanos();
+        let directory = std::env::temp_dir().join(format!("presence-bridge-{unique}"));
+        std::fs::create_dir(&directory).expect("create fixture folder");
+        std::fs::write(directory.join("ava.presence.json"), "{\"fixture\":true}")
+            .expect("write presence fixture");
+        std::fs::write(directory.join("notes.json"), "private notes")
+            .expect("write ignored fixture");
+
+        let files = read_presence_folder(directory.to_string_lossy().into_owned())
+            .expect("read fixture folder");
+        assert_eq!(files.len(), 1);
+        assert!(files[0].path.ends_with("ava.presence.json"));
+        assert_eq!(files[0].contents, "{\"fixture\":true}");
+
+        std::fs::remove_dir_all(directory).expect("remove fixture folder");
+    }
+}
 
 #[derive(serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -85,7 +171,12 @@ fn run_native_opener_smoke(webview: &Webview) {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![finish_native_opener_smoke])
+        .plugin(tauri_plugin_dialog::init())
+        .invoke_handler(tauri::generate_handler![
+            finish_native_opener_smoke,
+            choose_shared_folder,
+            read_presence_folder
+        ])
         .on_page_load(|webview, payload| {
             if matches!(payload.event(), tauri::webview::PageLoadEvent::Finished) {
                 run_native_opener_smoke(webview);

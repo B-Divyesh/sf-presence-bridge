@@ -34,7 +34,7 @@ test("unknown paths return the styled 404 on navigation and refresh", async ({ p
 
 test("site routes update metadata, history, and heading focus", async ({ page }) => {
   const metadata = [
-    ["/demo", "Demo — Presence Bridge", "Try Presence Bridge with an isolated five-person sample roster."],
+    ["/demo", "Demo — Presence Bridge", "Try Presence Bridge with four sample teammates and your status."],
     ["/privacy", "Privacy — Presence Bridge", "Read what Presence Bridge stores on your device"],
     ["/terms", "Terms — Presence Bridge", "Read the consent, usage, license, and warranty terms"],
     ["/download", "Download — Presence Bridge", "Download Presence Bridge for macOS, Windows, or Linux"]

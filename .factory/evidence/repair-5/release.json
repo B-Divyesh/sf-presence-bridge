@@ -1,0 +1,40 @@
+{
+  "workflow_run": {
+    "id": 33260656884,
+    "status": "completed",
+    "conclusion": "success",
+    "head_sha": "a78e58587bab4e4c23a4aa7fa15dae4e59df649d",
+    "head_branch": "v0.1.10"
+  },
+  "release": {
+    "tag_name": "v0.1.10",
+    "target_commitish": "a78e58587bab4e4c23a4aa7fa15dae4e59df649d",
+    "assets": [
+      "Presence.Bridge_universal.app.tar.gz",
+      "Presence.Bridge_0.1.10_universal.dmg",
+      "Presence.Bridge_0.1.10_x64-setup.exe",
+      "Presence.Bridge_0.1.10_x64_en-US.msi",
+      "Presence.Bridge_0.1.10_amd64.AppImage",
+      "Presence.Bridge_0.1.10_amd64.deb",
+      "Presence.Bridge-0.1.10-1.x86_64.rpm",
+      "SHA256SUMS",
+      "latest.json"
+    ]
+  },
+  "manifest": {
+    "version": "0.1.10",
+    "source_commit": "a78e58587bab4e4c23a4aa7fa15dae4e59df649d",
+    "platform_counts": {
+      "macos": 2,
+      "windows": 2,
+      "linux": 3
+    }
+  },
+  "downloaded_deb": {
+    "sha256": "683c9b1202710314a18b687c5099eaf80f61c90e41fdcbeb4ce529def16ec970",
+    "checksum_result": "OK",
+    "package": "presence-bridge",
+    "version": "0.1.10",
+    "architecture": "amd64"
+  }
+}

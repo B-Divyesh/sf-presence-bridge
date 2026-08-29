@@ -1,0 +1,28 @@
+{
+  "live_url": "https://presence-bridge.sociobot.in",
+  "build_identity": "0.1.10-a78e58587bab",
+  "site_asset": "assets/site-ChudbRoo.js",
+  "local_and_live_sha256": "d46d5b71f8acdc00ad5428a9fb6541a75cc0be4a8562cb70cddb9363ce60b007",
+  "routes": {
+    "/": 200,
+    "/demo": 200,
+    "/privacy": 200,
+    "/terms": 200,
+    "/download": 200,
+    "/app.html": 200,
+    "/missing-page": 404
+  },
+  "cache_control": {
+    "html": "public, must-revalidate, max-age=30",
+    "hashed_asset": "public, max-age=31536000, immutable",
+    "service_worker": "no-cache"
+  },
+  "download_page_390px": {
+    "status": 200,
+    "title": "Download — Presence Bridge",
+    "selected_asset": "Presence.Bridge_0.1.10_amd64.AppImage",
+    "console_errors": [],
+    "scroll_width": 390,
+    "client_width": 390
+  }
+}

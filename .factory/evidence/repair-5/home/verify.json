@@ -1,0 +1,14 @@
+{
+  "url": "https://presence-bridge.sociobot.in",
+  "loadMs": 901,
+  "errors": [],
+  "a11y": {
+    "title": "Presence Bridge — See who is free before you message",
+    "lang": "en",
+    "h1": 1,
+    "main": true,
+    "imgsMissingAlt": 0,
+    "buttonsUnlabeled": 0,
+    "textLength": 2099
+  }
+}

@@ -93,33 +93,21 @@ test("@claim:no-message-transport a handoff sends no message", async ({ page }) 
   expect(requestOrigins.every(origin => origin === new URL(page.url()).origin)).toBe(true);
 });
 
-test("@claim:checkout-availability only shows a purchase link after a checkout redirect", async ({ page }) => {
-  let status = 404;
+test("@claim:checkout-availability keeps an unavailable checkout out of every purchase surface", async ({ page }) => {
   const checkoutRequests: { method: string; body: string | null }[] = [];
   await page.route("https://api.sociobot.in/api/v1/products/presence-bridge/checkout", async route => {
     checkoutRequests.push({ method: route.request().method(), body: route.request().postData() });
-    await route.fulfill(status === 302
-      ? { status, headers: { location: "https://checkout.sociobot.in/session/recorded-24" } }
-      : { status, contentType: "application/json", body: '{"error":"enabled factory product","status":404}' });
+    await route.fulfill({ status: 404, contentType: "application/json", body: '{"error":"enabled factory product","status":404}' });
   });
   await page.goto("/");
   await expect(page.getByText("Bridge Plus · $24 once when available")).toBeVisible();
-  await expect(page.getByRole("link", { name: "Buy Bridge Plus" })).toHaveCount(0);
-  await page.getByRole("button", { name: "Check whether Bridge Plus is available" }).click();
   await expect(page.getByText("Bridge Plus purchases are not available right now.")).toBeVisible();
   await expect(page.getByRole("link", { name: "Buy Bridge Plus" })).toHaveCount(0);
-  expect(checkoutRequests).toEqual([{ method: "GET", body: null }]);
-
-  status = 302;
-  await page.getByRole("button", { name: "Check whether Bridge Plus is available" }).click();
-  await expect(page.getByRole("link", { name: "Buy Bridge Plus" })).toHaveAttribute("href", "https://api.sociobot.in/api/v1/products/presence-bridge/checkout");
-
-  status = 404;
   await page.goto("/app.html");
   await page.getByRole("button", { name: "Settings" }).click();
   await expect(page.getByRole("link", { name: "Buy Bridge Plus" })).toHaveCount(0);
-  await page.getByRole("button", { name: "Check whether Bridge Plus is available" }).click();
   await expect(page.getByText("Bridge Plus purchases are not available right now.")).toBeVisible();
+  expect(checkoutRequests).toEqual([]);
 });
 
 test("@claim:license-minimization sends only the license token for verification", async ({ page }) => {

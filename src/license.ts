@@ -3,24 +3,8 @@ const VERDICT_KEY = "presence-bridge:license-verdict";
 const DAY = 86_400_000;
 
 export type LicenseState = { valid: boolean; checkedAt: number; reason?: string };
-export type CheckoutAvailability = "available" | "unavailable" | "unreachable";
 
 export const checkoutUrl = "https://api.sociobot.in/api/v1/products/presence-bridge/checkout";
-
-/**
- * A checkout endpoint is usable only when it returns a redirect. Fetching with
- * `manual` preserves that redirect as an opaque redirect response, so the
- * caller can verify it before exposing a navigation link. A JSON error such as
- * the catalog's current 404 must never become a broken Buy link.
- */
-export async function checkCheckoutAvailability(): Promise<CheckoutAvailability> {
-  try {
-    const response = await fetch(checkoutUrl, { cache: "no-store", redirect: "manual" });
-    return response.type === "opaqueredirect" ? "available" : "unavailable";
-  } catch {
-    return "unreachable";
-  }
-}
 
 export function captureLicense(): void {
   const url = new URL(location.href);

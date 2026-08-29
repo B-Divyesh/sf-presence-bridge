@@ -16,7 +16,7 @@ import {
   type RosterState,
   type TeamMember
 } from "./model";
-import { cachedLicense, checkCheckoutAvailability, checkoutUrl, restoreLicense, type CheckoutAvailability, verifyLicense } from "./license";
+import { cachedLicense, restoreLicense, verifyLicense } from "./license";
 import { applyPresenceUpdate, createPresenceUpdate, parsePresenceUpdate } from "./sharing";
 
 type MountOptions = { demo?: boolean; embedded?: boolean };
@@ -64,7 +64,6 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
   let settingsOpen = false;
   let addOpen = false;
   let license = cachedLicense();
-  let checkoutAvailability: CheckoutAvailability | "checking" = "unavailable";
   let returnFocusSelector = "";
   let calendarTimer: number | undefined;
   const storage = demo ? sessionStorage : localStorage;
@@ -112,7 +111,7 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
       </div>
       <div class="toast" aria-live="polite" aria-atomic="true">${esc(notice)}</div>
       ${addOpen ? memberDialog(person, license.valid) : ""}
-      ${settingsOpen ? settingsDialog(state, license.valid, demo, checkoutAvailability) : ""}
+      ${settingsOpen ? settingsDialog(state, license.valid, demo) : ""}
     </section>`;
     bind();
     if (returnFocusSelector && !addOpen && !settingsOpen) {
@@ -156,7 +155,6 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
 
   const action = (name: string) => {
     if (name === "settings") { settingsOpen = true; returnFocusSelector = '[data-action="settings"]'; }
-    if (name === "check-checkout") { void checkCheckout(); return; }
     if (name === "close-settings") { settingsOpen = false; }
     if (name === "add-member") { addOpen = true; selectedId = ""; returnFocusSelector = '[data-action="add-member"]'; }
     if (name === "edit-member") { addOpen = true; returnFocusSelector = '[data-action="edit-member"]'; }
@@ -260,14 +258,6 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
     tell(license.valid ? "Bridge Plus is active." : "That license is not active. Check the token and try again.");
   };
 
-  const checkCheckout = async () => {
-    if (demo) return;
-    checkoutAvailability = "checking";
-    render();
-    checkoutAvailability = await checkCheckoutAvailability();
-    if (settingsOpen) render();
-  };
-
   const keyboard = (event: KeyboardEvent) => {
     if (event.key === "/" && !(event.target instanceof HTMLInputElement) && !(event.target instanceof HTMLTextAreaElement)) { event.preventDefault(); root.querySelector<HTMLInputElement>("#roster-search")?.focus(); }
     if (event.key === "Escape" && (addOpen || settingsOpen)) { event.preventDefault(); closeDialog(); }
@@ -330,7 +320,7 @@ function memberDialog(member: TeamMember | undefined, paid: boolean): string {
   </form></dialog>`;
 }
 
-function settingsDialog(state: RosterState, paid: boolean, demo: boolean, checkout: CheckoutAvailability | "checking"): string {
+function settingsDialog(state: RosterState, paid: boolean, demo: boolean): string {
   return `<dialog aria-labelledby="settings-title"><div class="dialog-scroll"><div class="dialog-head"><h2 id="settings-title">Settings</h2><button type="button" class="icon-button" data-action="close-settings" aria-label="Close">Close</button></div>
     <form id="settings-form"><label>Your name<input name="my-name" value="${esc(state.me.name)}"></label><label>Your role<input name="my-role" value="${esc(state.me.role)}"></label><label>Your note<input name="my-note" maxlength="80" value="${esc(state.me.note)}"></label>
       <label class="check"><input name="calendar-enabled" type="checkbox" ${state.calendarEnabled ? "checked" : ""}> Let imported calendar events set busy status</label>
@@ -340,14 +330,6 @@ function settingsDialog(state: RosterState, paid: boolean, demo: boolean, checko
     </form>
     <section class="settings-section"><h3>Back up this roster</h3><p>Download or restore a readable JSON file.</p><div class="inline-actions"><button data-action="export">Download backup</button><label class="file-label secondary">Import backup<input id="import-roster" type="file" accept="application/json"></label></div></section>
     <section class="settings-section"><h3>Share your chosen presence</h3><p>Download a small availability file, then send it through a shared folder or your existing tool. Import a teammate's file to update this local roster. Nothing sends automatically.</p><p class="field-help">The file includes only their name, role, status, note, status source, and update time. It never includes calendar events, contact routes, activity, or messages.</p><div class="inline-actions"><button data-action="export-presence">Download presence update</button><label class="file-label secondary">Import presence update<input id="import-presence" type="file" accept="application/json,.presence.json"></label></div></section>
-    <section class="settings-section"><p class="eyebrow">Bridge Plus · $24 once when available</p><h3>${paid ? "Bridge Plus is active" : "Add room for a larger team"}</h3><p>Keep up to ten people and add more contact routes in the desktop app. Free rosters hold five people.</p>${paid ? "" : `<div class="checkout-actions" aria-live="polite">${checkoutAction(checkout, demo)}</div><form id="license-form"><label>Have a license?<input name="license" required autocomplete="off"></label><button type="submit">Verify license</button></form>`}<p class="field-help">Sociobot is the merchant of record. See <a href="/terms">terms</a> and <a href="/privacy">privacy</a>.</p></section>
+    <section class="settings-section"><p class="eyebrow">Bridge Plus · $24 once when available</p><h3>${paid ? "Bridge Plus is active" : "Add room for a larger team"}</h3><p>Keep up to ten people and add more contact routes in the desktop app. Free rosters hold five people.</p>${paid ? "" : `<div class="checkout-actions"><p>Bridge Plus purchases are not available right now. You can still restore an existing license below.</p><form id="license-form"><label>Have a license?<input name="license" required autocomplete="off"></label><button type="submit">Verify license</button></form></div>`}<p class="field-help">Sociobot is the merchant of record. See <a href="/terms">terms</a> and <a href="/privacy">privacy</a>.</p></section>
     ${demo ? `<p class="field-help">Demo changes use the temporary ${DEMO_STORE} session namespace.</p>` : ""}</div></dialog>`;
-}
-
-function checkoutAction(state: CheckoutAvailability | "checking", demo: boolean): string {
-  if (demo) return `<p>Bridge Plus purchases are not checked in the demo.</p>`;
-  if (state === "available") return `<a class="button-link" href="${checkoutUrl}">Buy Bridge Plus</a>`;
-  if (state === "checking") return `<p>Checking whether Bridge Plus checkout is available.</p>`;
-  if (state === "unreachable") return `<p>Checkout could not be confirmed. Check your connection, then try again.</p><button class="secondary" type="button" data-action="check-checkout">Check again</button>`;
-  return `<p>Bridge Plus purchases are not available right now. You can still restore an existing license below.</p><button class="secondary" type="button" data-action="check-checkout">Check whether Bridge Plus is available</button>`;
 }

@@ -35,13 +35,7 @@ Count method: words separated by spaces. Labels and headings are included for re
 | The free local roster holds five. | 6 |
 | Bridge Plus purchases are not available right now. | 8 |
 | The free five-person roster is ready now. | 8 |
-| Check whether Bridge Plus is available | 6 |
-| Checking whether Bridge Plus checkout is available. | 7 |
-| Checkout could not be confirmed. | 5 |
-| Check your connection, then try again. | 7 |
-| Check again | 2 |
-| Buy Bridge Plus | 3 |
-| Sociobot handles payment and licenses. | 5 |
+| Already have a license? Restore it in the desktop app Settings. | 11 |
 | Demo — sample data, nothing is saved | 6 |
 | Reset demo | 2 |
 | Start for real | 3 |

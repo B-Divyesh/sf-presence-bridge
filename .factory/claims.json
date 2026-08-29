@@ -64,10 +64,10 @@
   },
   {
     "id": "checkout-availability",
-    "claim": "Bridge Plus shows a purchase link only after the Sociobot billing API confirms a checkout redirect",
+    "claim": "This release does not show a Bridge Plus purchase link while Sociobot checkout is unavailable",
     "where": "landing pricing section, app settings, terms, README",
     "test": "npm test -- --grep @claim:checkout-availability",
-    "sandbox": "fresh browser context; return the documented checkout API's 404 and assert no purchase link, then return a recorded 302 and assert the link appears; repeat the 404 check in app Settings"
+    "sandbox": "fresh browser context; intercept the documented checkout API with its recorded 404 and assert landing and app Settings show no purchase link and never request that endpoint"
   },
   {
     "id": "license-minimization",

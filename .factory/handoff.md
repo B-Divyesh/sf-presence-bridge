@@ -1,3 +1,48 @@
+# Presence Bridge — adversarial review 2 handoff
+
+## Result
+
+**FAIL** for live release `v0.1.17` and repository base
+`a0d07180eea0192f2f6395766130c025656cebd9`.
+
+The full report is `.factory/review-2.md`. No product code was changed. The
+review found one blocker and four minor findings:
+
+- The one-click mobile demo does not show a teammate row in its first viewport,
+  while the landing action promises a five-person roster and the UI says
+  “4 PEOPLE.”
+- Public demo, signing, release-platform, and payment-runtime statements are
+  not all represented by exact entries in `.factory/claims.json`.
+- `.factory/copy-audit.md` has 13 incorrect word counts and omits some copy.
+- The visible Settings and Slack buttons do not use result-naming verbs.
+- Teammate status updates still require a manual download/send/import cycle;
+  the report proposes an opt-in watched shared folder.
+
+## Verification performed
+
+- Cold live Chromium contexts at 390 × 844 and 1440 × 900.
+- One-click demo, Reset, Start for real, Back, demo/real storage keys, request
+  origins, and live offline reload.
+- Every exact command in `.factory/claims.json` from a fresh clone: 19/19 pass.
+- Full fresh-clone `npm test`: 13 Vitest and 76 Playwright tests pass; two
+  desktop skips are intentional.
+- `npm run lint` and `npm run build`: pass; `dist/site/` produced.
+- Live route metadata, deep links, History focus, designed 404, sitemap, and
+  internal/external link crawl.
+- `/opt/fleet/lib/verify-url.sh` on `/`, `/demo`, and `/app.html`.
+- Playwright Axe on `/`, `/demo`, `/privacy`, `/terms`, `/download`, and
+  `/app.html`: zero violations.
+- Every F-1-1 through F-1-8 item from the earlier review was rechecked live and
+  in source and is confirmed fixed.
+
+## Work left
+
+Resolve F-2-1 through F-2-5, update the claims registry and generated copy
+audit, deploy the repaired site, and rerun the entire adversarial checklist from
+fresh browser contexts and a fresh clone.
+
+---
+
 # Presence Bridge — verification 10 handoff
 
 ## Independent QA result

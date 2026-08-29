@@ -32,6 +32,8 @@ Count method: words separated by spaces. This audit covers every landing-page se
 | Open a contact tool | 4 |
 | Edit person | 2 |
 | Remove from roster | 3 |
+| That contact tool link is not supported. | 7 |
+| Use a mailto, https, Slack, Teams, Zoom, or phone link. | 10 |
 | How it works | 3 |
 | How to use the roster | 5 |
 | Set your status | 3 |

@@ -113,7 +113,7 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
       <div class="toast" aria-live="polite" aria-atomic="true">${esc(notice)}</div>
       ${addOpen ? memberDialog(person, license.valid) : ""}
       ${settingsOpen ? settingsDialog(state, license.valid, demo) : ""}
-      ${options.embedded ? "" : `<footer class="app-footer"><p>See who is free, then open a contact tool.</p><nav aria-label="App footer navigation"><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="https://sociobot.in" rel="external">Built by Param Factory</a></nav><p>v0.1.10</p></footer>`}
+      ${options.embedded ? "" : `<footer class="app-footer"><p>See who is free, then open a contact tool.</p><nav aria-label="App footer navigation"><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="https://sociobot.in" rel="external">Built by Param Factory</a></nav><p>v0.1.11</p></footer>`}
     </div>`;
     bind();
     if (returnFocusSelector && !addOpen && !settingsOpen) {
@@ -178,20 +178,39 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
     render();
   };
 
+  const showMemberFieldError = (form: HTMLFormElement, fieldName: string, errorId: string, message: string) => {
+    const field = form.elements.namedItem(fieldName);
+    const error = form.querySelector<HTMLElement>(`#${errorId}`);
+    if (!(field instanceof HTMLInputElement) || !error) return;
+    field.setAttribute("aria-invalid", "true");
+    const descriptions = new Set((field.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean));
+    descriptions.add(errorId);
+    field.setAttribute("aria-describedby", [...descriptions].join(" "));
+    error.textContent = message;
+    error.hidden = false;
+    field.focus();
+  };
+
   const saveMember = (event: SubmitEvent) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget as HTMLFormElement);
+    const form = event.currentTarget as HTMLFormElement;
+    const data = new FormData(form);
     const name = String(data.get("name") || "").trim();
     const url = String(data.get("url") || "").trim();
     const label = String(data.get("tool") || "Contact").trim();
-    if (!name || !allowedDeepLink(url)) return tell("Enter a name and a supported contact tool link, such as mailto: or https:.");
+    if (!name) {
+      const nameField = form.elements.namedItem("name");
+      if (nameField instanceof HTMLInputElement) nameField.focus();
+      return;
+    }
+    if (!allowedDeepLink(url)) return showMemberFieldError(form, "url", "contact-link-error", "That contact tool link is not supported. Use a mailto, https, Slack, Teams, Zoom, or phone link.");
     const existing = selected();
     if (!existing && state.members.length >= rosterLimit(license.valid)) return tell("The free roster holds five people. Bridge Plus raises the limit to ten.");
     const secondUrl = String(data.get("url-2") || "").trim();
     const secondLabel = String(data.get("tool-2") || "").trim();
     const tools = [{ id: existing?.tools[0]?.id || crypto.randomUUID(), label, url }];
     if (license.valid && secondUrl && secondLabel) {
-      if (!allowedDeepLink(secondUrl)) return tell("The second contact tool link is not supported.");
+      if (!allowedDeepLink(secondUrl)) return showMemberFieldError(form, "url-2", "second-contact-link-error", "That second contact tool link is not supported. Use a mailto, https, Slack, Teams, Zoom, or phone link.");
       tools.push({ id: existing?.tools[1]?.id || crypto.randomUUID(), label: secondLabel, url: secondUrl });
     } else if (license.valid && existing?.tools[1]) tools.push(existing.tools[1]);
     const member: TeamMember = {
@@ -326,9 +345,9 @@ function memberDialog(member: TeamMember | undefined, paid: boolean): string {
     <label>Role<input name="role" maxlength="50" value="${esc(member?.role || "")}"></label>
     <label>Status<select name="status">${["available", "busy", "away", "offline"].map(value => `<option ${member?.status === value ? "selected" : ""}>${value}</option>`).join("")}</select></label>
     <label>Status note<input name="note" maxlength="80" value="${esc(member?.note || "")}"></label>
-    <div class="form-pair"><label>Contact tool name<input name="tool" required maxlength="24" value="${esc(member?.tools[0]?.label || "Email")}"></label><label>Contact tool link<input name="url" required value="${esc(member?.tools[0]?.url || "mailto:")}" aria-describedby="link-help"></label></div>
+    <div class="form-pair"><label>Contact tool name<input name="tool" required maxlength="24" value="${esc(member?.tools[0]?.label || "Email")}"></label><div class="field-group"><label>Contact tool link<input name="url" required value="${esc(member?.tools[0]?.url || "mailto:")}" aria-describedby="link-help"></label><span class="field-error" id="contact-link-error" role="alert" hidden></span></div></div>
     <p class="field-help" id="link-help">Use a documented mailto, https, Slack, Teams, Zoom, or phone link.</p>
-    ${paid ? `<div class="form-pair"><label>Second contact tool name<input name="tool-2" maxlength="24" value="${esc(member?.tools[1]?.label || "")}"></label><label>Second contact tool link<input name="url-2" value="${esc(member?.tools[1]?.url || "")}"></label></div>` : ""}
+    ${paid ? `<div class="form-pair"><label>Second contact tool name<input name="tool-2" maxlength="24" value="${esc(member?.tools[1]?.label || "")}"></label><div class="field-group"><label>Second contact tool link<input name="url-2" value="${esc(member?.tools[1]?.url || "")}" aria-describedby="second-link-help"></label><span class="field-error" id="second-contact-link-error" role="alert" hidden></span></div></div><p class="field-help" id="second-link-help">Use a documented mailto, https, Slack, Teams, Zoom, or phone link.</p>` : ""}
     <div class="dialog-actions"><button type="button" class="secondary" data-action="close-member">Cancel</button><button type="submit">Save person</button></div>
   </form></dialog>`;
 }

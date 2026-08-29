@@ -128,6 +128,54 @@ test("Escape returns dialog focus to the control that opened it", async ({ page 
   await expect(settings).toBeFocused();
 });
 
+test("invalid contact links preserve the add-person form and expose an inline recovery path", async ({ page }) => {
+  await page.goto("/demo");
+  await page.getByRole("button", { name: "Add person" }).click();
+  await page.getByLabel("Name", { exact: true }).fill("Quinn Test");
+  await page.getByLabel("Role").fill("Support");
+  await page.getByLabel("Status note").fill("Ready now");
+  await page.getByLabel("Contact tool name").fill("Support chat");
+  const contactLink = page.getByLabel("Contact tool link", { exact: true });
+  await contactLink.fill("javascript:alert(1)");
+  await page.getByRole("button", { name: "Save person" }).click();
+
+  const dialog = page.getByRole("dialog");
+  const error = page.locator("#contact-link-error");
+  await expect(dialog).toBeVisible();
+  await expect(page.getByLabel("Name", { exact: true })).toHaveValue("Quinn Test");
+  await expect(page.getByLabel("Role")).toHaveValue("Support");
+  await expect(page.getByLabel("Status note")).toHaveValue("Ready now");
+  await expect(page.getByLabel("Contact tool name")).toHaveValue("Support chat");
+  await expect(contactLink).toHaveValue("javascript:alert(1)");
+  await expect(error).toHaveText("That contact tool link is not supported. Use a mailto, https, Slack, Teams, Zoom, or phone link.");
+  await expect(error).toBeVisible();
+  await expect(page.locator(".toast")).toBeEmpty();
+  await expect(contactLink).toHaveAttribute("aria-invalid", "true");
+  await expect(contactLink).toHaveAttribute("aria-describedby", /\bcontact-link-error\b/);
+  await expect(contactLink).toBeFocused();
+
+  const geometry = await error.evaluate(element => {
+    const errorBox = element.getBoundingClientRect();
+    const dialogBox = element.closest("dialog")!.getBoundingClientRect();
+    const centre = document.elementFromPoint(errorBox.x + errorBox.width / 2, errorBox.y + errorBox.height / 2);
+    return {
+      insideDialog: errorBox.top >= dialogBox.top && errorBox.bottom <= dialogBox.bottom,
+      insideViewport: errorBox.top >= 0 && errorBox.bottom <= innerHeight,
+      topElementIsError: centre === element || element.contains(centre)
+    };
+  });
+  expect(geometry).toEqual({ insideDialog: true, insideViewport: true, topElementIsError: true });
+  const accessibility = await new AxeBuilder({ page: page as never }).include("dialog").analyze();
+  expect(accessibility.violations.filter(item => ["serious", "critical"].includes(item.impact || ""))).toEqual([]);
+
+  await contactLink.fill("https://chat.example.com/quinn");
+  await page.getByRole("button", { name: "Save person" }).click();
+  await expect(dialog).toHaveCount(0);
+  await expect(page.getByRole("option", { name: /Quinn Test/ })).toContainText("Support");
+  await expect(page.getByRole("region", { name: "Selected teammate" })).toContainText("Ready now");
+  await expect(page.getByRole("button", { name: /Support chat/ })).toBeVisible();
+});
+
 test("390px routes and download names reflow without horizontal scrolling and keep touch targets", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile");
   for (const path of ["/", "/demo", "/privacy", "/terms", "/download", "/app.html"]) {

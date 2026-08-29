@@ -4,7 +4,7 @@
 
 Repair source commits: `16e9780` (`fix: fail closed when checkout is unavailable`) and `97407ac` (`fix: remove checkout probe console errors`).
 
-Artifact class remains **desktop app**: Tauri 2 with a Vite/TypeScript UI. The static landing site remains the deployment at `https://presence-bridge.sociobot.in`. This repair is versioned `0.1.8`; release and static-deployment evidence is appended below after publication.
+Artifact class remains **desktop app**: Tauri 2 with a Vite/TypeScript UI. The static landing site is deployed at `https://presence-bridge.sociobot.in`. This repair is versioned `0.1.8`.
 
 ## Release-blocking finding repaired
 
@@ -64,4 +64,13 @@ Desktop artifacts remain unsigned until GitHub Actions receives `APPLE_CERTIFICA
 
 ## Publication evidence
 
-`v0.1.7` was superseded before final publication because its user-initiated checkout probe caused an expected HTTP 404 to be logged as a browser console error. Pending the `v0.1.8` GitHub Actions release and Static Web Apps deployment. This section will record their exact run/deployment identifiers, live browser checks, headers, checksum, and post-deploy checkout result.
+`v0.1.7` was superseded before final publication because its user-initiated checkout probe caused an expected HTTP 404 to be logged as a browser console error.
+
+- GitHub release [`v0.1.8`](https://github.com/B-Divyesh/sf-presence-bridge/releases/tag/v0.1.8) targets `166e4d6b6690157e154c22e0e2359116ae7734e1`. GitHub Actions run [`33252735238`](https://github.com/B-Divyesh/sf-presence-bridge/actions/runs/33252735238) passed macOS universal, Windows, Linux, checksum/manifest generation, Windows installer smoke, and Linux installer smoke.
+- The release has macOS `.dmg` and app archive, Windows `.msi` and `.exe`, Linux `.AppImage`, `.deb`, and `.rpm`, plus valid `SHA256SUMS` and `latest.json` with 2 macOS, 2 Windows, and 3 Linux URLs.
+- Downloaded `Presence.Bridge_0.1.8_x64_en-US.msi` SHA-256 is `7966ac6b17560771fe13ba6c6230a9ab6f0b9a1b4b129bc2972c0d571e197aea`, exactly matching `SHA256SUMS`. The live download page selected the v0.1.8 Linux AppImage and showed checksum and manifest links with no console errors.
+- Azure Static Web Apps deployment `d16e7496-3637-4e08-a644-0af902d60d58` completed successfully. The live site serves build `0.1.8-166e4d6b6690`.
+- Live `verify-url.sh` passed for `/`, `/demo`, `/privacy`, `/terms`, `/download`, and `/app.html`: every page returned 200 with no console errors, title/lang, one h1, a main landmark, image alt text, and labelled buttons. An unknown route returned a styled real HTTP 404.
+- Fresh live desktop and 390px runs showed the unavailable purchase message, zero **Buy Bridge Plus** links, no external request, no console error, and no horizontal overflow. The demo made same-origin requests only and retained its isolated banner.
+- Live responses include CSP, HSTS, `X-Content-Type-Options: nosniff`, strict-origin referrer policy, and restrictive camera/microphone/geolocation permissions policy.
+- The external checkout endpoint still returns `404 {"error":"enabled factory product","status":404}`. The product no longer calls or links to it. A fresh 31-request invalid-license probe returned 30×200 then 429 on request 31; the 429 had `Retry-After: 3` and `X-RateLimit-After: 3`.

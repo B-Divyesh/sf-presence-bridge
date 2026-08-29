@@ -2,9 +2,9 @@
 
 ## Status
 
-Repair source commit: `16e9780` (`fix: fail closed when checkout is unavailable`).
+Repair source commits: `16e9780` (`fix: fail closed when checkout is unavailable`) and `97407ac` (`fix: remove checkout probe console errors`).
 
-Artifact class remains **desktop app**: Tauri 2 with a Vite/TypeScript UI. The static landing site remains the deployment at `https://presence-bridge.sociobot.in`. This repair is versioned `0.1.7`; release and static-deployment evidence is appended below after publication.
+Artifact class remains **desktop app**: Tauri 2 with a Vite/TypeScript UI. The static landing site remains the deployment at `https://presence-bridge.sociobot.in`. This repair is versioned `0.1.8`; release and static-deployment evidence is appended below after publication.
 
 ## Release-blocking finding repaired
 
@@ -19,14 +19,14 @@ HTTP/2 404
 The product now fails closed.
 
 - Landing and app Settings start with an honest unavailable-purchases message, not a broken purchase link.
-- A person must explicitly choose **Check whether Bridge Plus is available**. The check sends a `GET` with no request body, roster, calendar, activity, or license data.
-- **Buy Bridge Plus** is rendered only if the billing endpoint returns a redirect. A 404, non-redirect response, or unreachable endpoint never exposes the link.
+- The product makes no checkout request while the catalog is unavailable, so the reported 404 cannot produce a browser console error.
+- **Buy Bridge Plus** is absent from landing and Settings. A 404, non-redirect response, or unreachable endpoint therefore cannot expose a broken purchase path.
 - Existing-license restore and verification, Bridge Plus limits, the free five-person roster, demo isolation, and every previously passed behavior remain unchanged.
 - Privacy, terms, README, claims, and the landing copy audit now state the conditional checkout behavior plainly.
 
 ## Regression coverage
 
-`@claim:checkout-availability` reproduces the verifier's exact 404 body on both Chromium desktop and 390px mobile. It asserts no purchase link before or after that 404, asserts that the request is bodyless `GET`, asserts a recorded 302 exposes the link, and repeats the 404 assertion in desktop-app Settings.
+`@claim:checkout-availability` uses the verifier's exact 404 body on both Chromium desktop and 390px mobile. It asserts that landing and desktop-app Settings show no purchase link and make no request to that endpoint.
 
 `.factory/claims.json` has 18 claims. Each has exactly one tagged test. Every exact command listed in that manifest passed from this checkout.
 
@@ -50,17 +50,18 @@ Results:
 - Every one of the 18 exact claims-manifest commands: PASS.
 - `npm run lint`, `npm run build`, Rust format, and `cargo check --locked`: PASS. The required Linux Tauri development packages were installed before the Rust check.
 - Production-preview `verify-url.sh` on `/` and `/demo`: PASS — HTTP 200, no console errors, title/lang/one h1/main, image alt text, and labelled buttons.
-- Local production-preview Lighthouse mobile: performance **100**, accessibility **100**, LCP **1.7 s**, CLS **0**, total blocking time **40 ms**.
-- Static production build: app core JS 26.78 KB raw / 9.43 KB gzip; site JS 12.59 KB raw / 4.84 KB gzip; CSS 17.61 KB raw / 4.96 KB gzip.
+- Desktop and 390px production-preview checks: PASS — no Buy link, unavailable state visible, no external request, and no console error.
+- Local production-preview Lighthouse mobile: performance **100**, accessibility **100**, LCP **1.7 s**, CLS **0**, total blocking time **50 ms**.
+- Static production build: app core JS 25.85 KB raw / 9.14 KB gzip; site JS 11.46 KB raw / 4.53 KB gzip; CSS 17.61 KB raw / 4.96 KB gzip.
 
 ## Known external limitation
 
 The Sociobot billing catalog is still not configured to redirect this product to checkout. That external state cannot be changed by this static repository or its deployment. This is no longer a misleading or broken product path: people are told that purchases are unavailable and may still use the free roster or restore an existing license.
 
-To restore paid conversion, an authorized Sociobot billing operator must enable the `presence-bridge` public one-time `$24` product with return URL `https://presence-bridge.sociobot.in/`. Once it returns a redirect, the shipped conditional check will show **Buy Bridge Plus** without another code change.
+To restore paid conversion, an authorized Sociobot billing operator must enable the `presence-bridge` public one-time `$24` product with return URL `https://presence-bridge.sociobot.in/`. The factory can then publish a purchase-enabled release after independently confirming the redirect.
 
 Desktop artifacts remain unsigned until GitHub Actions receives `APPLE_CERTIFICATE`, `APPLE_CERTIFICATE_PASSWORD`, `APPLE_SIGNING_IDENTITY`, `WINDOWS_CERT_PFX`, and `WINDOWS_CERT_PASSWORD`.
 
 ## Publication evidence
 
-Pending the `v0.1.7` GitHub Actions release and Static Web Apps deployment. This section will record their exact run/deployment identifiers, live browser checks, headers, checksum, and post-deploy checkout result.
+`v0.1.7` was superseded before final publication because its user-initiated checkout probe caused an expected HTTP 404 to be logged as a browser console error. Pending the `v0.1.8` GitHub Actions release and Static Web Apps deployment. This section will record their exact run/deployment identifiers, live browser checks, headers, checksum, and post-deploy checkout result.

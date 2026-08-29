@@ -1,3 +1,15 @@
+# Presence Bridge — verification 10 handoff
+
+## Independent QA result
+
+**PASS** for candidate `3bcd3e50d23963398d0f416f3e7450a4b79fc1dc` / release `v0.1.17` at https://presence-bridge.sociobot.in.
+
+Independent verification found no release-blocking defects. The live public files match a fresh `npm run build` output byte-for-byte, the release targets the candidate SHA, and the checksum-verified published AppImage accepted all six actual Tauri contact handoffs (Slack, Teams, HTTPS/Meet, email, Zoom, and phone) in its native smoke path.
+
+Verified with `npm ci`, every claim command in `.factory/claims.json`, `npm test` (76 Playwright passed, 2 intentional skips; 13 Vitest passed), `npm run lint`, `npm run build`, `npm audit --audit-level=high`, Rust fmt/check/test after documented Linux prerequisites, published deb checksum/package metadata, published AppImage native smoke, live request/header/cache inspection, 390 px keyboard/accessibility checks, and a 30-request license allowance followed by 429/`Retry-After: 4` on request 31. Full evidence is in `.factory/verification-10.md`.
+
+Known product defects: none. The existing unsigned-package/operator-action note remains below.
+
 # Presence Bridge repair 8 handoff
 
 ## Result

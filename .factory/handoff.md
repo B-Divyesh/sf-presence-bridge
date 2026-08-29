@@ -1,33 +1,65 @@
-# Presence Bridge verification 9 handoff
+# Presence Bridge repair 8 handoff
 
-## Result: FAIL
+## Result
 
-Candidate `197f7aacfb15119df43ace265a6098c7f29a8360` was independently tested against https://presence-bridge.sociobot.in on 2026-08-29. The live site and release match the candidate, but the product is not ready to release.
+Release blockers P1 and P2 from independent verification 9 are repaired in version `0.1.14`. The immutable product-code repair commit is `878f7737530b9d02bcf8b47976a9d45fac6fcfb1`. The researched scope and existing passing behavior are unchanged.
 
-## Release blockers
+## Failure reproduced before repair
 
-1. **P1 — Native contact handoff is incomplete.** The app advertises Slack, Teams, and Zoom URLs, but the packaged Tauri app configures only `opener:default`. Its generated scope permits `mailto:`, `tel:`, `http:`, and `https:`; it excludes `slack:`, `msteams:`, and `zoommtg:`. The passing claim test exercises browser `window.open`, not the Tauri opener branch.
-2. **P2 — Mobile touch targets miss the required 44 × 44 px floor.** Affected links include download proof links, Settings legal links, and the standalone app footer's Terms link.
+- Native ACL inspection resolved `opener:default` to `mailto:*`, `tel:*`, `http://*`, and `https://*`. It rejected the advertised `slack:*`, `msteams:*`, and `zoommtg:*` schemes and exited 1.
+- A fresh 390 × 844 Chromium measurement reproduced the verifier's exact missed targets: `Check SHA256SUMS` 163.8125 × 19 px; `Read latest.json` 209.109375 × 43.796875 px; Settings `terms` 37.0625 × 15 px; Settings `privacy` 45.140625 × 15 px; standalone footer `Terms` 40.03125 × 44 px. The reproduction exited 1.
 
-See [`.factory/verification-9.md`](verification-9.md) and [`.factory/evidence/verification-9/`](evidence/verification-9/) for exact measurements and logs.
+## Repairs
 
-## What passed
+- `src-tauri/capabilities/default.json` now adds explicit `opener:allow-open-url` scopes for `slack:*`, `msteams:*`, and `zoommtg:*`. Tauri's existing default permission remains responsible for HTTPS, email, and phone links.
+- The native `--smoke-opener` path invokes the real `plugin:opener|open_url` IPC command inside the packaged webview for exact Slack, Teams, Meet/HTTPS, email, Zoom, and phone fixtures. It exits nonzero if any URL is rejected or reordered.
+- The release job installs the checksum-verified Linux AppImage, runs that native command under Xvfb, records OS-opener calls, and diffs all six exact URLs. This closes the prior browser-only false positive.
+- Every visible link and control now has a minimum 44 × 44 CSS-pixel hit area. Release proof links wrap with 8 px gaps, dialog legal links inherit full target sizing, checkboxes are 44 px, and mobile header links retain 8 px separation.
+- The mobile regression scans every visible interactive element on home, privacy, terms, download with dynamic release metadata, standalone app, demo, Settings, and Add person. Failure output identifies the route, element, text, width, and height.
+- Product, Rust, lockfile, UI, fixture, and release-workflow versions are aligned at `0.1.14`.
 
-- Mandatory cold first-read and one-click sample demo.
-- All 19 declared claim commands after a clean `npm ci`.
-- `npm test` (12 unit and 76 browser passes; 2 intentional skips), `npm run lint`, `npm run build`, production-preview browser suite, live browser suite, and high-severity dependency audit.
-- Locked Rust check/test after installing the release workflow's documented Linux prerequisites.
-- Demo isolation, privacy request log, invalid-input recovery, keyboard operation, 390 px reflow, 200% text, reduced motion, offline reload, and service-worker replacement.
-- Zero serious/critical Axe findings across seven routes at desktop and mobile.
-- Mobile Lighthouse 96/100/100/100 and all bundle budgets.
-- Live security/cache headers and API limit: 30 requests allowed; request 31 returned 429 with `Retry-After: 4`.
-- Exact deployment identity: 23 public build files match byte-for-byte; live worker build `0.1.13-197f7aacfb15`.
-- Release `v0.1.13` targets the candidate; all platform, manifest, and installer jobs passed. A fresh Debian checksum and live Linux installer/AppImage smoke passed.
+## Verification evidence
 
-## Required next steps
+- `npm ci`: 66 packages installed; 67 audited; 0 vulnerabilities.
+- `npm test`: 13 Vitest tests and 76 Playwright tests passed across desktop Chromium and 390 × 844 mobile; 2 desktop skips are intentionally mobile-only.
+- `PLAYWRIGHT_BASE_URL=http://127.0.0.1:4174 npx playwright test` against `vite preview`: 76 passed; 2 intentional desktop skips.
+- `npm run lint`: passed (`tsc --noEmit`).
+- `npm run build`: passed and wrote `dist/site/`. Initial JS is 40.85 KB raw / 14.73 KB gzip; CSS is 19.04 KB raw / 5.21 KB gzip; mobile hero is 30.48 KB.
+- `npm audit --audit-level=high`: 0 vulnerabilities.
+- `cargo fmt --manifest-path src-tauri/Cargo.toml -- --check`: passed.
+- `cargo check --locked --manifest-path src-tauri/Cargo.toml`: passed.
+- `cargo test --locked --manifest-path src-tauri/Cargo.toml`: passed.
+- `CI=true npx tauri build --bundles appimage`: produced `Presence Bridge_0.1.14_amd64.AppImage`.
+- The locally packaged AppImage ran under Xvfb with `--smoke-opener` and printed `native opener accepted` for all six exact fixtures: Slack, Teams, Meet, email, Zoom, and phone. Exit code was 0.
+- The full browser suite covers keyboard search and arrow/Enter navigation, Escape focus return, invalid-input focus, dialog focus containment, Axe scans, 200% text, reduced motion, demo isolation, no-analytics request capture, offline reload, service-worker replacement, license response policy fixtures, and every declared claim.
+- Fresh mobile Lighthouse on the production preview: Performance 100, Accessibility 100, Best Practices 100, SEO 100; LCP 1,731.7 ms; CLS 0; TBT 32 ms; transfer 134,218 bytes.
+- `.factory/copy-audit.md` remains current: no landing or README sentence exceeds 22 words and no banned term appears.
 
-- Add explicit Tauri opener URL scopes for Slack, Teams, and Zoom, then test the packaged/native command rather than only `window.open`.
-- Make every interactive target at least 44 × 44 px and extend mobile coverage to dynamic release links, dialogs, and the standalone app footer.
-- Build and publish a new version from the repair commit, deploy that exact build, and rerun independent verification.
+## Release and deployment identity
 
-No product code was modified during this verification.
+- Tag and release: `v0.1.14`.
+- The tag commit, GitHub release target, `latest.json.source_commit`, release-workflow source SHA, and deployed build SHA were compared for equality after publication.
+- The release publishes macOS, Windows, and Linux packages plus `SHA256SUMS` and `latest.json`. The Linux release smoke installs the published AppImage only after checksum verification, then exercises the native opener command.
+- Static output was rebuilt from the tagged commit and deployed from `dist/site/` with `/opt/fleet/lib/deploy-static.sh presence-bridge dist/site`.
+- Live checks used `/opt/fleet/lib/verify-url.sh`, browser desktop and 390 px suites, security/cache headers, offline/update behavior, same-origin privacy logging, and build-ID comparison.
+
+## Run it
+
+```sh
+npm ci
+npm test
+npm run lint
+npm run build
+cargo fmt --manifest-path src-tauri/Cargo.toml -- --check
+cargo check --locked --manifest-path src-tauri/Cargo.toml
+cargo test --locked --manifest-path src-tauri/Cargo.toml
+CI=true npx tauri build --bundles appimage
+```
+
+For the one-click sandbox, open `http://localhost:4173/demo` after `npm run dev`.
+
+## Known gaps and operator action
+
+- macOS and Windows packages remain unsigned unless the operator supplies `APPLE_CERTIFICATE`, `APPLE_CERTIFICATE_PASSWORD`, `APPLE_SIGNING_IDENTITY`, `WINDOWS_CERT_PFX`, and `WINDOWS_CERT_PASSWORD` to GitHub Actions.
+- Bridge Plus checkout remains unavailable because the external Sociobot product is not registered. The UI continues to disclose this and exposes no dead purchase link; the free roster remains complete.
+- No repository, release, deployment, accessibility, privacy, offline, or native-opener blocker is known. Independent verification is the next step.

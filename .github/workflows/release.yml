@@ -121,7 +121,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install native smoke dependencies
-        run: sudo apt-get update && sudo apt-get install -y xvfb xdg-utils
+        run: sudo apt-get update && sudo apt-get install -y xvfb xdg-utils libegl1 libgl1-mesa-dri gstreamer1.0-plugins-base dbus-x11
       - name: Install and exercise the checksum-verified Linux AppImage opener
         shell: bash
         run: |

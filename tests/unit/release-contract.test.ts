@@ -9,21 +9,21 @@ const root = resolve(import.meta.dirname, "../..");
 describe("release repair contracts", () => {
   it("keeps every package version aligned and rejects a release from a stale commit", () => {
     const versions = readProductVersions(root);
-    expect(new Set(Object.values(versions))).toEqual(new Set(["0.1.14"]));
+    expect(new Set(Object.values(versions))).toEqual(new Set(["0.1.15"]));
 
     const expectedCommit = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-    const matchingRelease = { tag_name: "v0.1.14", target_commitish: expectedCommit };
+    const matchingRelease = { tag_name: "v0.1.15", target_commitish: expectedCommit };
     expect(verifyReleaseProvenance({
       release: matchingRelease,
       expectedCommit,
-      expectedTag: "v0.1.14",
+      expectedTag: "v0.1.15",
       versions
-    })).toEqual({ version: "0.1.14", tag: "v0.1.14", sourceCommit: expectedCommit });
+    })).toEqual({ version: "0.1.15", tag: "v0.1.15", sourceCommit: expectedCommit });
 
     expect(() => verifyReleaseProvenance({
       release: { ...matchingRelease, target_commitish: "166e4d6b6690157e154c22e0e2359116ae7734e1" },
       expectedCommit,
-      expectedTag: "v0.1.14",
+      expectedTag: "v0.1.15",
       versions
     })).toThrow("Published release targets 166e4d6b6690157e154c22e0e2359116ae7734e1; expected aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.");
   });
@@ -31,11 +31,11 @@ describe("release repair contracts", () => {
   it("runs the same provenance CLI used by the release job from the repository checkout", () => {
     const output = execFileSync(process.execPath, [
       resolve(root, "scripts/verify-release-provenance.mjs"),
-      resolve(root, "tests/fixtures/release-v0.1.14.json"),
+      resolve(root, "tests/fixtures/release-v0.1.15.json"),
       "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "v0.1.14"
+      "v0.1.15"
     ], { encoding: "utf8" });
-    expect(output).toBe("Verified v0.1.14 targets aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.\n");
+    expect(output).toBe("Verified v0.1.15 targets aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.\n");
   });
 
   it("records and verifies release source provenance in the publishing workflow", () => {

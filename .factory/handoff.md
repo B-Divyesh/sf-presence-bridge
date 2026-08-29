@@ -2,7 +2,7 @@
 
 ## Result
 
-Release blockers P1 and P2 from independent verification 9 are repaired in version `0.1.14`. The immutable product-code repair commit is `878f7737530b9d02bcf8b47976a9d45fac6fcfb1`. The researched scope and existing passing behavior are unchanged.
+Release blockers P1 and P2 from independent verification 9 are repaired in version `0.1.15`. The immutable product-code repair commit is `878f7737530b9d02bcf8b47976a9d45fac6fcfb1`. The researched scope and existing passing behavior are unchanged.
 
 ## Failure reproduced before repair
 
@@ -16,7 +16,7 @@ Release blockers P1 and P2 from independent verification 9 are repaired in versi
 - The release job installs the checksum-verified Linux AppImage, runs that native command under Xvfb, records OS-opener calls, and diffs all six exact URLs. This closes the prior browser-only false positive.
 - Every visible link and control now has a minimum 44 × 44 CSS-pixel hit area. Release proof links wrap with 8 px gaps, dialog legal links inherit full target sizing, checkboxes are 44 px, and mobile header links retain 8 px separation.
 - The mobile regression scans every visible interactive element on home, privacy, terms, download with dynamic release metadata, standalone app, demo, Settings, and Add person. Failure output identifies the route, element, text, width, and height.
-- Product, Rust, lockfile, UI, fixture, and release-workflow versions are aligned at `0.1.14`.
+- Product, Rust, lockfile, UI, fixture, and release-workflow versions are aligned at `0.1.15`.
 
 ## Verification evidence
 
@@ -29,7 +29,7 @@ Release blockers P1 and P2 from independent verification 9 are repaired in versi
 - `cargo fmt --manifest-path src-tauri/Cargo.toml -- --check`: passed.
 - `cargo check --locked --manifest-path src-tauri/Cargo.toml`: passed.
 - `cargo test --locked --manifest-path src-tauri/Cargo.toml`: passed.
-- `CI=true npx tauri build --bundles appimage`: produced `Presence Bridge_0.1.14_amd64.AppImage`.
+- `CI=true npx tauri build --bundles appimage`: produced the versioned Linux AppImage.
 - The locally packaged AppImage ran under Xvfb with `--smoke-opener` and printed `native opener accepted` for all six exact fixtures: Slack, Teams, Meet, email, Zoom, and phone. Exit code was 0.
 - The full browser suite covers keyboard search and arrow/Enter navigation, Escape focus return, invalid-input focus, dialog focus containment, Axe scans, 200% text, reduced motion, demo isolation, no-analytics request capture, offline reload, service-worker replacement, license response policy fixtures, and every declared claim.
 - Fresh mobile Lighthouse on the production preview: Performance 100, Accessibility 100, Best Practices 100, SEO 100; LCP 1,731.7 ms; CLS 0; TBT 32 ms; transfer 134,218 bytes.
@@ -37,7 +37,7 @@ Release blockers P1 and P2 from independent verification 9 are repaired in versi
 
 ## Release and deployment identity
 
-- Tag and release: `v0.1.14`.
+- Tag and accepted release: `v0.1.15`. The preceding `v0.1.14` build matrix published packages, but its new native smoke exposed a missing `libEGL.so.1` on the clean smoke runner. Explicit EGL, Mesa, GStreamer, and D-Bus runtime packages were added before publishing this superseding release.
 - The tag commit, GitHub release target, `latest.json.source_commit`, release-workflow source SHA, and deployed build SHA were compared for equality after publication.
 - The release publishes macOS, Windows, and Linux packages plus `SHA256SUMS` and `latest.json`. The Linux release smoke installs the published AppImage only after checksum verification, then exercises the native opener command.
 - Static output was rebuilt from the tagged commit and deployed from `dist/site/` with `/opt/fleet/lib/deploy-static.sh presence-bridge dist/site`.

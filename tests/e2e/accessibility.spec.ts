@@ -197,11 +197,11 @@ test("390px routes, dynamic release links, dialogs, and app footer keep 44px tar
   test.skip(testInfo.project.name !== "mobile");
   await page.route("https://api.github.com/repos/B-Divyesh/sf-presence-bridge/releases?per_page=1", route => route.fulfill({
     contentType: "application/json",
-    body: JSON.stringify([{ tag_name: "v0.1.14", assets: [
-      { name: "Presence.Bridge_0.1.14_amd64.AppImage", size: 1_200, browser_download_url: "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.14/Presence.Bridge_0.1.14_amd64.AppImage" },
-      { name: "Presence.Bridge_0.1.14_x64-setup.exe", size: 1_200, browser_download_url: "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.14/Presence.Bridge_0.1.14_x64-setup.exe" },
-      { name: "SHA256SUMS", size: 900, browser_download_url: "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.14/SHA256SUMS" },
-      { name: "latest.json", size: 800, browser_download_url: "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.14/latest.json" }
+    body: JSON.stringify([{ tag_name: "v0.1.15", assets: [
+      { name: "Presence.Bridge_0.1.15_amd64.AppImage", size: 1_200, browser_download_url: "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.15/Presence.Bridge_0.1.15_amd64.AppImage" },
+      { name: "Presence.Bridge_0.1.15_x64-setup.exe", size: 1_200, browser_download_url: "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.15/Presence.Bridge_0.1.15_x64-setup.exe" },
+      { name: "SHA256SUMS", size: 900, browser_download_url: "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.15/SHA256SUMS" },
+      { name: "latest.json", size: 800, browser_download_url: "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.15/latest.json" }
     ] }])
   }));
 

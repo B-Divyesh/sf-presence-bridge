@@ -1,5 +1,7 @@
 $ErrorActionPreference = "Stop"
-$release = Invoke-RestMethod "https://api.github.com/repos/B-Divyesh/sf-presence-bridge/releases/latest"
+$headers = @{ Accept = "application/vnd.github+json" }
+if ($env:GITHUB_TOKEN) { $headers.Authorization = "Bearer $($env:GITHUB_TOKEN)" }
+$release = Invoke-RestMethod -Headers $headers -Uri "https://api.github.com/repos/B-Divyesh/sf-presence-bridge/releases/latest"
 $asset = $release.assets | Where-Object { $_.name -match '_x64-setup\.exe$' } | Select-Object -First 1
 $sums = $release.assets | Where-Object { $_.name -eq 'SHA256SUMS' } | Select-Object -First 1
 if (-not $asset -or -not $sums) { throw "No Windows setup release is published yet." }

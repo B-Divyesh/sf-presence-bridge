@@ -9,21 +9,21 @@ const root = resolve(import.meta.dirname, "../..");
 describe("release repair contracts", () => {
   it("keeps every package version aligned and rejects a release from a stale commit", () => {
     const versions = readProductVersions(root);
-    expect(new Set(Object.values(versions))).toEqual(new Set(["0.1.12"]));
+    expect(new Set(Object.values(versions))).toEqual(new Set(["0.1.13"]));
 
     const expectedCommit = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-    const matchingRelease = { tag_name: "v0.1.12", target_commitish: expectedCommit };
+    const matchingRelease = { tag_name: "v0.1.13", target_commitish: expectedCommit };
     expect(verifyReleaseProvenance({
       release: matchingRelease,
       expectedCommit,
-      expectedTag: "v0.1.12",
+      expectedTag: "v0.1.13",
       versions
-    })).toEqual({ version: "0.1.12", tag: "v0.1.12", sourceCommit: expectedCommit });
+    })).toEqual({ version: "0.1.13", tag: "v0.1.13", sourceCommit: expectedCommit });
 
     expect(() => verifyReleaseProvenance({
       release: { ...matchingRelease, target_commitish: "166e4d6b6690157e154c22e0e2359116ae7734e1" },
       expectedCommit,
-      expectedTag: "v0.1.12",
+      expectedTag: "v0.1.13",
       versions
     })).toThrow("Published release targets 166e4d6b6690157e154c22e0e2359116ae7734e1; expected aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.");
   });
@@ -31,11 +31,11 @@ describe("release repair contracts", () => {
   it("runs the same provenance CLI used by the release job from the repository checkout", () => {
     const output = execFileSync(process.execPath, [
       resolve(root, "scripts/verify-release-provenance.mjs"),
-      resolve(root, "tests/fixtures/release-v0.1.12.json"),
+      resolve(root, "tests/fixtures/release-v0.1.13.json"),
       "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "v0.1.12"
+      "v0.1.13"
     ], { encoding: "utf8" });
-    expect(output).toBe("Verified v0.1.12 targets aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.\n");
+    expect(output).toBe("Verified v0.1.13 targets aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.\n");
   });
 
   it("records and verifies release source provenance in the publishing workflow", () => {
@@ -43,12 +43,15 @@ describe("release repair contracts", () => {
     expect(workflow).toContain("verify-release-provenance.mjs release.json");
     expect(workflow).toContain("\"${GITHUB_SHA}\" \"${GITHUB_REF_NAME}\"");
     expect(workflow).toContain('"source_commit": os.environ[\'GITHUB_SHA\']');
+    expect(workflow).toContain("GITHUB_TOKEN: ${{ github.token }}");
   });
 
   it("runs the checksum-verified Windows setup and launches the installed app", () => {
     const script = readFileSync(resolve(root, "public/install.ps1"), "utf8");
     const workflow = readFileSync(resolve(root, ".github/workflows/release.yml"), "utf8");
     expect(script).toContain("$asset.name");
+    expect(script).toContain("$headers.Authorization");
+    expect(script).toContain("Invoke-RestMethod -Headers $headers");
     expect(script).toContain("Start-Process -FilePath $installer");
     expect(script).toContain("-ArgumentList \"/S\"");
     expect(script).toContain("$installedApp");

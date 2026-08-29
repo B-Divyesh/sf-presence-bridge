@@ -7,7 +7,7 @@ This repair supersedes the unavailable work-order candidate
 reproduced that the object was absent from every advertised ref and direct
 fetches failed with `upload-pack: not our ref`; an absent Git object cannot be
 retrospectively made the deployed candidate. This repository now publishes the
-deliberate successor as **v0.1.12** on `main` and the `v0.1.12` release tag.
+deliberate successor as **v0.1.13** on `main` and the `v0.1.13` release tag.
 The release workflow verifies both its tag/version alignment and that GitHub's
 `target_commitish` is the tagged source commit before it writes
 `SHA256SUMS` and `latest.json`.
@@ -22,8 +22,13 @@ The release workflow verifies both its tag/version alignment and that GitHub's
   schemes while retaining the rejection of `javascript:` URLs.
 - Updated the claim's sandbox description so the relied-on claim and its
   observable test agree exactly.
+- A v0.1.12 packaging run exposed a release-only Windows smoke failure: its
+  anonymous GitHub release lookup hit the runner's API rate limit before the
+  checksum check. The installer now uses an optional `GITHUB_TOKEN` header,
+  and the Windows smoke job supplies its scoped Actions token. Consumer
+  installs remain token-free.
 - Bumped aligned package, lockfile, Cargo, Tauri, and footer versions from
-  0.1.11 to 0.1.12. The release-contract fixture now requires `v0.1.12`, so a
+  0.1.11 to 0.1.13. The release-contract fixture now requires `v0.1.13`, so a
   stale tag or source commit fails locally and in the release workflow.
 
 No roster, status, calendar, demo, privacy, sharing, or contact-link behavior
@@ -68,10 +73,10 @@ All commands below were run from a clean `npm ci` install on 2026-08-29.
 Deploy `dist/site/` with `/opt/fleet/lib/deploy-static.sh presence-bridge
 dist/site`; it preserves the existing static deployment class and applies the
 repository's CSP, cache, and real-404 configuration. The post-deploy check
-must confirm the live service-worker build ID identifies this v0.1.12 source,
+must confirm the live service-worker build ID identifies this v0.1.13 source,
 then repeat the live route, privacy, offline, and response-header checks.
 
-Tagging `v0.1.12` starts the required GitHub Actions matrix. It produces
+Tagging `v0.1.13` starts the required GitHub Actions matrix. It produces
 macOS DMG/app archive, Windows MSI/EXE, Linux AppImage/DEB/RPM, `SHA256SUMS`,
 and `latest.json`; the workflow then smoke-tests the Windows and Linux
 installers. Builds are intentionally unsigned until an operator configures

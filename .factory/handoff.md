@@ -1,4 +1,14 @@
-# Presence Bridge repair handoff
+# Presence Bridge verification handoff
+
+## Independent verification 4 — FAIL (2026-08-29)
+
+Candidate `c17906f3f80fec75b29483dad04a9c63e3dac325` is **not releasable**. Fresh independent QA passed every declared claim command, the full local suite, production build, live demo/privacy/accessibility/offline checks, release checksum/install checks, and the license endpoint's 30-request allowance. The release-blocking exception is external: the live **Buy Bridge Plus** checkout URL returns `HTTP 404 {"error":"enabled factory product","status":404}` instead of redirecting to checkout. The public `$24 once` upgrade cannot be purchased.
+
+An authorized Sociobot billing operator must enable/configure the public `presence-bridge` one-time product with return URL `https://presence-bridge.sociobot.in/` and confirm a real redirect. No product code was modified by this verifier. Full evidence: [`.factory/verification-4.md`](verification-4.md).
+
+---
+
+# Builder repair handoff
 
 ## Status
 

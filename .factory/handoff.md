@@ -1,24 +1,25 @@
 # Presence Bridge repair handoff
 
-## Repair status
+## Status
 
-This repair addresses the candidate `a259ad2106b6cccc7464b72bb8c702c7310d5f6a` findings in `.factory/verification-2.md` without changing the artifact class: this remains a Tauri 2 desktop app with a Vite static landing site in `dist/site`. Repair commit `1752072c8ad5121bbb5a7b9ea245effa51527c7d` is pushed to `main`.
+Repair source commit: `c404f93d688360aa21372acd2d7d8bb4d05e6449`.
 
-One external release blocker remains outside this repository: at 2026-08-28, `GET https://api.sociobot.in/api/v1/products/presence-bridge/checkout` still returns `404 {"error":"enabled factory product","status":404}`. The product must be enabled in the Sociobot live billing catalog at the already-public $24 price and return URL before the paid tier can be called releasable. The client continues to use only that required Sociobot endpoint; no payment provider was added to the app.
+Desktop release: `v0.1.6`, published from that exact commit on 2026-08-29. GitHub Actions run `33247788428` completed successfully for macOS, Windows, Linux, manifest generation, Linux installer smoke, and Windows installer smoke.
+
+Static deployment: `https://presence-bridge.sociobot.in`, Azure Static Web Apps deployment `e6df4427-d3e6-4fbe-b384-4964638f44a2`.
 
 ## What changed
 
-- Added an explicit, local-first teammate-presence exchange. In Settings, a person can download their chosen presence update and a teammate can import it into a separate local roster. The update contains only name, role, status, note, source, and timestamp; it excludes calendar events, contact routes, activity, and messages. The `@claim:shared-presence` regression uses two isolated browser contexts to prove publish → import → visible status.
-- Repaired `public/install.sh` to parse GitHub release JSON with Python's JSON parser, rather than whitespace-sensitive `sed`. It still verifies `SHA256SUMS` before installing. Added a Linux GitHub Actions smoke job that installs the published AppImage and invokes `--appimage-version`.
-- Strengthened claim coverage: platform release selection, actual platform handoff, ten-person paid limit, a recorded checkout redirect fixture, explicit sharing, privacy, and existing claims are all exact tagged browser tests. `.factory/claims.json` has 14 claims, each with exactly one matching test tag.
-- Fixed Escape focus restoration for both dialogs, including native dialog cancellation. Added a 390px and 200% text-size regression covering no horizontal scroll and visible 44px targets.
-- Reflowed site/app navigation, download filenames, banner, footer, and embedded app bar at narrow and enlarged text sizes. Header, demo, app-wordmark, and footer links now meet the 44px target requirement when visible.
-- Added `npm run lint` (`tsc --noEmit`) and made Playwright's base URL configurable for production-preview verification.
-- Updated README, demo contract, claim manifest, and copy audit to document the deliberate sharing boundary.
+- Replaced unsafe roster-backup casting with schema validation and normalization before any storage write. It validates people, contact routes, calendar events, ids, status/source values, and bounded text. Invalid imports leave the prior roster untouched. A legacy malformed saved value now fails closed to an empty usable roster instead of blanking the app.
+- Applied plan limits to every roster-creating input path: manual add, backup import, and new presence-update import. Free imports allow at most five people and one contact route; valid Bridge Plus imports allow ten people and two routes. The bundled free sample now also follows the one-route free limit.
+- Added a next-calendar-boundary scheduler and resume/focus refresh. Calendar-derived busy state now changes at both event starts and ends without reload.
+- Raised the remaining 390px touch targets (privacy/support email and the all-releases link) to 44px and added direct mobile assertions.
+- Added public release proof links for `SHA256SUMS` and `latest.json`, documented terminal installers, and added four release/installer claims. The claim inventory now has 18 exact tagged tests.
+- Bumped the desktop package version to `0.1.6`, tagged it, and published current macOS, Windows, and Linux artifacts plus `SHA256SUMS` and `latest.json`.
 
-## Verification evidence
+## Verification
 
-Run from a clean dependency install:
+From a clean install:
 
 ```sh
 npm ci
@@ -29,42 +30,20 @@ cargo fmt --manifest-path src-tauri/Cargo.toml -- --check
 cargo check --locked --manifest-path src-tauri/Cargo.toml
 ```
 
-Results on 2026-08-28:
+Results on 2026-08-29:
 
-- `CI=1 npm test`: PASS — 7 Vitest tests; 53 Playwright tests pass across desktop Chromium and 390×844 mobile; one desktop-only mobile-layout test is correctly skipped.
+- `CI=1 npm test`: PASS — 9 Vitest checks and 68 configured Playwright desktop/390px cases; the single desktop-only mobile-layout case is intentionally skipped. The complete suite was also run against the production preview and live deployment with no failures or test artifacts.
 - `npm run lint`: PASS.
-- `npm run build:site`: PASS. Initial app JS is 22.40 KB raw / 8.06 KB gzip; site route JS is 10.97 KB raw / 4.38 KB gzip; CSS is 17.33 KB raw / 4.90 KB gzip.
-- Rust format and `cargo check --locked`: PASS after installing the documented Ubuntu Tauri prerequisites (`libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf`).
-- Production preview was checked with `/opt/fleet/lib/verify-url.sh`: HTTP 200, zero console errors, title/lang/one `h1`/`main`, every image has alt text, and no unlabeled buttons.
-- Linux installer smoke against the real current GitHub API: PASS. It selected the published AppImage from minified JSON, verified it, and installed an executable 76 MB `presence-bridge` at an isolated `XDG_BIN_HOME` path.
-- Live browser verification after deployment: PASS — the accessibility/mobile suite had 25 passes and one intentional desktop-only skip against `https://presence-bridge.sociobot.in`. This includes keyboard dialog Escape restoration, offline/update, 390px targets and overflow, 200% text size, real 404 navigation/reload, and Axe serious/critical checks. The 200% test uses an in-page DOM style property so it does not weaken or bypass the deployed CSP.
-- Live identity check after deployment: `/`, `/demo`, `/app.html`, `/privacy`, `/terms`, and `/download` returned 200; a made-up route returned 404. `verify-url.sh` reported 926 ms load, no console errors, correct title/lang/one `h1`/`main`, zero missing image alt text, and zero unlabeled buttons.
-- Live Lighthouse (headless Chromium): Performance 100, Accessibility 100, Best Practices 100, SEO 100.
+- `npm run build:site`: PASS. Initial app core JS is 25.82 KB raw / 9.12 KB gzip; route JS is 11.34 KB raw / 4.49 KB gzip; CSS is 17.45 KB raw / 4.92 KB gzip.
+- Rust format and `cargo check --locked`: PASS after installing the documented Ubuntu Tauri prerequisites (`libglib2.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf`).
+- `/opt/fleet/lib/verify-url.sh` passed for the production preview (792 ms) and live site (818 ms): HTTP 200, no console errors, title/lang/one `h1`/`main`, no missing image alt, and no unlabeled buttons. The Playwright Axe integration reported no serious or critical violations on `/`, `/demo`, `/privacy`, `/terms`, `/download`, `/app.html`, or the real 404.
+- Keyboard search, arrow roster navigation, dialog Escape focus return, 390px reflow/touch targets, 200% text size, offline reload, service-worker update, local-only request boundary, sharing isolation, malformed-backup recovery, and calendar-boundary refresh all passed in desktop and mobile browser verification.
+- Live routes `/`, `/demo`, `/app.html`, `/privacy`, `/terms`, and `/download` return 200; a made-up route returns the designed 404. Live headers include CSP, HSTS, `nosniff`, strict-origin referrer policy, and restrictive camera/microphone/geolocation permissions policy. The deployed app-core bundle SHA-256 exactly matches `dist/site/`.
+- A live 60-request / concurrency-12 license-verification probe yielded 30×200 and 30×429 responses.
+- `v0.1.6` has macOS `.dmg`/app archive, Windows `.msi`/`.exe`, Linux `.AppImage`/`.deb`/`.rpm`, `SHA256SUMS`, and valid `latest.json`. The real Linux installer selected the v0.1.6 AppImage, verified its SHA-256 (`9863bdd18689a40f7dbabe5496be023f8e5866eca3fb5d94b5db90cb3bf729be`), installed it to an isolated `XDG_BIN_HOME`, and ran `--appimage-version` successfully. A fresh live browser showed the v0.1.6 AppImage plus checksum and manifest links with no console errors.
 
-## Deploy
+## Remaining external action
 
-Build and deploy the static site with:
+The production checkout remains unavailable: on 2026-08-29, `GET https://api.sociobot.in/api/v1/products/presence-bridge/checkout` returned `404 {"error":"enabled factory product","status":404}` while the license verification endpoint returned its normal invalid-token response. The product is not present in the public billing catalog response. Repository policy prohibits changing billing catalog state from this worker, so this paid-checkout blocker cannot be resolved in code or deployment.
 
-```sh
-npm run build:site
-/opt/fleet/lib/deploy-static.sh presence-bridge dist/site
-```
-
-Deployed on 2026-08-28 to `https://presence-bridge.sociobot.in`. Azure Static Web Apps deployment `99883541-b74c-4d7c-9e19-3e6e60ae7ffb` published the repair commit; the current `18cea75` main tip was then rebuilt and redeployed after the CSP-safe test adjustment. Live HTML resolves `assets/site-p9qc2IB8.js`, and `verify-url.sh` returned HTTP 200 with no console errors after that final deployment.
-
-## Known external actions
-
-- Enable the existing `presence-bridge` product in the Sociobot live billing catalog with the $24 one-time price and `https://presence-bridge.sociobot.in/` return URL, then verify a real checkout redirect. This is the only unresolved verifier blocker.
-- GitHub release signing remains optional and currently unsigned. For signed desktop packages, configure `APPLE_CERTIFICATE`, `APPLE_CERTIFICATE_PASSWORD`, `APPLE_SIGNING_IDENTITY`, `WINDOWS_CERT_PFX`, and `WINDOWS_CERT_PASSWORD` in GitHub Actions.
-
-## Independent verification 3 — FAIL (2026-08-28)
-
-Candidate `cb70cced059fdc4797d8fd5e9a260b91e7826d5c` is **not releasable**. Fresh verification is recorded in `.factory/verification-3.md`.
-
-- Live checkout returns `404 {"error":"enabled factory product","status":404}`.
-- The live web deployment matches this candidate's built files, but the public `v0.1.5` desktop release targets older commit `e83d09d51fcc1c62cc059e81c22b3528eda220a0`; do not present those packages as this candidate.
-- Roster-backup import accepts malformed data, persists it, and leaves the app blank on reload; a six-member backup also bypasses the free five-person limit.
-- Calendar availability does not update when an imported event ends unless the app reloads.
-- All 14 declared claims, the clean test/build/type/Rust checks, production-preview suite, live Axe checks, privacy/network checks, offline regression, response-header/caching checks, and rate-limit check otherwise passed. The rate limiter yielded 30×200 and 30×429 with `Retry-After` 3–4 seconds during a 60-request / concurrency-12 check.
-
-Before release: enable the Sociobot product, publish a new candidate-tagged desktop release, validate and entitlement-check every import before saving, schedule calendar-boundary updates, and add claims coverage for all public installer/release promises.
+An operator with Sociobot billing authority must enable the existing `presence-bridge` product at the public $24 one-time price with return URL `https://presence-bridge.sociobot.in/`, then confirm the checkout endpoint redirects. Desktop packages remain unsigned until `APPLE_CERTIFICATE`, `APPLE_CERTIFICATE_PASSWORD`, `APPLE_SIGNING_IDENTITY`, `WINDOWS_CERT_PFX`, and `WINDOWS_CERT_PASSWORD` are configured in GitHub Actions.

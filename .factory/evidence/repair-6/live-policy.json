@@ -1,0 +1,46 @@
+{
+  "live_url": "https://presence-bridge.sociobot.in",
+  "deployment_id": "159562cb-c4a1-4023-a8aa-63cf2363398a",
+  "build_identity": "0.1.11-9537d2b3df35",
+  "assets": {
+    "app_core_js": "assets/app-core-DfphdSYd.js",
+    "app_core_js_sha256": "0cf138462d928d32edf68619ba8384987f2d277a2d1b5c9a6bba3dd5d802d2b2",
+    "site_js": "assets/site-DwB2IGa2.js",
+    "site_js_sha256": "aed6e147640ccdabaf3e0f46fe07c75851acd71cb50d7f71426e102bf76a14c2",
+    "app_core_css": "assets/app-core-DATIMoXw.css",
+    "app_core_css_sha256": "f021a160c857a84d208c7737673cd77fc0925903c6835ba528e567d1f123d77f"
+  },
+  "routes": {
+    "/": 200,
+    "/demo": 200,
+    "/privacy": 200,
+    "/terms": 200,
+    "/download": 200,
+    "/app.html": 200,
+    "/sw.js": 200,
+    "/missing-page": 404
+  },
+  "cache_control": {
+    "html": "public, must-revalidate, max-age=30",
+    "hashed_asset": "public, max-age=31536000, immutable",
+    "service_worker": "no-cache"
+  },
+  "security_headers": {
+    "content_security_policy": true,
+    "strict_transport_security": true,
+    "x_content_type_options": "nosniff",
+    "referrer_policy": "strict-origin-when-cross-origin",
+    "permissions_policy": "camera=(), microphone=(), geolocation=()"
+  },
+  "download_page_390px": {
+    "selected_asset": "Presence.Bridge_0.1.11_amd64.AppImage",
+    "console_errors": [],
+    "scroll_width": 390,
+    "client_width": 390
+  },
+  "license_rate_policy": {
+    "successful_sequential_requests": 30,
+    "next_status": 429,
+    "retry_after_seconds": 3
+  }
+}

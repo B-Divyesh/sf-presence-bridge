@@ -1,0 +1,50 @@
+{
+  "workflow_run": {
+    "id": 33265037801,
+    "url": "https://github.com/B-Divyesh/sf-presence-bridge/actions/runs/33265037801",
+    "status": "completed",
+    "conclusion": "success",
+    "head_sha": "9537d2b3df3521a5a4ceb8bab7dd62538d7b24a7",
+    "head_branch": "v0.1.11",
+    "successful_jobs": [
+      "build (ubuntu-latest)",
+      "build (windows-latest)",
+      "build (macos-latest, universal-apple-darwin)",
+      "manifest",
+      "linux installer smoke",
+      "windows installer smoke"
+    ]
+  },
+  "release": {
+    "tag_name": "v0.1.11",
+    "target_commitish": "9537d2b3df3521a5a4ceb8bab7dd62538d7b24a7",
+    "url": "https://github.com/B-Divyesh/sf-presence-bridge/releases/tag/v0.1.11",
+    "assets": [
+      "Presence.Bridge_universal.app.tar.gz",
+      "Presence.Bridge_0.1.11_universal.dmg",
+      "Presence.Bridge_0.1.11_x64-setup.exe",
+      "Presence.Bridge_0.1.11_x64_en-US.msi",
+      "Presence.Bridge_0.1.11_amd64.AppImage",
+      "Presence.Bridge_0.1.11_amd64.deb",
+      "Presence.Bridge-0.1.11-1.x86_64.rpm",
+      "SHA256SUMS",
+      "latest.json"
+    ]
+  },
+  "manifest": {
+    "version": "0.1.11",
+    "source_commit": "9537d2b3df3521a5a4ceb8bab7dd62538d7b24a7",
+    "platform_counts": {
+      "macos": 2,
+      "windows": 2,
+      "linux": 3
+    }
+  },
+  "downloaded_deb": {
+    "sha256": "406faa49b6757bde3e0392fe447cb8e5ebbe8f6b1cfad934301f72ecd812589d",
+    "checksum_result": "OK",
+    "package": "presence-bridge",
+    "version": "0.1.11",
+    "architecture": "amd64"
+  }
+}

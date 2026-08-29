@@ -15,9 +15,15 @@ import {
 import { applyPresenceUpdate, createPresenceUpdate, parsePresenceUpdate } from "../../src/sharing";
 
 describe("roster model", () => {
-  it("accepts documented contact protocols", () => {
-    expect(allowedDeepLink("mailto:ava@example.com")).toBe(true);
-    expect(allowedDeepLink("slack://user?team=T1&id=U1")).toBe(true);
+  it("accepts every documented contact protocol", () => {
+    [
+      "mailto:ava@example.com",
+      "slack://user?team=T1&id=U1",
+      "msteams://teams.microsoft.com/l/chat/0/0?users=ava@example.com",
+      "https://meet.google.com/lookup/ava",
+      "zoommtg://zoom.us/join?confno=123456789",
+      "tel:+15551234567"
+    ].forEach(link => expect(allowedDeepLink(link)).toBe(true));
     expect(allowedDeepLink("javascript:alert(1)")).toBe(false);
   });
 

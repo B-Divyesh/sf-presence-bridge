@@ -37,16 +37,44 @@ const presenceUpdate = (name: string) => ({
   person: { name, role: "Team", initials: "TM", status: "available", note: "Ready", source: "manual" }
 });
 
-test("@claim:contact-handoff opens a saved team tool", async ({ page }) => {
+test("@claim:contact-handoff opens every documented saved contact link", async ({ page }) => {
   await page.addInitScript(() => {
-    window.open = ((url?: string | URL) => { document.documentElement.dataset.openedUrl = String(url); return null; }) as typeof window.open;
+    window.open = ((url?: string | URL) => {
+      const opened = JSON.parse(document.documentElement.dataset.openedUrls || "[]") as string[];
+      opened.push(String(url));
+      document.documentElement.dataset.openedUrls = JSON.stringify(opened);
+      return null;
+    }) as typeof window.open;
   });
   await page.goto("/app.html");
   await page.getByRole("button", { name: "Load sample project" }).click();
-  await page.getByRole("option", { name: /Ava Shah/ }).click();
-  await page.getByRole("button", { name: /Slack/ }).click();
-  await expect(page.locator(".toast")).toContainText("Opening Slack for Ava Shah");
-  await expect(page.locator("html")).toHaveAttribute("data-opened-url", /slack:\/\/user/);
+  const shippedTools = [
+    { person: "Ava Shah", label: "Slack", url: "slack://user?team=T123&id=U100" },
+    { person: "Leo Martin", label: "Teams", url: "msteams://teams.microsoft.com/l/chat/0/0?users=leo@example.com" },
+    { person: "Noor Okafor", label: "Meet", url: "https://meet.google.com/lookup/noor" },
+    { person: "Mina Park", label: "Email", url: "mailto:mina@example.com" }
+  ];
+  for (const tool of shippedTools) {
+    await page.getByRole("option", { name: tool.person }).click();
+    await page.getByRole("button", { name: tool.label }).click();
+    await expect(page.locator(".toast")).toHaveText(`Opening ${tool.label} for ${tool.person}.`);
+  }
+
+  await page.getByRole("button", { name: "Edit person" }).click();
+  await page.getByLabel("Contact tool name").fill("Zoom");
+  await page.getByLabel("Contact tool link").fill("zoommtg://zoom.us/join?confno=123456789");
+  await page.getByRole("button", { name: "Save person" }).click();
+  await page.getByRole("button", { name: "Zoom" }).click();
+  await expect(page.locator(".toast")).toHaveText("Opening Zoom for Mina Park.");
+
+  await page.getByRole("button", { name: "Edit person" }).click();
+  await page.getByLabel("Contact tool name").fill("Phone");
+  await page.getByLabel("Contact tool link").fill("tel:+15551234567");
+  await page.getByRole("button", { name: "Save person" }).click();
+  await page.getByRole("button", { name: "Phone" }).click();
+  await expect(page.locator(".toast")).toHaveText("Opening Phone for Mina Park.");
+
+  await expect(page.locator("html")).toHaveAttribute("data-opened-urls", JSON.stringify([...shippedTools.map(tool => tool.url), "zoommtg://zoom.us/join?confno=123456789", "tel:+15551234567"]));
 });
 
 test("@claim:privacy-local demo roster sends no data away", async ({ page }) => {

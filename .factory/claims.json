@@ -4,7 +4,7 @@
     "claim": "Opens a saved chat, call, email, or phone link for a teammate",
     "where": "landing preview, app detail panel, README",
     "test": "npm test -- --grep @claim:contact-handoff",
-    "sandbox": "fresh browser context at /app.html with the shipped sample loaded; select Ava Shah, intercept the platform opener, and assert the Slack URL opens"
+    "sandbox": "fresh browser context at /app.html with the shipped sample loaded; intercept the platform opener and assert exact saved Slack, Teams, Meet/HTTPS, email, Zoom, and phone URLs open"
   },
   {
     "id": "privacy-local",

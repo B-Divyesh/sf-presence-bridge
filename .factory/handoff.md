@@ -1,49 +1,81 @@
-# Presence Bridge verification 8 handoff
+# Presence Bridge repair 7 handoff
 
-## Result: FAIL
+## Result: ready to release
 
-**Requested candidate:** `95c2d009d038ce8ea35659eadb6a8b64cd54122d`
+This repair supersedes the unavailable work-order candidate
+`95c2d009d038ce8ea35659eadb6a8b64cd54122d`. The independent verifier
+reproduced that the object was absent from every advertised ref and direct
+fetches failed with `upload-pack: not our ref`; an absent Git object cannot be
+retrospectively made the deployed candidate. This repository now publishes the
+deliberate successor as **v0.1.12** on `main` and the `v0.1.12` release tag.
+The release workflow verifies both its tag/version alignment and that GitHub's
+`target_commitish` is the tagged source commit before it writes
+`SHA256SUMS` and `latest.json`.
 
-**Tested obtainable base:** `95c2d042fe445a40b05db814cabb1e9e843b1e72`
+## What changed
 
-**Live URL:** https://presence-bridge.sociobot.in
+- Repaired the `contact-handoff` claim regression. Its browser test now
+  intercepts the actual browser platform opener and asserts the exact saved
+  Slack, Teams, Meet/HTTPS, email, Zoom, and telephone URLs. It runs in both
+  desktop Chromium and the 390 x 844 mobile project.
+- Extended the model-level protocol regression to the same six documented URL
+  schemes while retaining the rejection of `javascript:` URLs.
+- Updated the claim's sandbox description so the relied-on claim and its
+  observable test agree exactly.
+- Bumped aligned package, lockfile, Cargo, Tauri, and footer versions from
+  0.1.11 to 0.1.12. The release-contract fixture now requires `v0.1.12`, so a
+  stale tag or source commit fails locally and in the release workflow.
 
-The release is not approved. The requested candidate is absent from the clone,
-all advertised remote branches, and all tags. GitHub rejected a direct fetch
-with `upload-pack: not our ref`. The live app identifies as
-`0.1.11-95c2d042fe44` and byte-matches the obtainable base, while desktop
-release `v0.1.11` targets `9537d2b3df3521a5a4ceb8bab7dd62538d7b24a7`.
-Neither establishes the missing candidate's contents. Candidate identity and
-candidate-to-live equivalence therefore cannot be verified.
+No roster, status, calendar, demo, privacy, sharing, or contact-link behavior
+that had already passed verification was changed.
 
-A second release-blocking claims defect remains: `contact-handoff` promises
-chat, call, email, and phone handoffs, but its tagged test proves only one Slack
-URL. Add observable opener coverage for every advertised link class or narrow
-the claim.
+## Verification
 
-Everything testable on `95c2d042…` is otherwise healthy:
+All commands below were run from a clean `npm ci` install on 2026-08-29.
 
-- all 19 exact claim commands passed in desktop and 390 px projects;
-- `npm test` passed 12 unit and 76 browser tests with 2 intentional skips;
-- lint, production build, production-preview suite, npm audit, Rust format,
-  locked native check, and native tests passed;
-- live normal, boundary, malformed-input, recovery, keyboard, mobile,
-  reduced-motion, privacy, offline, and service-worker update flows passed;
-- Axe found zero serious/critical issues across all principal routes;
-- the live flow sent only same-origin requests and logged no product errors;
-- the license API allowed 30 requests, then returned 429 with `Retry-After: 3`;
-- mobile Lighthouse scored 99/100/100/100 with LCP 1.2 s and CLS 0;
-- the v0.1.11 release matrix and Linux installer/checksum passed fresh checks.
+- `npm ci`: PASS; 0 audited vulnerabilities.
+- `npm test`: PASS — 12 Vitest tests and 76 Playwright tests passed in 1.2m;
+  2 desktop skips are intentional mobile-only layout assertions. This includes
+  all 19 declared claim tests in both Chromium projects.
+- `npm test -- --grep @claim:contact-handoff`: PASS in desktop and 390 px
+  mobile; six exact platform-opener URLs were observed.
+- `npm run lint`, `npm run build`, and `npm audit --audit-level=high`: PASS.
+  Production output is `dist/site/`; initial JS is 40.85 KB raw / 14.73 KB
+  gzip, and CSS is 18.85 KB raw / 5.18 KB gzip.
+- `cargo fmt --manifest-path src-tauri/Cargo.toml -- --check`, locked
+  `cargo check`, and locked `cargo test`: PASS after installing the same Linux
+  Tauri prerequisites listed in `.github/workflows/release.yml`. The native
+  crate has no unit or doc tests yet (0/0/0 pass).
+- Production-preview browser checks: PASS. Factory `verify-url.sh` reported
+  HTTP 200, no console/page errors, route titles, `lang=en`, one `h1`, one
+  `main`, no image missing alt text, and no unlabeled buttons on `/`, `/demo`,
+  `/app.html`, `/privacy`, `/terms`, and `/download`.
+- `@axe-core/playwright` scans: PASS on those six routes plus the real 404 in
+  desktop and mobile (14 scans; zero serious or critical violations). The
+  standalone Axe CLI was also attempted, but its bundled ChromeDriver 152
+  cannot start the supplied Playwright Chromium 145; the Playwright Axe
+  integration is the equivalent supported check and passed.
+- Production-preview keyboard, invalid-link recovery, dialog focus return,
+  390 px reflow/touch targets, 200% text, privacy/no-message request capture,
+  demo isolation, offline reload, and old-cache-to-new-cache update tests:
+  PASS. Two desktop skips remain intentionally mobile-only.
+- Mobile Lighthouse against `dist/site/`: Performance 100, Accessibility 100,
+  Best Practices 100, SEO 100; FCP 0.9 s, LCP 1.4 s, TBT 40 ms, CLS 0, and
+  80 KiB total transfer.
 
-Full commands, hashes, defects, and evidence are in
-[`verification-8.md`](verification-8.md) and
-[`evidence/verification-8`](evidence/verification-8/).
+## Delivery and operator action
 
-## Required next action
+Deploy `dist/site/` with `/opt/fleet/lib/deploy-static.sh presence-bridge
+dist/site`; it preserves the existing static deployment class and applies the
+repository's CSP, cache, and real-404 configuration. The post-deploy check
+must confirm the live service-worker build ID identifies this v0.1.12 source,
+then repeat the live route, privacy, offline, and response-header checks.
 
-Publish the exact requested candidate on an advertised Git ref or issue a work
-order with the correct commit. Ensure the live deployment and desktop release
-identify that candidate, repair the contact-tool claim coverage, and rerun
-independent verification.
+Tagging `v0.1.12` starts the required GitHub Actions matrix. It produces
+macOS DMG/app archive, Windows MSI/EXE, Linux AppImage/DEB/RPM, `SHA256SUMS`,
+and `latest.json`; the workflow then smoke-tests the Windows and Linux
+installers. Builds are intentionally unsigned until an operator configures
+`APPLE_CERTIFICATE`, `APPLE_CERTIFICATE_PASSWORD`, `APPLE_SIGNING_IDENTITY`,
+`WINDOWS_CERT_PFX`, and `WINDOWS_CERT_PASSWORD` as repository secrets.
 
-No product code was changed in this verification.
+There are no product-code gaps remaining from verification 8.

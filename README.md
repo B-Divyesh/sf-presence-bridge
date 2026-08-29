@@ -57,9 +57,9 @@ curl -fsSL https://presence-bridge.sociobot.in/install.sh | sh
 irm https://presence-bridge.sociobot.in/install.ps1 | iex
 ```
 
-## Product limits and price
+## Product limits and Bridge Plus
 
-The free local roster holds five people with one contact route each. Bridge Plus costs $24 once. It raises the limit to ten and adds a second contact route. Checkout and license verification use the Sociobot billing API; no payment provider runs inside the app.
+The free local roster holds five people with one contact route each. Bridge Plus raises the limit to ten and adds a second contact route. When its Sociobot checkout is available, it costs $24 once. The app shows a purchase link only after an explicit availability check confirms that checkout redirects. If it is unavailable, the app says so and keeps the free roster usable. Existing licenses can be restored in Settings. No payment provider runs inside the app.
 
 Presence Bridge does not transport messages or infer activity. Keyboard and pointer activity never change presence. It has no analytics or advertising trackers.
 

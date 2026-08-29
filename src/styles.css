@@ -84,6 +84,9 @@ h3 { font-size: 1.15rem; }
 .price-strip > div:first-child { max-width: 680px; }
 .price-strip > div:last-child { min-width: 250px; }
 .price-strip > div:last-child p { font-size: .85rem; margin-top: 8px; }
+.checkout-actions { display: grid; justify-items: start; gap: 10px; max-width: 330px; }
+.checkout-actions p { margin-bottom: 0; }
+.settings-section .checkout-actions { margin: 16px 0; }
 .site-footer { max-width: 1216px; margin: auto; padding: 48px 32px; border-top: 1px solid var(--line); color: var(--mist); display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; }
 .site-footer > p:last-child { grid-column: 1/-1; font-size: .8rem; }
 .site-footer a { color: var(--mist); }

@@ -63,11 +63,11 @@
     "sandbox": "fresh browser context with the license verify endpoint fulfilled by a valid fixture; assert the second route field is enabled"
   },
   {
-    "id": "one-time-price",
-    "claim": "Bridge Plus costs $24 once and starts checkout through the Sociobot billing API",
+    "id": "checkout-availability",
+    "claim": "Bridge Plus shows a purchase link only after the Sociobot billing API confirms a checkout redirect",
     "where": "landing pricing section, app settings, terms, README",
-    "test": "npm test -- --grep @claim:one-time-price",
-    "sandbox": "fresh browser context; assert the displayed $24 price, then route the documented checkout API to a recorded redirect fixture and assert the checkout page opens"
+    "test": "npm test -- --grep @claim:checkout-availability",
+    "sandbox": "fresh browser context; return the documented checkout API's 404 and assert no purchase link, then return a recorded 302 and assert the link appears; repeat the 404 check in app Settings"
   },
   {
     "id": "license-minimization",

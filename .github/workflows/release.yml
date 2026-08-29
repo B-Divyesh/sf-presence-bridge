@@ -72,6 +72,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release download "${GITHUB_REF_NAME}" --dir release-assets
+      - name: Verify release targets this source commit
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF_NAME}" > release.json
+          node scripts/verify-release-provenance.mjs release.json "${GITHUB_SHA}" "${GITHUB_REF_NAME}"
       - name: Build checksums and manifest
         run: |
           cd release-assets
@@ -84,6 +90,7 @@ jobs:
           url = lambda f: f"https://github.com/{repo}/releases/download/{tag}/{f}"
           data = {
             "version": tag.lstrip('v'),
+            "source_commit": os.environ['GITHUB_SHA'],
             "platforms": {
               "macos": [url(f) for f in files if f.endswith(('.dmg', '.app.tar.gz'))],
               "windows": [url(f) for f in files if f.endswith(('.msi', '.exe'))],

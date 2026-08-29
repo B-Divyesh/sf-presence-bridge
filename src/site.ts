@@ -8,7 +8,7 @@ type Route = { title: string; description: string; canonicalPath: string; render
 let cleanupApp: (() => void) | undefined;
 
 const header = `<header class="site-header"><a class="wordmark" href="/" data-route><span class="bridge-mark" aria-hidden="true"><i></i><i></i></span><span>Presence Bridge</span></a><nav aria-label="Main navigation"><a href="/demo" data-route>Demo</a><a href="/download" data-route>Download</a><a href="/privacy" data-route>Privacy</a></nav></header>`;
-const footer = `<footer class="site-footer"><p><strong>Presence Bridge</strong><br><span>See who is free, then open a contact tool.</span></p><nav aria-label="Footer navigation"><a href="/privacy" data-route>Privacy</a><a href="/terms" data-route>Terms</a><a href="https://sociobot.in" rel="external">Built by Param Factory</a></nav><p>v0.1.8 · Original generated artwork</p></footer>`;
+const footer = `<footer class="site-footer"><p><strong>Presence Bridge</strong><br><span>See who is free, then open a contact tool.</span></p><nav aria-label="Footer navigation"><a href="/privacy" data-route>Privacy</a><a href="/terms" data-route>Terms</a><a href="https://sociobot.in" rel="external">Built by Param Factory</a></nav><p>v0.1.9 · Original generated artwork</p></footer>`;
 
 const home = (): string => `<div class="site-page home-page">${header}<main id="main">
   <section class="hero">

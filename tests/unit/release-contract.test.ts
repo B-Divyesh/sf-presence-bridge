@@ -1,10 +1,39 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
+import { readProductVersions, verifyReleaseProvenance } from "../../scripts/verify-release-provenance.mjs";
 
 const root = resolve(import.meta.dirname, "../..");
 
 describe("release repair contracts", () => {
+  it("keeps every package version aligned and rejects a release from a stale commit", () => {
+    const versions = readProductVersions(root);
+    expect(new Set(Object.values(versions))).toEqual(new Set(["0.1.9"]));
+
+    const expectedCommit = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    const matchingRelease = { tag_name: "v0.1.9", target_commitish: expectedCommit };
+    expect(verifyReleaseProvenance({
+      release: matchingRelease,
+      expectedCommit,
+      expectedTag: "v0.1.9",
+      versions
+    })).toEqual({ version: "0.1.9", tag: "v0.1.9", sourceCommit: expectedCommit });
+
+    expect(() => verifyReleaseProvenance({
+      release: { ...matchingRelease, target_commitish: "166e4d6b6690157e154c22e0e2359116ae7734e1" },
+      expectedCommit,
+      expectedTag: "v0.1.9",
+      versions
+    })).toThrow("Published release targets 166e4d6b6690157e154c22e0e2359116ae7734e1; expected aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.");
+  });
+
+  it("records and verifies release source provenance in the publishing workflow", () => {
+    const workflow = readFileSync(resolve(root, ".github/workflows/release.yml"), "utf8");
+    expect(workflow).toContain("verify-release-provenance.mjs release.json");
+    expect(workflow).toContain("\"${GITHUB_SHA}\" \"${GITHUB_REF_NAME}\"");
+    expect(workflow).toContain('"source_commit": os.environ[\'GITHUB_SHA\']');
+  });
+
   it("runs the checksum-verified Windows setup and launches the installed app", () => {
     const script = readFileSync(resolve(root, "public/install.ps1"), "utf8");
     const workflow = readFileSync(resolve(root, ".github/workflows/release.yml"), "utf8");

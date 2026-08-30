@@ -9,7 +9,7 @@ describe("claims registry", () => {
   it("maps every unique claim id to exactly one tagged test", () => {
     const claims = JSON.parse(readFileSync(resolve(root, ".factory/claims.json"), "utf8")) as Claim[];
     const tests = readFileSync(resolve(root, "tests/e2e/claims.spec.ts"), "utf8");
-    expect(claims.length).toBeGreaterThanOrEqual(24);
+    expect(claims.length).toBeGreaterThanOrEqual(26);
     expect(new Set(claims.map(claim => claim.id)).size).toBe(claims.length);
     for (const claim of claims) {
       expect(claim.claim.trim(), claim.id).not.toBe("");

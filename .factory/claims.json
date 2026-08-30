@@ -8,10 +8,10 @@
   },
   {
     "id": "privacy-local",
-    "claim": "Roster, status, and imported calendar data stay on this device unless the user explicitly downloads a presence update; clearing site storage removes them",
+    "claim": "Roster, status, imported calendar data, and the license token stay on this device except for explicit presence downloads and license verification; clearing site storage removes them",
     "where": "landing hero, privacy page, app settings, README",
     "test": "npm test -- --grep @claim:privacy-local",
-    "sandbox": "fresh browser context at /demo; change status and import a calendar while asserting every request is same-origin and the real namespace stays untouched; then create and clear a real roster"
+    "sandbox": "fresh browser context at /demo; change status and import a calendar while asserting every request is same-origin and the real namespace stays untouched; then create a real roster and fixture license, clear site storage, reload, and assert both are absent"
   },
   {
     "id": "transparent-presence",
@@ -89,6 +89,20 @@
     "where": "privacy page",
     "test": "npm test -- --grep @claim:license-minimization",
     "sandbox": "fresh browser context starting at /demo; enter a fixture license in the real app, intercept verification, and assert its URL, method, and empty request body"
+  },
+  {
+    "id": "license-restore",
+    "claim": "An existing Bridge Plus license can be restored in Settings and remains active after reload",
+    "where": "landing pricing section, app settings, terms, README",
+    "test": "npm test -- --grep @claim:license-restore",
+    "sandbox": "fresh browser context at /app.html with a recorded valid verification response; enter a fixture token, reload, and assert Bridge Plus remains active with ten-person and two-contact-tool limits"
+  },
+  {
+    "id": "status-note",
+    "claim": "A saved status note persists and appears with the selected person; demo notes remain isolated and reset with the sample",
+    "where": "landing preview, landing how-it-works section, app roster, README",
+    "test": "npm test -- --grep @claim:status-note",
+    "sandbox": "fresh browser context at /app.html; save a person's note, reload, and assert it remains visible; then edit the demo note, assert only the demo namespace changes, reset, and assert the sample note returns"
   },
   {
     "id": "json-backup",

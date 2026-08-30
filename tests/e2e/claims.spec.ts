@@ -93,10 +93,21 @@ test("@claim:privacy-local demo roster sends no data away", async ({ page }) => 
   await page.goto("/app.html");
   await page.getByRole("button", { name: "Load sample project" }).click();
   await expect(page.getByRole("option", { name: /Ava Shah/ })).toBeVisible();
+  await page.route("https://api.sociobot.in/api/v1/products/presence-bridge/verify?license=*", route => route.fulfill({ json: { valid: true, reason: "ok" } }));
+  await page.getByRole("button", { name: "Open settings" }).click();
+  await page.getByLabel("Have a license?").fill("privacy-delete-fixture");
+  await page.getByRole("button", { name: "Verify license" }).click();
+  await expect(page.locator(".toast")).toHaveText("Bridge Plus is active.");
+  expect(await page.evaluate(() => localStorage.getItem("sb_license:presence-bridge"))).toBe("privacy-delete-fixture");
   await page.evaluate(() => localStorage.clear());
   await page.reload();
   await expect(page.getByText("Your roster is empty.")).toBeVisible();
-  expect(origins.every(origin => origin === new URL(page.url()).origin)).toBe(true);
+  expect(await page.evaluate(() => ({
+    roster: localStorage.getItem("presence-bridge:v1"),
+    token: localStorage.getItem("sb_license:presence-bridge"),
+    verdict: localStorage.getItem("presence-bridge:license-verdict")
+  }))).toEqual({ roster: null, token: null, verdict: null });
+  expect(origins.every(origin => origin === new URL(page.url()).origin || origin === "https://api.sociobot.in")).toBe(true);
 });
 
 test("@claim:transparent-presence activity never changes a chosen status", async ({ page }) => {
@@ -156,6 +167,50 @@ test("@claim:license-minimization sends only the license token for verification"
     method: "GET",
     body: null
   });
+});
+
+test("@claim:license-restore keeps a verified Bridge Plus license active after reload", async ({ page }) => {
+  await page.route("https://api.sociobot.in/api/v1/products/presence-bridge/verify?license=*", route => route.fulfill({ json: { valid: true, reason: "ok" } }));
+  await page.goto("/app.html");
+  await page.getByRole("button", { name: "Open settings" }).click();
+  await page.getByLabel("Have a license?").fill("restored-license-fixture");
+  await page.getByRole("button", { name: "Verify license" }).click();
+  await expect(page.locator(".toast")).toHaveText("Bridge Plus is active.");
+  expect(await page.evaluate(() => localStorage.getItem("sb_license:presence-bridge"))).toBe("restored-license-fixture");
+
+  await page.reload();
+  await page.getByRole("button", { name: "Open settings" }).click();
+  await expect(page.getByRole("heading", { name: "Bridge Plus is active" })).toBeVisible();
+  await page.getByRole("button", { name: "Close" }).click();
+  await page.getByRole("button", { name: "Add person" }).click();
+  await expect(page.getByLabel("Second contact tool link")).toBeVisible();
+});
+
+test("@claim:status-note persists a real note and resets an isolated demo note", async ({ page }) => {
+  await page.goto("/app.html");
+  await page.getByRole("button", { name: "Add your first person" }).click();
+  await page.getByLabel("Name", { exact: true }).fill("Rina Patel");
+  await page.getByLabel("Role").fill("Support");
+  await page.getByLabel("Status note").fill("Free until 3 pm");
+  await page.getByLabel("Contact tool link").fill("mailto:rina@example.com");
+  await page.getByRole("button", { name: "Save person" }).click();
+  await expect(page.getByRole("region", { name: "Selected teammate" })).toContainText("Free until 3 pm");
+  await page.reload();
+  await expect(page.getByRole("option", { name: /Rina Patel/ })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Selected teammate" })).toContainText("Free until 3 pm");
+  const realRoster = await page.evaluate(() => localStorage.getItem("presence-bridge:v1"));
+
+  await page.goto("/?demo=1");
+  await page.getByRole("button", { name: "Open settings" }).click();
+  await page.getByLabel("Your note").fill("Back at 4 pm");
+  await page.getByRole("button", { name: "Save settings" }).click();
+  await expect(page.locator(".status-summary")).toContainText("Back at 4 pm");
+  expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem("demo:presence-bridge:v1") || "{}").me.note)).toBe("Back at 4 pm");
+  expect(await page.evaluate(() => localStorage.getItem("presence-bridge:v1"))).toBe(realRoster);
+
+  await page.getByRole("button", { name: "Reset demo" }).click();
+  await expect(page.locator(".status-summary")).toContainText("Free for a quick question");
+  expect(await page.evaluate(() => sessionStorage.getItem("demo:presence-bridge:v1"))).toBeNull();
 });
 
 test("@claim:json-backup downloads readable roster JSON", async ({ page }) => {

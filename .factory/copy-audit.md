@@ -78,7 +78,7 @@ This includes visible headings, sentences, actions, labels, placeholders, image 
 | Privacy | 1 |
 | Terms | 1 |
 | Built by Param Factory | 4 |
-| v0.1.18 · Original generated artwork | 5 |
+| v0.1.19 · Original generated artwork | 5 |
 | A small studio with five warm windows beside a bridge at blue hour. | 13 |
 | Presence settings with manual status and local calendar import. | 9 |
 | The sample roster showing Leo as busy from his calendar. | 10 |
@@ -102,9 +102,9 @@ This includes headings, prose, requirements, project-map entries, and license se
 | The roster and imported .ics calendar events stay on this device. | 11 |
 | A presence update leaves only when its owner downloads it. | 10 |
 | It contains chosen status fields, not calendar events, contact tools, activity, or messages. | 13 |
-| The installed site works after the first visit, even offline. | 10 |
+| After its first online visit, the browser app works offline. | 10 |
 | These statements and each other product claim map to browser tests in .factory/claims.json. | 13 |
-| Try the sandbox | 3 |
+| Try the demo | 3 |
 | Run the site and open http://localhost:4173/?demo=1, or use the hosted path: | 11 |
 | The demo starts with four teammates and your status. | 9 |
 | It uses the separate demo:presence-bridge:v1 session key. | 7 |
@@ -114,11 +114,12 @@ This includes headings, prose, requirements, project-map entries, and license se
 | Open Settings, choose Download presence update, then send that file using a shared folder or a contact tool. | 18 |
 | A teammate imports it from the same Settings panel. | 9 |
 | Updates never send automatically, and an imported status remains a local roster row. | 13 |
-| This is the sharing boundary: no activity tracking, message transport, contact scraping, or hosted roster relay. | 16 |
+| Presence Bridge does not track activity, carry messages, copy contacts, or store your team roster online. | 16 |
 | The installed desktop app can watch a shared folder you choose. | 11 |
 | It imports newer .presence.json files and marks updates older than one day as stale. | 14 |
 | Choose Stop watching to remove the saved folder grant. | 9 |
-| Publishing remains an explicit download; the watcher never publishes your status. | 11 |
+| Watching a folder only imports teammate updates. | 7 |
+| To share your own status, download a new presence update. | 10 |
 | Run and test | 3 |
 | Requirements: Node.js 22, npm, Rust stable, and the Tauri 2 system packages. | 12 |
 | npm run build:site is the static deploy command. | 8 |

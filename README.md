@@ -4,9 +4,9 @@ See who is free, then open the contact tool you already use.
 
 Presence Bridge is a local desktop roster for teams of two to ten people. Each person has a clear status, note, and saved contact tool. The app opens Slack, Teams, Meet, Zoom, email, or phone links without creating another inbox. When a teammate shares a small presence update file, you can import it into your local roster.
 
-The roster and imported `.ics` calendar events stay on this device. A presence update leaves only when its owner downloads it. It contains chosen status fields, not calendar events, contact tools, activity, or messages. The installed site works after the first visit, even offline. These statements and each other product claim map to browser tests in [`.factory/claims.json`](.factory/claims.json).
+The roster and imported `.ics` calendar events stay on this device. A presence update leaves only when its owner downloads it. It contains chosen status fields, not calendar events, contact tools, activity, or messages. After its first online visit, the browser app works offline. These statements and each other product claim map to browser tests in [`.factory/claims.json`](.factory/claims.json).
 
-## Try the sandbox
+## Try the demo
 
 Run the site and open `http://localhost:4173/?demo=1`, or use the hosted path:
 
@@ -18,9 +18,9 @@ The demo starts with four teammates and your status. It uses the separate `demo:
 
 ## Share a chosen status
 
-Open **Settings**, choose **Download presence update**, then send that file using a shared folder or a contact tool. A teammate imports it from the same Settings panel. Updates never send automatically, and an imported status remains a local roster row. This is the sharing boundary: no activity tracking, message transport, contact scraping, or hosted roster relay.
+Open **Settings**, choose **Download presence update**, then send that file using a shared folder or a contact tool. A teammate imports it from the same Settings panel. Updates never send automatically, and an imported status remains a local roster row. Presence Bridge does not track activity, carry messages, copy contacts, or store your team roster online.
 
-The installed desktop app can watch a shared folder you choose. It imports newer `.presence.json` files and marks updates older than one day as stale. Choose **Stop watching** to remove the saved folder grant. Publishing remains an explicit download; the watcher never publishes your status.
+The installed desktop app can watch a shared folder you choose. It imports newer `.presence.json` files and marks updates older than one day as stale. Choose **Stop watching** to remove the saved folder grant. Watching a folder only imports teammate updates. To share your own status, download a new presence update.
 
 ## Run and test
 

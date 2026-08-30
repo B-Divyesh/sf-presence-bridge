@@ -27,6 +27,8 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      - name: Verify tagged candidate is reachable
+        run: node scripts/verify-release-provenance.mjs --candidate "${GITHUB_SHA}"
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}

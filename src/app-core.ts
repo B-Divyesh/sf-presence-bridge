@@ -149,7 +149,7 @@ export function mountPresenceApp(root: HTMLElement, options: MountOptions = {}):
       <div class="toast" aria-live="polite" aria-atomic="true">${esc(notice)}</div>
       ${addOpen ? memberDialog(person, license.valid) : ""}
       ${settingsOpen ? settingsDialog(state, license.valid, demo, watchFolder, isNativeRuntime()) : ""}
-      ${options.embedded ? "" : `<footer class="app-footer"><p>See who is free, then open a contact tool.</p><nav aria-label="App footer navigation"><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="https://sociobot.in" rel="external">Built by Param Factory</a></nav><p>v0.1.19</p></footer>`}
+      ${options.embedded ? "" : `<footer class="app-footer"><p>See who is free, then open a contact tool.</p><nav aria-label="App footer navigation"><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="https://sociobot.in" rel="external">Built by Param Factory</a></nav><p>v0.1.20</p></footer>`}
     </div>`;
     bind();
     if (returnFocusSelector && !addOpen && !settingsOpen) {

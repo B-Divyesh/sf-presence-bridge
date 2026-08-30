@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -16,6 +17,31 @@ export function readProductVersions(root) {
     tauri: tauri.version,
     cargo: cargoVersion
   };
+}
+
+/**
+ * Release tags must name an actual commit in the checkout.  Checking this
+ * before any package work starts keeps a typo in a work order or tag from
+ * producing a release whose provenance cannot later be verified.
+ */
+export function verifyCandidateCommit({ root, candidate }) {
+  if (!/^[0-9a-f]{40}$/i.test(candidate)) {
+    throw new Error(`Candidate ${candidate} must be a full 40-character commit SHA.`);
+  }
+  try {
+    const resolved = execFileSync("git", ["rev-parse", "--verify", `${candidate}^{commit}`], {
+      cwd: root,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"]
+    }).trim();
+    if (resolved.toLowerCase() !== candidate.toLowerCase()) {
+      throw new Error(`Candidate ${candidate} resolved to ${resolved}, not the requested commit.`);
+    }
+    return resolved;
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith("Candidate ")) throw error;
+    throw new Error(`Candidate ${candidate} is unavailable in this checkout.`);
+  }
 }
 
 export function verifyReleaseProvenance({ release, expectedCommit, expectedTag, versions }) {
@@ -38,11 +64,18 @@ export function verifyReleaseProvenance({ release, expectedCommit, expectedTag, 
 
 const invokedPath = process.argv[1] ? resolve(process.argv[1]) : "";
 if (invokedPath === fileURLToPath(import.meta.url)) {
-  const [releasePath, expectedCommit, expectedTag] = process.argv.slice(2);
+  const [firstArgument, secondArgument, thirdArgument] = process.argv.slice(2);
+  const root = fileURLToPath(new URL("..", import.meta.url));
+  if (firstArgument === "--candidate") {
+    if (!secondArgument) throw new Error("Usage: node scripts/verify-release-provenance.mjs --candidate <commit>");
+    const candidate = verifyCandidateCommit({ root, candidate: secondArgument });
+    process.stdout.write(`Verified candidate ${candidate} is reachable.\n`);
+    process.exit(0);
+  }
+  const [releasePath, expectedCommit, expectedTag] = [firstArgument, secondArgument, thirdArgument];
   if (!releasePath || !expectedCommit || !expectedTag) {
     throw new Error("Usage: node scripts/verify-release-provenance.mjs <release.json> <commit> <tag>");
   }
-  const root = fileURLToPath(new URL("..", import.meta.url));
   const release = JSON.parse(readFileSync(resolve(releasePath), "utf8"));
   const result = verifyReleaseProvenance({ release, expectedCommit, expectedTag, versions: readProductVersions(root) });
   process.stdout.write(`Verified ${result.tag} targets ${result.sourceCommit}.\n`);

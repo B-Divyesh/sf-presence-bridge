@@ -1,85 +1,57 @@
-# Presence Bridge — repair handoff
+# Presence Bridge — independent verification 12 handoff
 
 ## Result
 
-Perfection-loop round 3 is complete. All 21 findings across `.factory/review-1.md`, `.factory/review-2.md`, and `.factory/review-3.md` are resolved and mapped in [`.factory/polish-3.md`](polish-3.md).
+**FAIL. Do not release candidate `57d6a7d77b6a886000198128178f8b2c90c07855`.**
 
-- Product: Presence Bridge v0.1.19, Tauri 2 desktop app with a static browser companion.
-- Repair source: `3a1c0740362341ae7115d3533a1b60276f9e8572`.
-- Live site: <https://presence-bridge.sociobot.in>
-- Demo: <https://presence-bridge.sociobot.in/?demo=1>
-- Release: <https://github.com/B-Divyesh/sf-presence-bridge/releases/tag/v0.1.19>
-- Release workflow: <https://github.com/B-Divyesh/sf-presence-bridge/actions/runs/33284547730>
-- Static deployment ID: `4e648ff2-6680-4bab-80b0-399333853ae1`.
+The requested commit is not present locally or on GitHub. An exact fetch returns `upload-pack: not our ref`, and the GitHub commits API returns HTTP 422, `No commit found for SHA`. Because production cannot be tied to that object, the required candidate/deployment identity check fails.
 
-## What changed
+- Requested candidate: `57d6a7d77b6a886000198128178f8b2c90c07855`
+- Supplied checkout and current `origin/main`: `57d6a784584d76f26b6b0f66bdd9b6b5e081d527`
+- Live desktop release source: `3a1c0740362341ae7115d3533a1b60276f9e8572` (`v0.1.19`)
+- Live URL: <https://presence-bridge.sociobot.in>
+- Full report: [`.factory/verification-12.md`](verification-12.md)
 
-- Added explicit `license-restore` and `status-note` claims and outcome tests.
-- Expanded `privacy-local` to prove clearing site storage deletes the roster, license token, and cached verdict.
-- Removed the unavailable merchant-of-record statement.
-- Rewrote all four review-3 README phrases with the review's plain, consistent terminology.
-- Preserved every earlier demo, routing, metadata, 404, focus, mobile, copy, folder-watching, installer, offline, privacy, and accessibility repair.
-- Updated the catalog description to the 75-character verb-first sentence: “Check your small team's status, then open the contact tool you already use.”
-- Bumped and released the desktop artifact as v0.1.19 because app Settings changed.
+Defects: **P0: 0 · P1: 1 · P2: 0 · P3: 0**. The P1 is unavailable/mismatched candidate provenance. No separate product behavior defect was found.
 
-## Verification
+## What was verified
 
-From clean clone `/tmp/presence-bridge-polish3-krkKBI/clone` at the pushed repair source:
+- Mandatory first read and one-click sample demo: PASS at desktop and 390 × 844.
+- All 26 exact `.factory/claims.json` commands after `npm ci`: PASS in both browser projects.
+- `npm test`: PASS on clean rerun; 14 unit assertions and 92 browser tests passed, with two intentional desktop skips covered on mobile.
+- Typecheck, copy audit, production build, dependency audit: PASS.
+- Rust format, locked check/test, and Clippy with warnings denied: PASS after installing the release workflow's Linux prerequisites.
+- Live claims and recovery matrix: 58/58 PASS.
+- Live accessibility matrix: 32 PASS, two intentional desktop skips; zero serious/critical axe findings.
+- Privacy flow: 20/20 requests same-origin; demo/real storage isolated; no console/page errors.
+- Service-worker update and offline reload: PASS.
+- Headers and caching: PASS; missing route is a true 404.
+- Billing verification allowance: 30 requests; request 31 returned 429 with `Retry-After: 3`.
+- Lighthouse mobile: 100 Performance, 100 Accessibility, 100 Best Practices, 100 SEO; LCP 1.13 s, TBT 48.5 ms, CLS 0.
+- Bundle budgets: 43,982 B total JS raw, 19,488 B CSS, 30,482 B mobile hero, no fonts.
+- Fresh build versus live: 24/24 public files match byte-for-byte for reachable checkout `57d6a784…`.
+- v0.1.19 packages and release jobs: PASS; downloaded Debian and AppImage checksums match; packaged AppImage accepts all six documented opener schemes.
 
-- `npm ci` — passed, 66 packages, zero audit findings.
-- All 26 exact claim commands from `.factory/claims.json`, one by one — 26/26 passed in both browser projects, or 52 matched claim executions.
-- `npm test` — 14 unit assertions and 92 browser tests passed; two expected Chromium skips are mobile-only assertions that passed in the mobile project.
-- `npm run lint` — passed.
-- `npm run audit:copy` — two copy-audit checks passed.
-- `npm run build` — passed and produced `dist/site/` and `dist/app/`.
-- `npm audit --audit-level=high` — zero vulnerabilities.
-
-Native checks in the repair workspace:
-
-- `cargo fmt --check` — passed.
-- `cargo check --locked` — passed.
-- `cargo test --locked` — passed, including `reads_only_bounded_presence_files`.
-- `cargo clippy --all-targets -- -D warnings` — passed.
-
-Live checks after deployment:
-
-- `PLAYWRIGHT_BASE_URL=https://presence-bridge.sociobot.in npm test` — 14 unit assertions and 92 browser tests passed; two expected desktop-project skips.
-- `/opt/fleet/lib/verify-url.sh` passed `/`, `/?demo=1`, and `/app.html` with one H1, `lang=en`, a main landmark, alt text, named controls, and no console errors. Reports and screenshots are under `.factory/evidence/polish-3/live-*`.
-- A cold 390 × 844 visit kept Privacy and all three facts in view; fact bottoms were 619, 643, and 667 px. One click opened four sample teammates; three rows ended within 765 px. Reset restored the seed, and Start for real opened a zero-person real roster.
-- `/`, `/demo`, `/privacy`, `/terms`, and `/download` returned 200 with distinct titles, descriptions, canonicals, and one H1. `/missing-page` returned the designed HTTP 404 with its own metadata and home action.
-- Axe checks embedded in the Playwright accessibility suite found no serious or critical violations on every public route in both browser projects.
-- Lighthouse mobile report: Performance 100, Accessibility 100, Best Practices 100, SEO 100; FCP 0.90 s, LCP 1.43 s, TBT 35 ms, CLS 0, total transfer 149,338 bytes. Raw report: `.factory/evidence/polish-3/lighthouse.json`.
-- Production build budgets: CSS 19.49 KB raw / 5.31 KB gzip; site JS 12.77 KB / 4.78 KB gzip; shared app JS 30.61 KB / 10.56 KB gzip.
-
-Release checks:
-
-- GitHub Actions run `33284547730` passed all six jobs: macOS universal, Windows, Linux, manifest, Linux installer smoke, and Windows installer smoke.
-- v0.1.19 publishes DMG/app tarball, MSI/EXE, AppImage/DEB/RPM, `SHA256SUMS`, and `latest.json`.
-- `latest.json` records source `3a1c0740362341ae7115d3533a1b60276f9e8572` with 2 macOS, 2 Windows, and 3 Linux packages.
-- A cold Debian download matched `SHA256SUMS`: `3cc65ee1a616c290d1c3e297a4aaf2b8f0c594f63495ed6ed51d273681f89603`.
-- The Linux installer smoke downloaded the published AppImage, checked its SHA-256, and exercised all six native openers under Xvfb. The Windows smoke installed and launched the published setup.
-
-## Run locally
+## Commands used
 
 ```sh
 npm ci
-npm test
+npm test -- --grep @claim:<each-id-from-.factory/claims.json>
 npm run lint
 npm run audit:copy
+npm test
 npm run build
-```
-
-For native checks, install the Tauri 2 Linux packages listed in the release workflow, then run:
-
-```sh
-cargo fmt --manifest-path src-tauri/Cargo.toml --check
+npm audit --audit-level=high
+cargo fmt --manifest-path src-tauri/Cargo.toml -- --check
 cargo check --manifest-path src-tauri/Cargo.toml --locked
 cargo test --manifest-path src-tauri/Cargo.toml --locked
 cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
+PLAYWRIGHT_BASE_URL=https://presence-bridge.sociobot.in npx playwright test tests/e2e/claims.spec.ts --workers=1
+PLAYWRIGHT_BASE_URL=https://presence-bridge.sociobot.in npx playwright test tests/e2e/accessibility.spec.ts --workers=1
 ```
 
-## Known gaps and operator action
+## Required next step
 
-No review finding is open. Bridge Plus checkout remains intentionally unavailable, and the free five-person roster remains fully usable.
+Provide and push the intended candidate commit, then deploy that exact revision and rerun independent verification. If the work order SHA is a typo, correct it to a reachable full SHA before requesting release approval.
 
-Current packages are unsigned unless the repository owner configures signing. To sign later, add `APPLE_CERTIFICATE`, `APPLE_CERTIFICATE_PASSWORD`, `APPLE_SIGNING_IDENTITY`, `WINDOWS_CERT_PFX`, and `WINDOWS_CERT_PASSWORD` to GitHub Actions secrets and issue a new version tag.
+No product code was changed. Only this handoff and the verification report were updated.

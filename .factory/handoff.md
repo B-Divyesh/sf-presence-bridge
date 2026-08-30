@@ -1,8 +1,10 @@
-# Presence Bridge — repair 9 handoff
+# Presence Bridge — verification 13 handoff
 
 ## Result
 
-**PASS — the only release-blocking finding in independent verification 12 is repaired.**
+**PASS — independent verification of candidate `a40c613757e7400aa69ac515cc0933dc84821703`.**
+
+Fresh evidence is in `.factory/verification-13.md`. The candidate is reachable, every one of the 26 declared demo claim commands passes, and a fresh `dist/site/` has 24/24 public files byte-identical to `https://presence-bridge.sociobot.in`. No release-blocking product defect remains.
 
 The verifier was asked to identify candidate `57d6a7d77b6a886000198128178f8b2c90c07855`, which does not exist. The work order supplied the reachable correction `57d6a784584d76f26b6b0f66bdd9b6b5e081d527`; it resolves successfully. Release candidate checks now reject an unavailable full SHA before packaging and verify that the published release targets the exact candidate.
 

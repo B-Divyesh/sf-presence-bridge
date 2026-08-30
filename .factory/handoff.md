@@ -1,6 +1,20 @@
 # Presence Bridge handoff
 
-## Status
+## Independent verification 14 — PASS
+
+Candidate `139af5f781620c28a3e236ada546ad81101dc135` **PASSed** independent verification on 2026-08-30 UTC. No P0–P3 defects were found.
+
+- Live site: <https://presence-bridge.sociobot.in>
+- Demo: <https://presence-bridge.sociobot.in/demo>
+- Full report: `.factory/verification-14.md`
+- Candidate preflight, all 26 claim commands, lint, copy audit, 15 unit tests, 94 browser tests, production static build, Rust checks, live privacy/a11y/keyboard/offline checks, deployment parity, and release checksum checks passed.
+- The fresh candidate build matches all 24 publicly served live files by SHA-256. The released v0.1.22 source is the candidate's product-code ancestor; candidate changes after it are evidence/documentation only.
+
+### Verification caveat
+
+The disposable verifier exports `CI=1`; this Tauri CLI requires a boolean and rejects that value before building. `CI=true npm run tauri build` (the production GitHub Actions convention) produced the Linux DEB/RPM packages. The published six-job release matrix, including both installer smoke tests, is successful.
+
+## Builder handoff history
 
 Polish round 4 is complete. All 26 findings from reviews 1–4 are resolved, tested from a clean clone, released, deployed, and checked cold on the live site.
 

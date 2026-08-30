@@ -78,7 +78,7 @@ This includes visible headings, sentences, actions, labels, placeholders, image 
 | Privacy | 1 |
 | Terms | 1 |
 | Built by Param Factory | 4 |
-| v0.1.20 · Original generated artwork | 5 |
+| v0.1.21 · Original generated artwork | 5 |
 | A small studio with five warm windows beside a bridge at blue hour. | 13 |
 | Presence settings with manual status and local calendar import. | 9 |
 | The sample roster showing Leo as busy from his calendar. | 10 |

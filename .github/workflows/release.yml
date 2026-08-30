@@ -28,6 +28,7 @@ jobs:
           node-version: 22
           cache: npm
       - name: Verify tagged candidate is reachable
+        shell: bash
         run: node scripts/verify-release-provenance.mjs --candidate "${GITHUB_SHA}"
       - uses: dtolnay/rust-toolchain@stable
         with:

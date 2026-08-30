@@ -21,9 +21,8 @@ This includes visible headings, sentences, actions, labels, placeholders, image 
 | Your roster stays on this device unless you share an update. | 11 |
 | Works after the first visit, even offline. | 7 |
 | Free for up to five people. | 6 |
-| The product | 2 |
 | Check a teammate and open a contact tool | 8 |
-| Read a clear status note before opening Slack, Teams, Meet, email, Zoom, or a phone link. | 16 |
+| Read a teammate's status note before opening Slack, Teams, Meet, email, Zoom, or a phone link. | 16 |
 | Reset demo | 2 |
 | Start for real | 3 |
 | ⌁ Presence Bridge | 3 |
@@ -78,7 +77,7 @@ This includes visible headings, sentences, actions, labels, placeholders, image 
 | Privacy | 1 |
 | Terms | 1 |
 | Built by Param Factory | 4 |
-| v0.1.21 · Original generated artwork | 5 |
+| v0.1.22 · Original generated artwork | 5 |
 | A small studio with five warm windows beside a bridge at blue hour. | 13 |
 | Presence settings with manual status and local calendar import. | 9 |
 | The sample roster showing Leo as busy from his calendar. | 10 |
@@ -96,7 +95,7 @@ This includes headings, prose, requirements, project-map entries, and license se
 | Presence Bridge | 2 |
 | See who is free, then open the contact tool you already use. | 12 |
 | Presence Bridge is a local desktop roster for teams of two to ten people. | 14 |
-| Each person has a clear status, note, and saved contact tool. | 11 |
+| Each person has a status, note, and saved contact tool. | 10 |
 | The app opens Slack, Teams, Meet, Zoom, email, or phone links without creating another inbox. | 15 |
 | When a teammate shares a small presence update file, you can import it into your local roster. | 17 |
 | The roster and imported .ics calendar events stay on this device. | 11 |

@@ -8,17 +8,17 @@
   },
   {
     "id": "privacy-local",
-    "claim": "Roster, status, imported calendar data, and the license token stay on this device except for explicit presence downloads and license verification; clearing site storage removes them",
+    "claim": "Roster, status, calendar data, profile settings, shared-folder choice, and the license token stay on this device except for explicit presence downloads and license verification; clearing site storage removes them",
     "where": "landing hero, privacy page, app settings, README",
     "test": "npm test -- --grep @claim:privacy-local",
-    "sandbox": "fresh browser context at /demo; change status and import a calendar while asserting every request is same-origin and the real namespace stays untouched; then create a real roster and fixture license, clear site storage, reload, and assert both are absent"
+    "sandbox": "fresh browser context at /demo; change status and import a calendar while asserting the real namespace stays untouched; then save a real profile name and shared-folder grant, verify a fixture license, clear site storage, reload, and assert every local key is absent"
   },
   {
     "id": "transparent-presence",
-    "claim": "Presence changes only when the user chooses a status or imports a calendar; keyboard and pointer activity are not monitored and no analytics request is sent",
+    "claim": "Presence changes only when the user chooses a status or imports a calendar; keyboard and pointer activity are not monitored, and no analytics or advertising tracker runs",
     "where": "landing privacy section, privacy page, README",
     "test": "npm test -- --grep @claim:transparent-presence",
-    "sandbox": "fresh browser context at /demo; choose away, simulate keyboard and pointer activity, then assert the status remains away and no external request occurs"
+    "sandbox": "fresh browser context at /demo; choose away, simulate keyboard and pointer activity, assert the status remains away, then visit every public route and inspect requests, runtime dependencies, and production imports for analytics or advertising trackers"
   },
   {
     "id": "no-message-transport",

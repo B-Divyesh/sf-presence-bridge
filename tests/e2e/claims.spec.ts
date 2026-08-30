@@ -80,6 +80,12 @@ test("@claim:contact-handoff opens every documented saved contact link", async (
 test("@claim:privacy-local demo roster sends no data away", async ({ page }) => {
   const origins: string[] = [];
   page.on("request", request => origins.push(new URL(request.url()).origin));
+  await page.addInitScript(() => {
+    window.__PRESENCE_BRIDGE_NATIVE__ = {
+      chooseSharedFolder: async () => "/Team/Presence",
+      readPresenceFolder: async () => []
+    };
+  });
   await page.goto("/demo");
   await page.locator("#own-status").selectOption("away");
   await page.getByRole("button", { name: "Settings" }).click();
@@ -95,31 +101,54 @@ test("@claim:privacy-local demo roster sends no data away", async ({ page }) => 
   await expect(page.getByRole("option", { name: /Ava Shah/ })).toBeVisible();
   await page.route("https://api.sociobot.in/api/v1/products/presence-bridge/verify?license=*", route => route.fulfill({ json: { valid: true, reason: "ok" } }));
   await page.getByRole("button", { name: "Open settings" }).click();
+  await page.getByLabel("Your name").fill("Priya Rao");
+  await page.getByRole("button", { name: "Save settings" }).click();
+  await page.getByRole("button", { name: "Open settings" }).click();
+  await page.getByRole("button", { name: "Watch a shared folder" }).click();
+  await expect(page.getByText("Watching: /Team/Presence")).toBeVisible();
   await page.getByLabel("Have a license?").fill("privacy-delete-fixture");
   await page.getByRole("button", { name: "Verify license" }).click();
   await expect(page.locator(".toast")).toHaveText("Bridge Plus is active.");
-  expect(await page.evaluate(() => localStorage.getItem("sb_license:presence-bridge"))).toBe("privacy-delete-fixture");
+  expect(await page.evaluate(() => ({
+    name: JSON.parse(localStorage.getItem("presence-bridge:v1") || "{}").me?.name,
+    folder: localStorage.getItem("presence-bridge:watch-folder:v1"),
+    token: localStorage.getItem("sb_license:presence-bridge")
+  }))).toEqual({ name: "Priya Rao", folder: "/Team/Presence", token: "privacy-delete-fixture" });
   await page.evaluate(() => localStorage.clear());
   await page.reload();
   await expect(page.getByText("Your roster is empty.")).toBeVisible();
   expect(await page.evaluate(() => ({
     roster: localStorage.getItem("presence-bridge:v1"),
+    folder: localStorage.getItem("presence-bridge:watch-folder:v1"),
     token: localStorage.getItem("sb_license:presence-bridge"),
     verdict: localStorage.getItem("presence-bridge:license-verdict")
-  }))).toEqual({ roster: null, token: null, verdict: null });
+  }))).toEqual({ roster: null, folder: null, token: null, verdict: null });
   expect(origins.every(origin => origin === new URL(page.url()).origin || origin === "https://api.sociobot.in")).toBe(true);
 });
 
 test("@claim:transparent-presence activity never changes a chosen status", async ({ page }) => {
-  const requestOrigins: string[] = [];
-  page.on("request", request => requestOrigins.push(new URL(request.url()).origin));
+  const requestUrls: string[] = [];
+  page.on("request", request => requestUrls.push(request.url()));
+  await page.route("https://api.github.com/repos/B-Divyesh/sf-presence-bridge/releases?per_page=1", route => route.fulfill({ json: [] }));
   await page.goto("/demo");
   await page.locator("#own-status").selectOption("away");
   await page.mouse.move(100, 100);
   await page.keyboard.type("work activity is not presence");
   await page.waitForTimeout(250);
   await expect(page.locator("#own-status")).toHaveValue("away");
-  expect(requestOrigins.every(origin => origin === new URL(page.url()).origin)).toBe(true);
+  for (const path of ["/", "/privacy", "/terms", "/download", "/app.html"]) await page.goto(path);
+  expect(requestUrls).not.toEqual([]);
+  expect(requestUrls.every(url => {
+    const origin = new URL(url).origin;
+    return origin === new URL(page.url()).origin || origin === "https://api.github.com";
+  })).toBe(true);
+  expect(requestUrls.join("\n")).not.toMatch(/google-analytics|googletagmanager|doubleclick|facebook\.com\/tr|connect\.facebook|segment\.(?:com|io)|plausible\.io|posthog|mixpanel|amplitude/i);
+
+  const packageJson = JSON.parse(await readFile("package.json", "utf8")) as { dependencies?: Record<string, string>; devDependencies?: Record<string, string> };
+  const runtimeDependencies = Object.keys(packageJson.dependencies || {});
+  expect(runtimeDependencies.join("\n")).not.toMatch(/analytics|tracking|advert|segment|posthog|mixpanel|amplitude|gtag|pixel/i);
+  const productionSources = await Promise.all(["src/site.ts", "src/app.ts", "src/app-core.ts", "src/license.ts"].map(path => readFile(path, "utf8")));
+  expect(productionSources.join("\n")).not.toMatch(/google-analytics|googletagmanager|doubleclick|connect\.facebook|segment-js|posthog-js|mixpanel-browser|amplitude-js|gtag\s*\(/i);
 });
 
 test("@claim:no-message-transport a handoff sends no message", async ({ page }) => {
@@ -236,16 +265,23 @@ test("@claim:calendar-local imports an ICS file without upload", async ({ page }
   await expect(page.locator(".toast")).toContainText("Imported 1 calendar event");
 });
 
-test("@claim:offline-reload works offline after the first visit", async ({ page, context, browserName }) => {
+test("@claim:offline-reload works offline after the first visit", async ({ browser, baseURL, browserName }) => {
   test.skip(browserName !== "chromium");
-  await page.goto("/demo");
-  await page.evaluate(() => navigator.serviceWorker.ready);
-  await page.reload();
-  await expect(page.getByRole("heading", { name: "Try a complete team roster" })).toBeVisible();
-  await context.setOffline(true);
-  await page.reload();
-  await expect(page.getByRole("heading", { name: "Try a complete team roster" })).toBeVisible();
-  await expect(page.getByRole("option", { name: /Ava Shah/ })).toBeVisible();
+  const context = await browser.newContext();
+  try {
+    const page = await context.newPage();
+    await page.goto(new URL("/demo", baseURL || "http://127.0.0.1:4173").toString());
+    await page.evaluate(() => navigator.serviceWorker.ready);
+    await page.reload();
+    await expect(page.getByRole("heading", { name: "Try a complete team roster" })).toBeVisible();
+    await context.setOffline(true);
+    await page.reload();
+    await expect(page.getByRole("heading", { name: "Try a complete team roster" })).toBeVisible();
+    await expect(page.getByRole("option", { name: /Ava Shah/ })).toBeVisible();
+  } finally {
+    await context.setOffline(false).catch(() => undefined);
+    await context.close();
+  }
 });
 
 test("@claim:demo-seed-and-first-view shows four sample teammates in one mobile click", async ({ browser, baseURL }) => {

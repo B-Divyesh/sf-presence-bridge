@@ -70,38 +70,46 @@ test("the real roster route has complete metadata and legal navigation", async (
   await expect(page.getByRole("navigation", { name: "App footer navigation" }).getByRole("link", { name: "Terms" })).toHaveAttribute("href", "/terms");
 });
 
-test("a new service worker retires the old cache and reloads offline", async ({ page, context, browserName }) => {
+test("a new service worker retires the old cache and reloads offline", async ({ browser, baseURL, browserName }) => {
   test.skip(browserName !== "chromium");
-  await page.goto("/demo");
-  await page.evaluate(async () => {
-    const existing = await navigator.serviceWorker.getRegistration();
-    await existing?.unregister();
-    for (const key of await caches.keys()) await caches.delete(key);
-  });
+  const context = await browser.newContext();
+  try {
+    const page = await context.newPage();
+    const demoUrl = new URL("/demo", baseURL || "http://127.0.0.1:4173").toString();
+    await page.goto(demoUrl);
+    await page.evaluate(async () => {
+      const existing = await navigator.serviceWorker.getRegistration();
+      await existing?.unregister();
+      for (const key of await caches.keys()) await caches.delete(key);
+    });
 
-  const activate = (build: string) => page.evaluate(async buildId => {
-    const registration = await navigator.serviceWorker.register(`/sw.js?build=${buildId}`);
-    const worker = registration.installing || registration.waiting || registration.active;
-    if (worker && worker.state !== "activated") {
-      await new Promise<void>(resolve => worker.addEventListener("statechange", () => {
-        if (worker.state === "activated") resolve();
-      }));
-    }
-    return caches.keys();
-  }, build);
+    const activate = (build: string) => page.evaluate(async buildId => {
+      const registration = await navigator.serviceWorker.register(`/sw.js?build=${buildId}`);
+      const worker = registration.installing || registration.waiting || registration.active;
+      if (worker && worker.state !== "activated") {
+        await new Promise<void>(resolve => worker.addEventListener("statechange", () => {
+          if (worker.state === "activated") resolve();
+        }));
+      }
+      return caches.keys();
+    }, build);
 
-  expect(await activate("regression-old")).toContain("presence-bridge-regression-old");
-  const updatedCaches = await activate("regression-new");
-  expect(updatedCaches).toContain("presence-bridge-regression-new");
-  expect(updatedCaches).not.toContain("presence-bridge-regression-old");
+    expect(await activate("regression-old")).toContain("presence-bridge-regression-old");
+    const updatedCaches = await activate("regression-new");
+    expect(updatedCaches).toContain("presence-bridge-regression-new");
+    expect(updatedCaches).not.toContain("presence-bridge-regression-old");
 
-  // Chromium may abort one navigation while a newly activated worker takes control.
-  // Retrying from the stable demo URL verifies the same post-update document path.
-  try { await page.reload(); } catch { await page.goto("/demo"); }
-  await context.setOffline(true);
-  await page.reload();
-  await expect(page.getByRole("heading", { name: "Try a complete team roster" })).toBeVisible();
-  await expect(page.getByRole("option", { name: /Ava Shah/ })).toBeVisible();
+    // Chromium may abort one navigation while a newly activated worker takes control.
+    // Retrying from the stable demo URL verifies the same post-update document path.
+    try { await page.reload(); } catch { await page.goto(demoUrl); }
+    await context.setOffline(true);
+    await page.reload();
+    await expect(page.getByRole("heading", { name: "Try a complete team roster" })).toBeVisible();
+    await expect(page.getByRole("option", { name: /Ava Shah/ })).toBeVisible();
+  } finally {
+    await context.setOffline(false).catch(() => undefined);
+    await context.close();
+  }
 });
 
 test("keyboard search and roster navigation", async ({ page }) => {

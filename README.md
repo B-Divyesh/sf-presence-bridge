@@ -2,7 +2,7 @@
 
 See who is free, then open the contact tool you already use.
 
-Presence Bridge is a local desktop roster for teams of two to ten people. Each person has a clear status, note, and saved contact tool. The app opens Slack, Teams, Meet, Zoom, email, or phone links without creating another inbox. When a teammate shares a small presence update file, you can import it into your local roster.
+Presence Bridge is a local desktop roster for teams of two to ten people. Each person has a status, note, and saved contact tool. The app opens Slack, Teams, Meet, Zoom, email, or phone links without creating another inbox. When a teammate shares a small presence update file, you can import it into your local roster.
 
 The roster and imported `.ics` calendar events stay on this device. A presence update leaves only when its owner downloads it. It contains chosen status fields, not calendar events, contact tools, activity, or messages. After its first online visit, the browser app works offline. These statements and each other product claim map to browser tests in [`.factory/claims.json`](.factory/claims.json).
 

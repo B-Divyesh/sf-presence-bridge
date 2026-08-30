@@ -1,0 +1,613 @@
+{
+  "total_count": 6,
+  "jobs": [
+    {
+      "id": 99209134858,
+      "run_id": 33293510396,
+      "workflow_name": "Release desktop apps",
+      "head_branch": "v0.1.22",
+      "run_url": "https://api.github.com/repos/B-Divyesh/sf-presence-bridge/actions/runs/33293510396",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUHExJs8AAAAXGVNDCg",
+      "head_sha": "992682353261f38d2bd3be260dbbba132ea72dbf",
+      "url": "https://api.github.com/repos/B-Divyesh/sf-presence-bridge/actions/jobs/99209134858",
+      "html_url": "https://github.com/B-Divyesh/sf-presence-bridge/actions/runs/33293510396/job/99209134858",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-08-30T04:54:14Z",
+      "started_at": "2026-08-30T04:54:17Z",
+      "completed_at": "2026-08-30T04:59:19Z",
+      "name": "build (macos-latest, --target universal-apple-darwin)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-08-30T04:54:18Z",
+          "completed_at": "2026-08-30T04:54:20Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-08-30T04:54:20Z",
+          "completed_at": "2026-08-30T04:54:22Z"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-08-30T04:54:22Z",
+          "completed_at": "2026-08-30T04:54:24Z"
+        },
+        {
+          "name": "Verify tagged candidate is reachable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-08-30T04:54:24Z",
+          "completed_at": "2026-08-30T04:54:24Z"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-08-30T04:54:24Z",
+          "completed_at": "2026-08-30T04:54:33Z"
+        },
+        {
+          "name": "Install Linux packages",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-08-30T04:54:33Z",
+          "completed_at": "2026-08-30T04:54:33Z"
+        },
+        {
+          "name": "Run npm ci",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-08-30T04:54:33Z",
+          "completed_at": "2026-08-30T04:54:35Z"
+        },
+        {
+          "name": "Configure optional signing",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-08-30T04:54:35Z",
+          "completed_at": "2026-08-30T04:54:35Z"
+        },
+        {
+          "name": "Run tauri-apps/tauri-action@v0",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-08-30T04:54:35Z",
+          "completed_at": "2026-08-30T04:59:14Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-08-30T04:59:14Z",
+          "completed_at": "2026-08-30T04:59:16Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18,
+          "started_at": "2026-08-30T04:59:16Z",
+          "completed_at": "2026-08-30T04:59:17Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-08-30T04:59:17Z",
+          "completed_at": "2026-08-30T04:59:17Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/B-Divyesh/sf-presence-bridge/check-runs/99209134858",
+      "labels": [
+        "macos-latest"
+      ],
+      "runner_id": 1000009690,
+      "runner_name": "GitHub Actions 1000009690",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 99209134881,
+      "run_id": 33293510396,
+      "workflow_name": "Release desktop apps",
+      "head_branch": "v0.1.22",
+      "run_url": "https://api.github.com/repos/B-Divyesh/sf-presence-bridge/actions/runs/33293510396",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUHExJs8AAAAXGVNDIQ",
+      "head_sha": "992682353261f38d2bd3be260dbbba132ea72dbf",
+      "url": "https://api.github.com/repos/B-Divyesh/sf-presence-bridge/actions/jobs/99209134881",
+      "html_url": "https://github.com/B-Divyesh/sf-presence-bridge/actions/runs/33293510396/job/99209134881",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-08-30T04:54:14Z",
+      "started_at": "2026-08-30T04:54:17Z",
+      "completed_at": "2026-08-30T05:00:11Z",
+      "name": "build (ubuntu-latest)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-08-30T04:54:18Z",
+          "completed_at": "2026-08-30T04:54:20Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-08-30T04:54:20Z",
+          "completed_at": "2026-08-30T04:54:22Z"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-08-30T04:54:22Z",
+          "completed_at": "2026-08-30T04:54:23Z"
+        },
+        {
+          "name": "Verify tagged candidate is reachable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-08-30T04:54:23Z",
+          "completed_at": "2026-08-30T04:54:23Z"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-08-30T04:54:23Z",
+          "completed_at": "2026-08-30T04:54:24Z"
+        },
+        {
+          "name": "Install Linux packages",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-08-30T04:54:24Z",
+          "completed_at": "2026-08-30T04:54:56Z"
+        },
+        {
+          "name": "Run npm ci",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-08-30T04:54:56Z",
+          "completed_at": "2026-08-30T04:54:58Z"
+        },
+        {
+          "name": "Configure optional signing",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-08-30T04:54:58Z",
+          "completed_at": "2026-08-30T04:54:58Z"
+        },
+        {
+          "name": "Run tauri-apps/tauri-action@v0",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-08-30T04:54:58Z",
+          "completed_at": "2026-08-30T05:00:07Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-08-30T05:00:07Z",
+          "completed_at": "2026-08-30T05:00:09Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18,
+          "started_at": "2026-08-30T05:00:09Z",
+          "completed_at": "2026-08-30T05:00:09Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-08-30T05:00:09Z",
+          "completed_at": "2026-08-30T05:00:09Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/B-Divyesh/sf-presence-bridge/check-runs/99209134881",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000009692,
+      "runner_name": "GitHub Actions 1000009692",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 99209134911,
+      "run_id": 33293510396,
+      "workflow_name": "Release desktop apps",
+      "head_branch": "v0.1.22",
+      "run_url": "https://api.github.com/repos/B-Divyesh/sf-presence-bridge/actions/runs/33293510396",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUHExJs8AAAAXGVNDPw",
+      "head_sha": "992682353261f38d2bd3be260dbbba132ea72dbf",
+      "url": "https://api.github.com/repos/B-Divyesh/sf-presence-bridge/actions/jobs/99209134911",
+      "html_url": "https://github.com/B-Divyesh/sf-presence-bridge/actions/runs/33293510396/job/99209134911",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-08-30T04:54:14Z",
+      "started_at": "2026-08-30T04:54:16Z",
+      "completed_at": "2026-08-30T05:00:59Z",
+      "name": "build (windows-latest)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-08-30T04:54:17Z",
+          "completed_at": "2026-08-30T04:54:18Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-08-30T04:54:18Z",
+          "completed_at": "2026-08-30T04:54:24Z"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-08-30T04:54:24Z",
+          "completed_at": "2026-08-30T04:54:30Z"
+        },
+        {
+          "name": "Verify tagged candidate is reachable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-08-30T04:54:30Z",
+          "completed_at": "2026-08-30T04:54:30Z"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-08-30T04:54:30Z",
+          "completed_at": "2026-08-30T04:54:36Z"
+        },
+        {
+          "name": "Install Linux packages",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-08-30T04:54:36Z",
+          "completed_at": "2026-08-30T04:54:36Z"
+        },
+        {
+          "name": "Run npm ci",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-08-30T04:54:36Z",
+          "completed_at": "2026-08-30T04:54:43Z"
+        },
+        {
+          "name": "Configure optional signing",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-08-30T04:54:43Z",
+          "completed_at": "2026-08-30T04:54:43Z"
+        },
+        {
+          "name": "Run tauri-apps/tauri-action@v0",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-08-30T04:54:43Z",
+          "completed_at": "2026-08-30T05:00:55Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-08-30T05:00:55Z",
+          "completed_at": "2026-08-30T05:00:56Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18,
+          "started_at": "2026-08-30T05:00:56Z",
+          "completed_at": "2026-08-30T05:00:58Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-08-30T05:00:58Z",
+          "completed_at": "2026-08-30T05:00:58Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/B-Divyesh/sf-presence-bridge/check-runs/99209134911",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000009691,
+      "runner_name": "GitHub Actions 1000009691",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 99209762363,
+      "run_id": 33293510396,
+      "workflow_name": "Release desktop apps",
+      "head_branch": "v0.1.22",
+      "run_url": "https://api.github.com/repos/B-Divyesh/sf-presence-bridge/actions/runs/33293510396",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUHExJs8AAAAXGVzWOw",
+      "head_sha": "992682353261f38d2bd3be260dbbba132ea72dbf",
+      "url": "https://api.github.com/repos/B-Divyesh/sf-presence-bridge/actions/jobs/99209762363",
+      "html_url": "https://github.com/B-Divyesh/sf-presence-bridge/actions/runs/33293510396/job/99209762363",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-08-30T05:01:00Z",
+      "started_at": "2026-08-30T05:01:02Z",
+      "completed_at": "2026-08-30T05:01:12Z",
+      "name": "manifest",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-08-30T05:01:03Z",
+          "completed_at": "2026-08-30T05:01:04Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-08-30T05:01:04Z",
+          "completed_at": "2026-08-30T05:01:06Z"
+        },
+        {
+          "name": "Download release assets",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-08-30T05:01:06Z",
+          "completed_at": "2026-08-30T05:01:08Z"
+        },
+        {
+          "name": "Verify release targets this source commit",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-08-30T05:01:08Z",
+          "completed_at": "2026-08-30T05:01:09Z"
+        },
+        {
+          "name": "Build checksums and manifest",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-08-30T05:01:09Z",
+          "completed_at": "2026-08-30T05:01:09Z"
+        },
+        {
+          "name": "Upload checksums and manifest",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-08-30T05:01:09Z",
+          "completed_at": "2026-08-30T05:01:10Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-08-30T05:01:10Z",
+          "completed_at": "2026-08-30T05:01:10Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-08-30T05:01:10Z",
+          "completed_at": "2026-08-30T05:01:10Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/B-Divyesh/sf-presence-bridge/check-runs/99209762363",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000009709,
+      "runner_name": "GitHub Actions 1000009709",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 99209783773,
+      "run_id": 33293510396,
+      "workflow_name": "Release desktop apps",
+      "head_branch": "v0.1.22",
+      "run_url": "https://api.github.com/repos/B-Divyesh/sf-presence-bridge/actions/runs/33293510396",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUHExJs8AAAAXGV0p3Q",
+      "head_sha": "992682353261f38d2bd3be260dbbba132ea72dbf",
+      "url": "https://api.github.com/repos/B-Divyesh/sf-presence-bridge/actions/jobs/99209783773",
+      "html_url": "https://github.com/B-Divyesh/sf-presence-bridge/actions/runs/33293510396/job/99209783773",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-08-30T05:01:13Z",
+      "started_at": "2026-08-30T05:01:15Z",
+      "completed_at": "2026-08-30T05:01:45Z",
+      "name": "linux-installer-smoke",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-08-30T05:01:15Z",
+          "completed_at": "2026-08-30T05:01:16Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-08-30T05:01:16Z",
+          "completed_at": "2026-08-30T05:01:18Z"
+        },
+        {
+          "name": "Install native smoke dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-08-30T05:01:18Z",
+          "completed_at": "2026-08-30T05:01:35Z"
+        },
+        {
+          "name": "Install and exercise the checksum-verified Linux AppImage opener",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-08-30T05:01:35Z",
+          "completed_at": "2026-08-30T05:01:43Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-08-30T05:01:43Z",
+          "completed_at": "2026-08-30T05:01:43Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-08-30T05:01:43Z",
+          "completed_at": "2026-08-30T05:01:43Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/B-Divyesh/sf-presence-bridge/check-runs/99209783773",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000009710,
+      "runner_name": "GitHub Actions 1000009710",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 99209783789,
+      "run_id": 33293510396,
+      "workflow_name": "Release desktop apps",
+      "head_branch": "v0.1.22",
+      "run_url": "https://api.github.com/repos/B-Divyesh/sf-presence-bridge/actions/runs/33293510396",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUHExJs8AAAAXGV0p7Q",
+      "head_sha": "992682353261f38d2bd3be260dbbba132ea72dbf",
+      "url": "https://api.github.com/repos/B-Divyesh/sf-presence-bridge/actions/jobs/99209783789",
+      "html_url": "https://github.com/B-Divyesh/sf-presence-bridge/actions/runs/33293510396/job/99209783789",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-08-30T05:01:13Z",
+      "started_at": "2026-08-30T05:01:15Z",
+      "completed_at": "2026-08-30T05:01:28Z",
+      "name": "windows-installer-smoke",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-08-30T05:01:16Z",
+          "completed_at": "2026-08-30T05:01:16Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-08-30T05:01:16Z",
+          "completed_at": "2026-08-30T05:01:21Z"
+        },
+        {
+          "name": "Install and open the published Windows app",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-08-30T05:01:21Z",
+          "completed_at": "2026-08-30T05:01:24Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-08-30T05:01:24Z",
+          "completed_at": "2026-08-30T05:01:26Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-08-30T05:01:26Z",
+          "completed_at": "2026-08-30T05:01:26Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/B-Divyesh/sf-presence-bridge/check-runs/99209783789",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000009711,
+      "runner_name": "GitHub Actions 1000009711",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

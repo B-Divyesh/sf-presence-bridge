@@ -1,0 +1,41 @@
+{
+  "facts": [
+    618.796875,
+    643.125,
+    667.453125
+  ],
+  "privacyVisible": true,
+  "rowBottoms": [
+    568.6875,
+    666.65625,
+    764.625,
+    863.59375
+  ],
+  "realDuringDemo": null,
+  "resetState": "available",
+  "demoAfterReset": null,
+  "exitUrl": "http://127.0.0.1:4174/app.html",
+  "exitStores": {
+    "demo": null,
+    "real": null
+  },
+  "backState": "available",
+  "demoOnlySameOrigin": true,
+  "privacy": {
+    "title": "Privacy — Presence Bridge",
+    "h1": "Your roster belongs to you",
+    "canonical": "https://presence-bridge.sociobot.in/privacy"
+  },
+  "privacyFocused": true,
+  "homeFocused": true,
+  "notFound": {
+    "status": 404,
+    "title": "Page not found — Presence Bridge",
+    "h1": "This path does not reach the roster",
+    "returnHome": "/"
+  },
+  "expected404Errors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "unexpectedErrors": []
+}

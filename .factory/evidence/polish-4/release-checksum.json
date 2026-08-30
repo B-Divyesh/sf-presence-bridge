@@ -1,0 +1,7 @@
+{
+  "asset": "Presence.Bridge_0.1.22_amd64.deb",
+  "bytes": 4788054,
+  "expected": "749ed9326327822f18ec1be01151589bad99f05e5cad33823e1ca69269693e92",
+  "actual": "749ed9326327822f18ec1be01151589bad99f05e5cad33823e1ca69269693e92",
+  "matches": true
+}

@@ -1,0 +1,111 @@
+{
+  "results": [
+    {
+      "href": "https://github.com/B-Divyesh/sf-presence-bridge/releases",
+      "status": 200,
+      "finalUrl": "https://github.com/B-Divyesh/sf-presence-bridge/releases"
+    },
+    {
+      "href": "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.22/Presence.Bridge_0.1.22_amd64.AppImage",
+      "status": 200,
+      "finalUrl": "https://release-assets.githubusercontent.com/github-production-release-asset/1349595430/217d881f-8b85-4bee-af5a-049ce3d48bb0?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-08-30T05%3A56%3A14Z&rscd=attachment%3B+filename%3DPresence.Bridge_0.1.22_amd64.AppImage&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-08-30T04%3A55%3A42Z&ske=2026-08-30T05%3A56%3A14Z&sks=b&skv=2018-11-09&sig=W0R6lY6FqdS5R2KePRuMvE1bBQ2QsXYNmmejGHR%2FM%2Bo%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc4ODA2ODM5MywibmJmIjoxNzg4MDY2NTkzLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.91XdZ4Ey5VPVvmCwz-PozElzg9r1lceoINtf-7O0EQk&response-content-disposition=attachment%3B%20filename%3DPresence.Bridge_0.1.22_amd64.AppImage&response-content-type=application%2Foctet-stream"
+    },
+    {
+      "href": "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.22/SHA256SUMS",
+      "status": 200,
+      "finalUrl": "https://release-assets.githubusercontent.com/github-production-release-asset/1349595430/1f35cb40-eca8-42b7-b3b3-ebb3ff5626ac?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-08-30T05%3A52%3A30Z&rscd=attachment%3B+filename%3DSHA256SUMS&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-08-30T04%3A52%3A08Z&ske=2026-08-30T05%3A52%3A30Z&sks=b&skv=2018-11-09&sig=waO2o9gogWFsMJqopzEVLixvZwXDWJgUbRO1%2BGH%2BJto%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc4ODA2Njg5NCwibmJmIjoxNzg4MDY2NTk0LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.tUkDN_dRHNCOAlyyMH9IEgwVPrAhvYvCjpciuu3qCQM&response-content-disposition=attachment%3B%20filename%3DSHA256SUMS&response-content-type=application%2Foctet-stream"
+    },
+    {
+      "href": "https://github.com/B-Divyesh/sf-presence-bridge/releases/download/v0.1.22/latest.json",
+      "status": 200,
+      "finalUrl": "https://release-assets.githubusercontent.com/github-production-release-asset/1349595430/a267b5c9-af33-4022-aea8-6ac24f5c7d5f?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-08-30T05%3A45%3A15Z&rscd=attachment%3B+filename%3Dlatest.json&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-08-30T04%3A44%3A21Z&ske=2026-08-30T05%3A45%3A15Z&sks=b&skv=2018-11-09&sig=l4OZuXbRqfmDN8YRdQvfJ6QcgAYpJGyqUhMn4LPaXYs%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc4ODA2Njg5NCwibmJmIjoxNzg4MDY2NTk0LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.tUkDN_dRHNCOAlyyMH9IEgwVPrAhvYvCjpciuu3qCQM&response-content-disposition=attachment%3B%20filename%3Dlatest.json&response-content-type=application%2Foctet-stream"
+    },
+    {
+      "href": "https://presence-bridge.sociobot.in/",
+      "status": 200,
+      "finalUrl": "https://presence-bridge.sociobot.in/"
+    },
+    {
+      "href": "https://presence-bridge.sociobot.in/#main",
+      "status": 200,
+      "finalUrl": "https://presence-bridge.sociobot.in/"
+    },
+    {
+      "href": "https://presence-bridge.sociobot.in/?demo=1",
+      "status": 200,
+      "finalUrl": "https://presence-bridge.sociobot.in/?demo=1"
+    },
+    {
+      "href": "https://presence-bridge.sociobot.in/app.html",
+      "status": 200,
+      "finalUrl": "https://presence-bridge.sociobot.in/app.html"
+    },
+    {
+      "href": "https://presence-bridge.sociobot.in/app.html#main",
+      "status": 200,
+      "finalUrl": "https://presence-bridge.sociobot.in/app.html"
+    },
+    {
+      "href": "https://presence-bridge.sociobot.in/demo",
+      "status": 200,
+      "finalUrl": "https://presence-bridge.sociobot.in/demo"
+    },
+    {
+      "href": "https://presence-bridge.sociobot.in/demo#main",
+      "status": 200,
+      "finalUrl": "https://presence-bridge.sociobot.in/demo"
+    },
+    {
+      "href": "https://presence-bridge.sociobot.in/download",
+      "status": 200,
+      "finalUrl": "https://presence-bridge.sociobot.in/download"
+    },
+    {
+      "href": "https://presence-bridge.sociobot.in/download#main",
+      "status": 200,
+      "finalUrl": "https://presence-bridge.sociobot.in/download"
+    },
+    {
+      "href": "https://presence-bridge.sociobot.in/privacy",
+      "status": 200,
+      "finalUrl": "https://presence-bridge.sociobot.in/privacy"
+    },
+    {
+      "href": "https://presence-bridge.sociobot.in/privacy#main",
+      "status": 200,
+      "finalUrl": "https://presence-bridge.sociobot.in/privacy"
+    },
+    {
+      "href": "https://presence-bridge.sociobot.in/terms",
+      "status": 200,
+      "finalUrl": "https://presence-bridge.sociobot.in/terms"
+    },
+    {
+      "href": "https://presence-bridge.sociobot.in/terms#main",
+      "status": 200,
+      "finalUrl": "https://presence-bridge.sociobot.in/terms"
+    },
+    {
+      "href": "https://sociobot.in/",
+      "status": 200,
+      "finalUrl": "https://sociobot.in/"
+    },
+    {
+      "href": "mailto:privacy@sociobot.in",
+      "status": "allowed-mailto"
+    },
+    {
+      "href": "mailto:support@sociobot.in",
+      "status": "allowed-mailto"
+    }
+  ],
+  "headers": {
+    "cache-control": "public, must-revalidate, max-age=30",
+    "content-security-policy": "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self' https://api.github.com https://api.sociobot.in; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://api.sociobot.in",
+    "permissions-policy": "camera=(), microphone=(), geolocation=()",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "strict-transport-security": "max-age=10886400; includeSubDomains; preload",
+    "x-content-type-options": "nosniff"
+  },
+  "failures": []
+}

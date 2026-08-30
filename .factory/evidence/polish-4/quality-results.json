@@ -1,0 +1,22 @@
+{
+  "source_commit": "992682353261f38d2bd3be260dbbba132ea72dbf",
+  "live_url": "https://presence-bridge.sociobot.in",
+  "release_url": "https://github.com/B-Divyesh/sf-presence-bridge/releases/tag/v0.1.22",
+  "workflow_url": "https://github.com/B-Divyesh/sf-presence-bridge/actions/runs/33293510396",
+  "checks": {
+    "clean_clone_npm_test_consecutive_runs": 2,
+    "unit_tests_per_run": 15,
+    "playwright_passed_per_run": 92,
+    "playwright_intentional_skips_per_run": 2,
+    "claim_commands_passed": "26/26",
+    "live_full_suite": "15 unit, 92 Playwright passed, 2 intentional desktop skips",
+    "cargo_test": "1 passed",
+    "cargo_clippy": "passed with warnings denied",
+    "npm_audit_high": "0 vulnerabilities",
+    "lighthouse_local": { "performance": 100, "accessibility": 100, "best_practices": 100, "seo": 100 },
+    "lighthouse_live": { "performance": 100, "accessibility": 100, "best_practices": 100, "seo": 100, "lcp_seconds": 1.1, "cls": 0 },
+    "live_public_files": "24/24 match local dist/site hashes",
+    "live_link_crawl": "20 links checked, 0 failures",
+    "release_checksum": "Debian asset SHA-256 matched SHA256SUMS"
+  }
+}

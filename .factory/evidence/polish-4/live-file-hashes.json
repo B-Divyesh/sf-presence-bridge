@@ -1,0 +1,174 @@
+{
+  "total": 24,
+  "mismatches": [],
+  "checked": [
+    {
+      "file": "404.html",
+      "status": 200,
+      "local": "15af4d676f888ce79668a7c6c1bf107df229e892076e056734a9a8d454b3457f",
+      "live": "15af4d676f888ce79668a7c6c1bf107df229e892076e056734a9a8d454b3457f",
+      "matches": true
+    },
+    {
+      "file": "app.html",
+      "status": 200,
+      "local": "59d60d701aea7b164e347529597bfa5d24a6fa4c339e31d9cc5285af7a4bfc8d",
+      "live": "59d60d701aea7b164e347529597bfa5d24a6fa4c339e31d9cc5285af7a4bfc8d",
+      "matches": true
+    },
+    {
+      "file": "apple-touch-icon.png",
+      "status": 200,
+      "local": "870786f78b88ac606d111d047ab7ea7879f32a636ef63c59d589cc87b8063e6f",
+      "live": "870786f78b88ac606d111d047ab7ea7879f32a636ef63c59d589cc87b8063e6f",
+      "matches": true
+    },
+    {
+      "file": "asset-manifest.json",
+      "status": 200,
+      "local": "564d7dbcfd300ea2724f4d2d4a0b7323fe419469fd0122093db3eac3dbcf001e",
+      "live": "564d7dbcfd300ea2724f4d2d4a0b7323fe419469fd0122093db3eac3dbcf001e",
+      "matches": true
+    },
+    {
+      "file": "assets/app-DRDK59L_.js",
+      "status": 200,
+      "local": "0d47a499829b8a0337de52d0a1c67b0c8f872d8e2d7378bc41abac3789391288",
+      "live": "0d47a499829b8a0337de52d0a1c67b0c8f872d8e2d7378bc41abac3789391288",
+      "matches": true
+    },
+    {
+      "file": "assets/app-core-Bkj3f2Sa.css",
+      "status": 200,
+      "local": "0ff68a5f92781f054711cba18b0be9472b8e488e66acdc7dbcb5d8e7266c5faf",
+      "live": "0ff68a5f92781f054711cba18b0be9472b8e488e66acdc7dbcb5d8e7266c5faf",
+      "matches": true
+    },
+    {
+      "file": "assets/app-core-CdAgyUGX.js",
+      "status": 200,
+      "local": "3bbb24ed9c5d6d4c747a11105e27086034bd381b1cc5e2464fc34488a2174793",
+      "live": "3bbb24ed9c5d6d4c747a11105e27086034bd381b1cc5e2464fc34488a2174793",
+      "matches": true
+    },
+    {
+      "file": "assets/core-DV6XEvTN.js",
+      "status": 200,
+      "local": "bcca1f6d2bb9e96b04c14c1e11cb231a0a8dd0d455b39a7d4cbedee2349cd683",
+      "live": "bcca1f6d2bb9e96b04c14c1e11cb231a0a8dd0d455b39a7d4cbedee2349cd683",
+      "matches": true
+    },
+    {
+      "file": "assets/index-FHJRkEFR.js",
+      "status": 200,
+      "local": "c2a4a6c5cad67b63428dd61bc1abf0ad10f713c295a0fe75c0968635f84df227",
+      "live": "c2a4a6c5cad67b63428dd61bc1abf0ad10f713c295a0fe75c0968635f84df227",
+      "matches": true
+    },
+    {
+      "file": "assets/presence-bridge-hero-1536.webp",
+      "status": 200,
+      "local": "1a27371ab91c834dde851465d5e3e503e672e3449ed75cb259d30c8a93b4d59c",
+      "live": "1a27371ab91c834dde851465d5e3e503e672e3449ed75cb259d30c8a93b4d59c",
+      "matches": true
+    },
+    {
+      "file": "assets/presence-bridge-hero-768.webp",
+      "status": 200,
+      "local": "42d0b00e970897cd49b0eb501fbfcdeac1f92b9d624b7c70bed5180cbe0e4d1a",
+      "live": "42d0b00e970897cd49b0eb501fbfcdeac1f92b9d624b7c70bed5180cbe0e4d1a",
+      "matches": true
+    },
+    {
+      "file": "assets/presence-bridge-og.webp",
+      "status": 200,
+      "local": "7591e54e6334601ff48339f4fc6999d02bf3c493f435b1620cc58c8caed7adf0",
+      "live": "7591e54e6334601ff48339f4fc6999d02bf3c493f435b1620cc58c8caed7adf0",
+      "matches": true
+    },
+    {
+      "file": "assets/site-5ED7CkVz.js",
+      "status": 200,
+      "local": "385eacf2f821f2df9a57f980c97d91b2d33dfc69147bd33ce8d5616f3f7fbdd8",
+      "live": "385eacf2f821f2df9a57f980c97d91b2d33dfc69147bd33ce8d5616f3f7fbdd8",
+      "matches": true
+    },
+    {
+      "file": "assets/walkthrough-roster.webp",
+      "status": 200,
+      "local": "6776549a1df982ba08ab4f8afc36cf0abfb79fe8ed599a671fc1b186a258619b",
+      "live": "6776549a1df982ba08ab4f8afc36cf0abfb79fe8ed599a671fc1b186a258619b",
+      "matches": true
+    },
+    {
+      "file": "assets/walkthrough-settings.webp",
+      "status": 200,
+      "local": "d087802d565bae908dd9c0a69aa77b04517ce2a4d8783384a057cd8535e4e2a3",
+      "live": "d087802d565bae908dd9c0a69aa77b04517ce2a4d8783384a057cd8535e4e2a3",
+      "matches": true
+    },
+    {
+      "file": "assets/walkthrough-status.webp",
+      "status": 200,
+      "local": "c7aa2ea09edd4993c4361fc280095d47ae35f36e03887efd69dc345a26486a60",
+      "live": "c7aa2ea09edd4993c4361fc280095d47ae35f36e03887efd69dc345a26486a60",
+      "matches": true
+    },
+    {
+      "file": "favicon.svg",
+      "status": 200,
+      "local": "ef179a7589761ce30fb368431a763c7acebe598aba3babb83abea07b91da00ae",
+      "live": "ef179a7589761ce30fb368431a763c7acebe598aba3babb83abea07b91da00ae",
+      "matches": true
+    },
+    {
+      "file": "index.html",
+      "status": 200,
+      "local": "4013ad988b5316a2a9400e0464e0f02e2836a6a8c9286cdd13fd4a0505a61328",
+      "live": "4013ad988b5316a2a9400e0464e0f02e2836a6a8c9286cdd13fd4a0505a61328",
+      "matches": true
+    },
+    {
+      "file": "install.ps1",
+      "status": 200,
+      "local": "c63fa9218faf7248896a863b012157ed0ff0918de4d879d446ddccce21d8a205",
+      "live": "c63fa9218faf7248896a863b012157ed0ff0918de4d879d446ddccce21d8a205",
+      "matches": true
+    },
+    {
+      "file": "install.sh",
+      "status": 200,
+      "local": "6f5b457c68475ff396ccb194e8507bf452c72c4d225f0e0a99694de3677c7e65",
+      "live": "6f5b457c68475ff396ccb194e8507bf452c72c4d225f0e0a99694de3677c7e65",
+      "matches": true
+    },
+    {
+      "file": "manifest.webmanifest",
+      "status": 200,
+      "local": "ec54fcb57334cca7abace2ba87c9b93a8becc0073c4f338d314bf4d95bd92141",
+      "live": "ec54fcb57334cca7abace2ba87c9b93a8becc0073c4f338d314bf4d95bd92141",
+      "matches": true
+    },
+    {
+      "file": "robots.txt",
+      "status": 200,
+      "local": "77fa19fa97d1e58ec6c32c6d90a2ae3386b1921da32017bfa476422142d586b6",
+      "live": "77fa19fa97d1e58ec6c32c6d90a2ae3386b1921da32017bfa476422142d586b6",
+      "matches": true
+    },
+    {
+      "file": "sitemap.xml",
+      "status": 200,
+      "local": "0fe4bf9527c536c8fb11d915a61524c7649fd10d5946f684ad4587eaad17d35a",
+      "live": "0fe4bf9527c536c8fb11d915a61524c7649fd10d5946f684ad4587eaad17d35a",
+      "matches": true
+    },
+    {
+      "file": "sw.js",
+      "status": 200,
+      "local": "262c6513562a7c3d40350a65e1fee2f25aa28fc0c441264c576712714374ddb0",
+      "live": "262c6513562a7c3d40350a65e1fee2f25aa28fc0c441264c576712714374ddb0",
+      "matches": true
+    }
+  ]
+}
